@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class AdminModel {
@@ -13,14 +14,20 @@ public class AdminModel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long admin_id;
 	
+	@NotBlank(message = "first name is required")
 	private String firstName;
 	
+	@NotBlank(message = "lastname is required")
 	private String lastName;
 	
+	
+	@NotBlank(message = "username is required")
 	private String username;
 	
+	@NotBlank(message = "password is required")
 	private String password;
 	
+	@NotBlank(message = "type field is required")
 	private String type = "admin";
 
 	public Long getAdmin_id() {
