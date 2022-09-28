@@ -7,10 +7,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
 public class Student {
@@ -51,5 +51,6 @@ public class Student {
 	private Boolean active_deactive;
 	 @NotBlank( message="Course must not be empty")
 	private String course;
+
 
 }
