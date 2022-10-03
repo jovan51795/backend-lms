@@ -2,9 +2,9 @@ package biz.global.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import biz.global.model.AdminModel;
+import biz.global.model.Admin;
 
-public interface AuthRepo extends JpaRepository<AdminModel, Long> {
+public interface AuthRepo extends JpaRepository<Admin, Long> {
 
 
 }

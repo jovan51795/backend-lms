@@ -6,7 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class AdminModel {
+public class Admin {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -22,6 +22,19 @@ public class AdminModel {
 	private String password;
 	
 	private String type = "admin";
+	
+	public Admin() {
+		
+	}
+	
+	public Admin(Long admin_id, String firstName, String lastName, String username, String type, String password) {
+		this.admin_id = admin_id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.username = username;
+		this.type = type;
+		this.password = password;
+	}
 
 	public Long getAdmin_id() {
 		return admin_id;
