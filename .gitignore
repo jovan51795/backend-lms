@@ -59,12 +59,4 @@ local.properties
 # End of https://www.gitignore.io/api/eclipse
 .metadata/.plugins/org.eclipse.m2e.logback.configuration/logback.1.16.3.20211002-1029.xml
 .metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.jdt.ui.prefs
-*.log
-*.resources
-*.log
-*.ini
-*.properties
-.metadata/.plugins/org.eclipse.ui.workbench/workingsets.xml
-.metadata/.plugins/org.eclipse.core.resources/.safetable/org.eclipse.core.resources
-.metadata/.plugins/org.eclipse.ui.workbench/workingsets.xml
-.metadata/version.ini
+
