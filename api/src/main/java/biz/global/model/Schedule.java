@@ -19,8 +19,6 @@ public class Schedule {
 	private Long schedule_id;
 	
 	private String schedule_code;
-	
-
 
 	private String schedule_subject;
 	
