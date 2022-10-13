@@ -87,8 +87,6 @@ public class Student  implements  Serializable{
 		this.subject = subject;
 	}
 
-
-=======
 	@ManyToMany(targetEntity = Subject.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 
 	@JoinTable(name ="student_subject",
@@ -110,9 +108,6 @@ public class Student  implements  Serializable{
 	 @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	 @JoinColumn(name="course_fk", updatable = true, insertable = true)
 	 private Course course;
-	 
-	 @ManyToMany()
-	    private List<AttendanceSheet> attendance = new ArrayList<>();
 
 	public Course getCourse() {
 		return course;
