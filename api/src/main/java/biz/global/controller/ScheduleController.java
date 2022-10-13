@@ -58,13 +58,5 @@ public class ScheduleController {
 	}
 	
 	
-//	@GetMapping(value="/findByScheduleCode/{schedule_code}")
-//	private ResponseEntity<ResponseModel> getScheduleByCode(@PathVariable String schedule_code){
-//		Optional<Schedule> schedule = Optional.ofNullable(scheduleRepo.findByScheduleCode(schedule_code));
-//		if(schedule.isPresent()) {
-//			return ResponseEntity.ok().body(new ResponseModel(1, "schedule exist", "", schedule));
-//		}
-//		return ResponseEntity.ok().body(new ResponseModel(0, "schedule does not exist", "", schedule));
-//	}
-//	
+	
 }

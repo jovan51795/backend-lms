@@ -8,5 +8,4 @@ import biz.global.model.Schedule;
 @Repository
 public interface ScheduleRepo extends JpaRepository<Schedule, Long> {
 	
-//	Schedule  findByScheduleCode(String schedule_code);
 }
