@@ -65,6 +65,14 @@ public class Attendance implements  Serializable{
 	 
 	 private Boolean isPresent;
 
+	public Subject getSubject() {
+		return subject;
+	}
+
+	public void setSubject(Subject subject) {
+		this.subject = subject;
+	}
+
 	public Long getAttendance_id() {
 		return attendance_id;
 	}
