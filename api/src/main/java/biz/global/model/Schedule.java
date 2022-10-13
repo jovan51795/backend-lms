@@ -1,6 +1,7 @@
 package biz.global.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -19,14 +20,14 @@ public class Schedule {
 	private Long schedule_id;
 	
 	private String schedule_code;
-	
-
 
 	private String schedule_subject;
 	
-	private LocalDateTime startTime;
+	private LocalDate startDate;
 	
-	private LocalDateTime endTime;
+	private LocalTime startTime;
+	
+	private LocalTime endTime;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "subject_id")
@@ -48,6 +49,14 @@ public class Schedule {
 		this.schedule_id = schedule_id;
 	}
 
+	public String getSchedule_code() {
+		return schedule_code;
+	}
+
+	public void setSchedule_code(String schedule_code) {
+		this.schedule_code = schedule_code;
+	}
+
 	public String getSchedule_subject() {
 		return schedule_subject;
 	}
@@ -56,19 +65,27 @@ public class Schedule {
 		this.schedule_subject = schedule_subject;
 	}
 
-	public LocalDateTime getStartTime() {
+	public LocalDate getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
+	}
+
+	public LocalTime getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(LocalDateTime startTime) {
+	public void setStartTime(LocalTime startTime) {
 		this.startTime = startTime;
 	}
 
-	public LocalDateTime getEndTime() {
+	public LocalTime getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(LocalDateTime endTime) {
+	public void setEndTime(LocalTime endTime) {
 		this.endTime = endTime;
 	}
 
@@ -95,14 +112,6 @@ public class Schedule {
 	public void setProfessor(Professor professor) {
 		this.professor = professor;
 	}
-    
-    
-	public String getSchedule_code() {
-		return schedule_code;
-	}
 
-	public void setSchedule_code(String schedule_code) {
-		this.schedule_code = schedule_code;
-	}
     
 }
