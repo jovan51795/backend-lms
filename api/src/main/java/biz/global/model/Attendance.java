@@ -22,6 +22,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -50,36 +51,19 @@ public class Attendance implements  Serializable{
 	 
 	 private Long attendance_id;
 	
-	 private LocalDate date = LocalDate.now();
+	 private LocalDate datemodified = LocalDate.now();
 	 
-	 private Boolean isPresent;
 	 
-	
-
 	 
-	 @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-	 @JoinColumn(name="subject_fk")
+	 @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+	 @JoinColumn(name="attendance_student", updatable = true, insertable = true)
+	 private Student student;
+	 
+	 @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+	 @JoinColumn(name="attendance_subject", updatable = true, insertable = true)
 	 private Subject subject;
 	 
-	 
-	 @ManyToMany(targetEntity = AttendanceSheet.class)
-		private List<AttendanceSheet> studentrecord = new ArrayList<>();
-
-	public Boolean getIsPresent() {
-		return isPresent;
-	}
-
-	public void setIsPresent(Boolean isPresent) {
-		this.isPresent = isPresent;
-	}
-
-	public List<AttendanceSheet> getStudentrecord() {
-		return studentrecord;
-	}
-
-	public void setStudentrecord(List<AttendanceSheet> studentrecord) {
-		this.studentrecord = studentrecord;
-	}
+	 private Boolean isPresent;
 
 	public Long getAttendance_id() {
 		return attendance_id;
@@ -91,22 +75,35 @@ public class Attendance implements  Serializable{
 
 
 
-	public LocalDate getDate() {
-		return date;
+	public LocalDate getDatemodified() {
+		return datemodified;
 	}
 
-	public void setDate(LocalDate date) {
-		this.date = date;
+	public void setDatemodified(LocalDate datemodified) {
+		this.datemodified = datemodified;
 	}
 
-	public Subject getSubject() {
-		return subject;
+	public Student getStudent() {
+		return student;
 	}
 
-	public void setSubject(Subject subject) {
-		this.subject = subject;
+	public void setStudent(Student student) {
+		this.student = student;
 	}
 
+	public Boolean getIsPresent() {
+		return isPresent;
+	}
+
+	public void setIsPresent(Boolean isPresent) {
+		this.isPresent = isPresent;
+	}
+	 
+	 
+	 
+
+
+		
 
 	
 	 

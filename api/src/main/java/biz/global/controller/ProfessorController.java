@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +26,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
+import biz.global.dto.AttendanceDto;
 import biz.global.exception.ResourceNotFoundException;
 import biz.global.model.Attendance;
+
 import biz.global.model.Professor;
 import biz.global.model.ResponseModel;
 import biz.global.model.Student;
 import biz.global.model.Subject;
 import biz.global.repo.AttendanceRepo;
+
 import biz.global.repo.ProfessorRepo;
 
 @RestController
@@ -46,7 +49,10 @@ public class ProfessorController {
 	@Autowired 
 	private AttendanceRepo attendanceRepo;
 	
+
 	
+	@Autowired
+	private ModelMapper modelMapper;
 
 	
 	
@@ -105,14 +111,15 @@ public class ProfessorController {
     
     @GetMapping(value="attendance")
     public List<Object> getAllStudentsEnrolledSubject(@RequestParam String subjectCode){
-    	List<Object> obj = attendanceRepo.getAllStudentsEnrolledSubject(subjectCode);
-    	return obj;
+    	return attendanceRepo.getAllStudentsEnrolledSubject(subjectCode);
+    	
+    	
     }
     
     
     @PostMapping(value="attendancesheet")
     public String attendanceChecking( @RequestBody Attendance model) {
-    	
+   
     	attendanceRepo.save(model);
     	return "attendance ok";
     }
