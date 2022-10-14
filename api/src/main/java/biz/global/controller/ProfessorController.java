@@ -44,7 +44,7 @@ public class ProfessorController {
 	
 	@GetMapping(value= "all")
     List<Professor> getprofessors() {
-        return professorRepo.findAll();
+		return professorRepo.getAllProfessor();
     }
 
     @PostMapping(value="add")
@@ -60,7 +60,7 @@ public class ProfessorController {
     }
     
  
-    @GetMapping("{id}")
+    @GetMapping(value = "details/{id}")
     public ResponseEntity<Professor> getEmployeeById(@PathVariable Long id){
     	Professor professor = professorRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not exist with id:" + id));
@@ -77,14 +77,16 @@ public class ProfessorController {
 		return ResponseEntity.ok().body(new ResponseModel(0, "An unexpected error occurred", "", null));
 	}
     
-    @DeleteMapping("{id}")
+    @DeleteMapping(value = "delete/{id}")
     public ResponseEntity<ResponseModel> deleteProfessor(@PathVariable Long id){
     	Optional<Professor> professor = professorRepo.findById(id);
     	if(professor.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(0, "professor does not exist", null, null));
 		}
     	
-		professorRepo.deleteById(professor.get().getProfessor_id());
+    	professor.get().setActiveDeactive(false);
+    	professorRepo.save(professor.get());
+		//professorRepo.deleteById(professor.get().getProfessor_id());
 		
 		return ResponseEntity.ok().body(new ResponseModel(1, "successfully deleted", null, null));
 
