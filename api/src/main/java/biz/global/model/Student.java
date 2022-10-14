@@ -121,7 +121,6 @@ public class Student  implements  Serializable{
 	 @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	 @JoinColumn(name="course_fk", updatable = true, insertable = true)
 	 private Course course;
-
 	 
 	
 	public Course getCourse() {
@@ -234,6 +233,7 @@ public class Student  implements  Serializable{
 	public void setStudent_id(Long student_id) {
 		this.student_id = student_id;
 	}
+	
 	
 	
 	public String getStudentNo() {

@@ -42,18 +42,8 @@ public class Professor {
 	
 	private String password;
 	
-	private Boolean activeDeactive =true;
+	private Boolean activeDeactive;
 	
-	private String type = "faculty";
-	
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
 	@OneToMany(targetEntity = Grades.class, cascade = CascadeType.ALL)
 	@JoinColumn(name = "encode", referencedColumnName = "professor_id" )
 	private List<Grades> grades;

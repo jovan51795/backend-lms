@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import biz.global.dto.AttendanceDto;
 import biz.global.model.Attendance;
 import biz.global.model.Subject;
 
