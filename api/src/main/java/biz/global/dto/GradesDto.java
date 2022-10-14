@@ -1,26 +1,9 @@
-package biz.global.model;
+package biz.global.dto;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.validation.constraints.NotBlank;
+public class GradesDto {
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import biz.global.util.Generator;
-@Entity
-public class Grades {
-	 @Id
-	 @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long grade_id;
 
 	 private String session_id;
@@ -35,14 +18,12 @@ public class Grades {
 	 
 	 private String status;
 	 
-	 @JsonIgnore
-	 @OneToOne(mappedBy = "grades")
-	 private Subject subject;
+	 private SubjectDto subject;
 	 
-	public Subject getSubject() {
+	public SubjectDto getSubject() {
 		return subject;
 	}
-	public void setSubject(Subject subject) {
+	public void setSubject(SubjectDto subject) {
 		this.subject = subject;
 	}
 	public Long getGrade_id() {
@@ -87,7 +68,4 @@ public class Grades {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
-	 
-
 }

@@ -30,7 +30,6 @@ public class AuthController {
 	@PostMapping(value = "login") 
 	public AdminResponse login(@RequestBody Admin model) throws IOException{
 		return authService.login(model);
-		
 	}
 	
 	

@@ -74,7 +74,29 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+		
+		<!-- https://mavenlibs.com/maven/dependency/pl.bristleback/serialization-engine-jackson -->
+		<dependency>
+		    <groupId>pl.bristleback</groupId>
+		    <artifactId>serialization-engine-jackson</artifactId>
+		    <version>0.3.5</version>
+		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310 -->
+		<dependency>
+		    <groupId>com.fasterxml.jackson.datatype</groupId>
+		    <artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.simpleflatmapper</groupId>
+		    <artifactId>sfm-jdbc</artifactId>
+		    <version>8.2.3</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.modelmapper</groupId>
+		    <artifactId>modelmapper</artifactId>
+		    <version>2.3.5</version>
+		</dependency>
 
 	</dependencies>
 
@@ -115,7 +137,7 @@
 								true
 							</pojosEqualsAndHashCode>
 							<javaTimeTypes>true</javaTimeTypes>
-							<fluentSetters>true</fluentSetters>
+							<fluentSetters>true</fluentSetters>s
 						</generate>
                         <database>
                             <name>org.jooq.meta.postgres.PostgresDatabase</name>
@@ -124,7 +146,7 @@
                         </database>
                         <target>
                             <packageName>biz.global.Table</packageName>
-                            <directory>target/generated-sources/jooq</directory>
+                            <directory>target/generated-sources/table</directory>
                         </target>
                     </generator>
                 </configuration>

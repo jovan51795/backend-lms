@@ -1,15 +1,6 @@
-package biz.global.model;
+package biz.global.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotBlank;
-@Entity
-public class SubjectDetailHistory {
-	 @Id
-	 @GeneratedValue(strategy=GenerationType.IDENTITY)
+public class SubjectDetailHistoryDto {
 	private Long session_id;
 	 
 	 private Long subject_id;
@@ -83,6 +74,4 @@ public class SubjectDetailHistory {
 	public void setActive_deactive(Boolean active_deactive) {
 		this.active_deactive = active_deactive;
 	}
-	 
-
 }

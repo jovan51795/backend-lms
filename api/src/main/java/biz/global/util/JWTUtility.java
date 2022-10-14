@@ -56,10 +56,12 @@ public class JWTUtility implements Serializable {
 
 
     //generate token for user
-    public String generateToken(Admin model) {
+    public String generateToken(String model) {
         Map<String, Object> claims = new HashMap<>();
-        return doGenerateToken(claims, model.getUsername());
+        return doGenerateToken(claims, model);
     }
+    
+   
 
 
     //while creating the token -

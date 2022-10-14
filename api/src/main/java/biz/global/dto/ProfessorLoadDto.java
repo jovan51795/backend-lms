@@ -1,15 +1,7 @@
-package biz.global.model;
+package biz.global.dto;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-@Entity
-public class ProfessorLoad {
-	 @Id
-	 @GeneratedValue(strategy=GenerationType.IDENTITY)	
+public class ProfessorLoadDto {
 	 private Long load_id;
 	 
 	 private String courseTitle;
@@ -49,9 +41,4 @@ public class ProfessorLoad {
 	public void setYearLevel(String yearLevel) {
 		this.yearLevel = yearLevel;
 	}
-	 
-	 
-	 
-	 
-	 
 }
