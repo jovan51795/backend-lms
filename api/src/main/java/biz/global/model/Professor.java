@@ -42,7 +42,7 @@ public class Professor {
 	
 	private String password;
 	
-	private Boolean activeDeactive;
+	private Boolean activeDeactive =true;
 	
 	@OneToMany(targetEntity = Grades.class, cascade = CascadeType.ALL)
 	@JoinColumn(name = "encode", referencedColumnName = "professor_id" )

@@ -2,12 +2,7 @@ package biz.global.controller;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-
-import javax.persistence.EntityManager;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,21 +14,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import biz.global.dto.AttendanceDto;
 import biz.global.exception.ResourceNotFoundException;
 import biz.global.model.Attendance;
 
 import biz.global.model.Professor;
 import biz.global.model.ResponseModel;
-import biz.global.model.Student;
-import biz.global.model.Subject;
 import biz.global.repo.AttendanceRepo;
 
 import biz.global.repo.ProfessorRepo;
@@ -42,21 +32,12 @@ import biz.global.repo.ProfessorRepo;
 @RequestMapping("api/professor/")
 @CrossOrigin(origins = "http://localhost:3000")
 public class ProfessorController {
+	
 	@Autowired
 	private ProfessorRepo professorRepo;
-	
 
 	@Autowired 
 	private AttendanceRepo attendanceRepo;
-	
-
-	
-	@Autowired
-	private ModelMapper modelMapper;
-
-	
-	
-	
 	
 	@GetMapping(value= "all")
     List<Professor> getprofessors() {
@@ -69,13 +50,9 @@ public class ProfessorController {
     	if(prof.isPresent()) {
     		return ResponseEntity.ok().body(new ResponseModel(0, "professor code already exist", null, null));
     	}
-    	
-    	ObjectMapper mapper = new ObjectMapper();
-		System.out.print(mapper.writeValueAsString(professor));
-		
     	professorRepo.save(professor);
 
-        return ResponseEntity.ok().body(new ResponseModel(0, "professor added successfully", null, professor));
+        return ResponseEntity.ok().body(new ResponseModel(1, "professor added successfully", null, professor));
     }
     
  
