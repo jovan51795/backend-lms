@@ -26,6 +26,10 @@ public class Department {
 	
 	private String departmentName;
 	
+	private String logo;
+	private String altlogo;
+	private String link;
+	
 	@OneToMany(targetEntity = Course.class, cascade = CascadeType.ALL)
 	@JoinColumn(name = "department", referencedColumnName = "departmentId")
 	@ElementCollection
@@ -66,6 +70,30 @@ public class Department {
 	public void setCourse(List<Course> course) {
 		this.course = course;
 	}
-	
 
+	public String getLogo() {
+		return logo;
+	}
+
+	public void setLogo(String logo) {
+		this.logo = logo;
+	}
+
+	public String getAltlogo() {
+		return altlogo;
+	}
+
+	public void setAltlogo(String altlogo) {
+		this.altlogo = altlogo;
+	}
+
+	public String getLink() {
+		return link;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
+	}
+	
+	
 }
