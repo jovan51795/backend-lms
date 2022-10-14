@@ -1,6 +1,7 @@
 package biz.global.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -36,7 +37,7 @@ public class Subject  {
 	 
 	private String prerequisites;
 	
-    private Boolean active_deactive = true;
+    private Boolean activeDeactive = true;
 
 	@ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="load_id", referencedColumnName = "load_id")

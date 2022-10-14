@@ -86,7 +86,6 @@ public class StudentController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(0, "student does not exist", null, null));
 		}
 		stud.get().setStudent_id(student.getStudent_id());
-		stud.get().setStudentNo(student.getStudentNo());
 		stud.get().setFirstName(student.getFirstName());
 		stud.get().setMiddleName(student.getMiddleName());
 		stud.get().setLastName(student.getLastName());

@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
@@ -107,7 +108,7 @@ public class Student  implements  Serializable{
 		this.middleName = middleName;
 		this.lastName = lastName;
 		this.program = program;
-		this.subjects = subjects;
+		this.subject = subjects;
 		this.sem = sem;
 		this.academicYear = academicYear;
 		this.active_deactive = active_deactive;
@@ -201,11 +202,6 @@ public class Student  implements  Serializable{
 	public void setProgram(List<Program> program) {
 		this.program = program;
 	}
-	
-	 
-	 public Student() {
-		 super();
-	 }
 	
 	public Student(Long student_id, String student_no, String firstName, String middleName,
 			String lastName, List<Program> program,
