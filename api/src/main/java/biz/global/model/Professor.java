@@ -88,20 +88,10 @@ public class Professor {
 		this.professorNo = "SUBJ-"  +  String.format("%03d",professor_id);;
 	}
 
-	public List<ProfessorLoad> getProfessorLoad() {
-		return professorLoad;
-	}
+	
 
-	public void setProfessorLoad(List<ProfessorLoad> professorLoad) {
-		this.professorLoad = professorLoad;
-	}
-
-	public List<SubjectDetailHistory> getSubjectDetailHistory() {
-		return subjectDetailHistory;
-	}
-
-	public void setSubjectDetailHistory(List<SubjectDetailHistory> subjectDetailHistory) {
-		this.subjectDetailHistory = subjectDetailHistory;
+	public void setProfessorNo(String professorNo) {
+		this.professorNo = professorNo;
 	}
 
 	public List<Subject> getSubjects() {
