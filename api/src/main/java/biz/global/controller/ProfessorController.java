@@ -2,6 +2,7 @@ package biz.global.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import biz.global.exception.ResourceNotFoundException;
+import biz.global.model.Admin;
 import biz.global.model.Attendance;
 
 import biz.global.model.Professor;
@@ -105,6 +107,23 @@ public class ProfessorController {
    
     	attendanceRepo.save(model);
     	return "attendance ok";
+    }
+    
+    @PostMapping(value = "login")
+    public ResponseEntity<ResponseModel> login(@RequestBody Admin admin) {
+    	try {
+    		Optional<Professor> prof = Optional.ofNullable(professorRepo.findByProfessorNo(admin.getUsername()));
+        	if(prof.isPresent() && prof.get().getProfessorNo().equals(admin.getUsername()) && bcrypt.matches(admin.getPassword(), prof.get().getPassword()) && prof.get().getActiveDeactive()) {
+        		prof.get().setPassword("");
+        		return ResponseEntity.ok().body(new ResponseModel(1, "login successful", "", prof.get()));
+        	}else if(!prof.get().getActiveDeactive()) {
+        		return ResponseEntity.ok().body(new ResponseModel(0, "your account has been deactivated", "", null));
+        	}
+        	return ResponseEntity.ok().body(new ResponseModel(0, "username or password is incorrect", "", null));
+    	}catch (NoSuchElementException e) {
+    		return ResponseEntity.ok().body(new ResponseModel(0, "username or password is incorrect", "", null));
+		}
+    	
     }
     
 }

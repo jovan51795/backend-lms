@@ -10,6 +10,8 @@ import biz.global.model.Professor;
 
 @Repository
 public interface ProfessorRepo extends JpaRepository<Professor, Long> {
+	
+	@Query(value = "select *from professor where professor_no = ?1", nativeQuery = true)
 	Professor findByProfessorNo(String professorNo);
 	
 	@Query(value ="select * from professor where active_deactive = true", nativeQuery = true)
