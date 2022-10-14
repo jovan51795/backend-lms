@@ -71,22 +71,51 @@ public class Professor {
 	@JoinColumn(name = "professor_id", referencedColumnName = "professor_id" )
 	private List<SubjectDetailHistory> subjectDetailHistory;
 	
+	 @JsonIgnore
+	  @OneToMany(mappedBy = "professor")
+	  private List<Subject> subjects;
+	 
 	
 	public Long getProfessor_id() {
 		return professor_id;
-	}
-
-	public void setProfessor_id(Long professor_id) {
-		this.professor_id = professor_id;
 	}
 
 	public String getProfessorNo() {
 		return professorNo;
 	}
 
-	public void setProfessorNo(String professorNo) {
-		this.professorNo = professorNo;
+	public void setProfessorNo(Long professor_id) {
+		this.professorNo = "SUBJ-"  +  String.format("%03d",professor_id);;
 	}
+
+	public List<ProfessorLoad> getProfessorLoad() {
+		return professorLoad;
+	}
+
+	public void setProfessorLoad(List<ProfessorLoad> professorLoad) {
+		this.professorLoad = professorLoad;
+	}
+
+	public List<SubjectDetailHistory> getSubjectDetailHistory() {
+		return subjectDetailHistory;
+	}
+
+	public void setSubjectDetailHistory(List<SubjectDetailHistory> subjectDetailHistory) {
+		this.subjectDetailHistory = subjectDetailHistory;
+	}
+
+	public List<Subject> getSubjects() {
+		return subjects;
+	}
+
+	public void setSubjects(List<Subject> subjects) {
+		this.subjects = subjects;
+	}
+
+	public void setProfessor_id(Long professor_id) {
+		this.professor_id = professor_id;
+	}
+
 
 	public String getProfessorName() {
 		return professorName;

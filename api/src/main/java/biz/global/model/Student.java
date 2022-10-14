@@ -4,8 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,19 +40,8 @@ public class Student  implements  Serializable{
 
 	 @Id
 	 @GeneratedValue(strategy=GenerationType.IDENTITY)
-	 
 	 private Long student_id;
-	 
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_seq")
-	@GenericGenerator(
-	            name = "student_seq",
-	            strategy = "biz.global.util.Generator",
-	            parameters = {
-	                    @Parameter(name = Generator.INCREMENT_PARAM, value = "1"),
-	                    @Parameter(name = Generator.VALUE_PREFIX_PARAMETER, value = "SN_"),
-	                    @Parameter(name = Generator.NUMBER_FORMAT_PARAMETER, value = "%05d")
-	            })
-
+	
 	 private String studentNo;
 
 	 private String firstName;
@@ -72,7 +60,7 @@ public class Student  implements  Serializable{
 
 	 private String academicYear;
 	 
-	 private Boolean active_deactive=true;
+	 private Boolean active_deactive = false;
 	
 	@OneToMany(targetEntity = Program.class, cascade = CascadeType.ALL)
 	 @JoinColumn(referencedColumnName = "student_id", name = "student_program")
@@ -86,6 +74,8 @@ public class Student  implements  Serializable{
 	public void setSubject(List<Subject> subject) {
 		this.subject = subject;
 	}
+
+
 
 	@ManyToMany(targetEntity = Subject.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 
@@ -101,6 +91,29 @@ public class Student  implements  Serializable{
 	 
 	 private String type = "student";
 	 
+	 
+	 
+	 public Student() {
+		 super();
+	 }
+	
+	public Student(Long student_id, String firstName, String middleName,
+			String lastName, List<Program> program,
+			List<Subject> subjects, String sem, String academicYear, Boolean active_deactive) {
+		super();
+	
+		this.student_id = student_id;
+		this.firstName = firstName;
+		this.middleName = middleName;
+		this.lastName = lastName;
+		this.program = program;
+		this.subjects = subjects;
+		this.sem = sem;
+		this.academicYear = academicYear;
+		this.active_deactive = active_deactive;
+	}
+
+	 
 	 @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	 @JoinColumn(name="department_fk", updatable = true, insertable = true)
 	 private Department department;
@@ -109,6 +122,8 @@ public class Student  implements  Serializable{
 	 @JoinColumn(name="course_fk", updatable = true, insertable = true)
 	 private Course course;
 
+	 
+	
 	public Course getCourse() {
 		return course;
 	}
@@ -224,10 +239,9 @@ public class Student  implements  Serializable{
 	public String getStudentNo() {
 		return studentNo;
 	}
-
-
-	public void setStudentNo(String studentNo) {
-		this.studentNo = studentNo;
+	
+	public void setStudent_no(Long student_id) {
+		this.studentNo  = "SN-" + Integer.toString(LocalDate.now().getYear()) + "-" +String.format("%04d",student_id);
 	}
 
 

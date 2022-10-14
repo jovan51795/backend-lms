@@ -51,6 +51,9 @@ public class StudentController {
 		
 		String hashedPassword = bcrypt.encode(student.getStudentNo());
 		student.setPassword(hashedPassword);
+		
+		studentRepo.save(student);
+		student.setStudent_no(student.getStudent_id());
 		studentRepo.save(student);
 		return ResponseEntity.ok().body(new ResponseModel(1, "student successfully added", null, student));
 	}

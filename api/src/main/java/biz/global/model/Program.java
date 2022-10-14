@@ -37,8 +37,8 @@ public class Program {
 		return program_code;
 	}
 	
-	public void setProgram_code(String program_code) {
-		this.program_code = program_code;
+	public void setProgram_code(String program_id) {
+		this.program_code = "PROGRAM-"  +  String.format("%03d",program_id);
 	}
 	
 	public String getProgram_title() {

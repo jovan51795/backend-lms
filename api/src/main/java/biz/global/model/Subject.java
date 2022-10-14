@@ -1,6 +1,6 @@
 package biz.global.model;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -36,7 +36,7 @@ public class Subject  {
 	 
 	private String prerequisites;
 	
-    private Boolean activeDeactive = true;
+    private Boolean active_deactive = true;
 
 	@ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="load_id", referencedColumnName = "load_id")
@@ -107,6 +107,10 @@ public class Subject  {
 	}
 	public void setSubjectTitle(String subjectTitle) {
 		this.subjectTitle = subjectTitle;
+	}
+
+	public void setSubject_code(Long subject_id) {
+		this.subjectCode = "SUBJ-"  +  String.format("%03d",subject_id);
 	}
 	public Integer getUnits() {
 		return units;

@@ -22,16 +22,7 @@ public class Grades {
 	 @Id
 	 @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long grade_id;
-	 
-	 @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_seq")
-	 @GenericGenerator(
-	            name = "grade_seq",
-	            strategy = "biz.global.util.Generator",
-	            parameters = {
-	                    @Parameter(name = Generator.INCREMENT_PARAM, value = "1"),
-	                    @Parameter(name = Generator.VALUE_PREFIX_PARAMETER, value = "SESSION_ID"),
-	                    @Parameter(name = Generator.NUMBER_FORMAT_PARAMETER, value = "%05d")
-	            })
+
 	 private String session_id;
 	 
 	 private String grade;

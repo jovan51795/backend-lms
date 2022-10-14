@@ -47,6 +47,8 @@ public class SubjectController {
     	if(subj.isPresent()) {
     		return ResponseEntity.ok().body(new ResponseModel(0, "Subject Code already exist", "", null));
     	}
+    	subjectRepo.save(subject);
+    	subject.setSubject_code(subject.getSubject_id());
     	Subject sub = subjectRepo.save(subject);
         return ResponseEntity.ok().body(new ResponseModel(1, "subject successfully added", "", sub));
     }
@@ -65,6 +67,20 @@ public class SubjectController {
     @PatchMapping("update/{id}")
     public ResponseEntity<ResponseModel> updateSubject(@PathVariable Long id,@RequestBody Subject subject) {
     	Optional<Subject> sub = subjectRepo.findById(id);
+    @PutMapping("/{subjectID}/prof/{professorId}")
+    Subject assignProfessorToSubject(
+            @PathVariable Long subjectID,
+            @PathVariable Long professorId
+    ) {
+        Subject subject = subjectRepo.findById(subjectID).get();
+        Professor prof = professorRepo.findById(professorId).get();
+        subject.setProfessor(prof);
+        return subjectRepo.save(subject);
+    }
+    
+    @DeleteMapping("delete")
+    public ResponseEntity<ResponseModel> deleteSubject(@RequestBody String subject_code) {
+    	Optional<Subject> sub = Optional.ofNullable(subjectRepo.findBySubjectCode(subject_code));
     	if(sub.isEmpty()) {
     		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(0, "subject does not exist", null, null));
     	}
