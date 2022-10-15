@@ -37,7 +37,7 @@ public class SubjectController {
 	
 	@GetMapping(value= "all")
     List<Subject> getSubjects() {
-        return subjectRepo.getAllSubject();
+        return subjectRepo.findAll();
     }
 
     @PostMapping(value="add")
@@ -92,4 +92,16 @@ public class SubjectController {
         subject.setProfessor(professor);
         return subjectRepo.save(subject);
     }
+    
+    @GetMapping(value = "getbyid/{id}")
+    private ResponseEntity<ResponseModel> getSubjectByID(@PathVariable Long id) {
+    	Optional<Subject> sub = subjectRepo.findById(id);
+    	if(sub.isEmpty()) {
+    		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(0, "subject does not exist", null, null));
+    	}
+    	
+    	return ResponseEntity.ok().body(new ResponseModel(1, "subject exist", null, sub.get()));
+    	
+    }
+    
 }

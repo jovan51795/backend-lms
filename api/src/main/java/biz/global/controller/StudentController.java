@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +43,6 @@ public class StudentController {
 	@Autowired
 	private JWTUtility jwtUtility;
 	
-	
 	BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 	
 	@PostMapping(value = "add")
@@ -51,6 +51,8 @@ public class StudentController {
 		if(!stu.isEmpty()) {
 			return ResponseEntity.ok().body(new ResponseModel(0, "student number already exist", null, null));
 		}
+		String hashedPassword = bcrypt.encode(student.getStudentNo());
+		student.setPassword(hashedPassword);
 		studentRepo.save(student);
 		student.setStudent_no(student.getStudent_id());
 		String hashedPassword = bcrypt.encode(student.getStudentNo());

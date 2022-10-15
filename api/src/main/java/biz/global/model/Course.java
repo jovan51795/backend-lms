@@ -2,9 +2,11 @@ package biz.global.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -27,11 +29,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+@Embeddable
 @Table(name = "course")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
 public class Course {
 	
 	@Id
@@ -44,8 +44,8 @@ public class Course {
 	private String courseCode;
 	
 
-	@OneToMany(cascade = CascadeType.MERGE,  fetch = FetchType.LAZY)
-	@JoinColumn(name = "course", referencedColumnName = "courseId")
+	@OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH, CascadeType.ALL},  fetch = FetchType.LAZY)
+	@JoinColumn(name = "course", referencedColumnName = "courseId", nullable = true)
 	private List<Student> student = new ArrayList<>();
 	
 	@OneToMany(targetEntity = Subject.class, cascade = CascadeType.ALL)
@@ -83,5 +83,26 @@ public class Course {
 	public void setCourseTitle(String courseTitle) {
 		this.courseTitle = courseTitle;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(courseCode, courseId, courseTitle, student, subject);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Course)) {
+			return false;
+		}
+		Course other = (Course) obj;
+		return Objects.equals(courseCode, other.courseCode) && Objects.equals(courseId, other.courseId)
+				&& Objects.equals(courseTitle, other.courseTitle) && Objects.equals(student, other.student)
+				&& Objects.equals(subject, other.subject);
+	}
+	
+	
 
 }
