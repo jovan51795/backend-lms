@@ -112,8 +112,6 @@ public class ProfessorController {
     @GetMapping(value="studentlist")
     public List<Object> studentList(@RequestParam String subjectCode,@RequestParam Long id){
     	return attendanceRepo.studentList(subjectCode, id);
-    	
-
     }
     
     

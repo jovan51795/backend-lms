@@ -26,6 +26,7 @@ import biz.global.dto.StudentDto;
 import biz.global.model.Admin;
 import biz.global.model.ResponseModel;
 import biz.global.model.Student;
+import biz.global.model.Subject;
 import biz.global.repo.StudentRepo;
 import biz.global.util.JWTUtility;
 
@@ -36,6 +37,8 @@ public class StudentController {
 	
 	@Autowired
 	StudentRepo studentRepo;
+	
+	
 	
 	@Autowired
 	private JWTUtility jwtUtility;
@@ -48,12 +51,14 @@ public class StudentController {
 		if(!stu.isEmpty()) {
 			return ResponseEntity.ok().body(new ResponseModel(0, "student number already exist", null, null));
 		}
-		
 		String hashedPassword = bcrypt.encode(student.getStudentNo());
 		student.setPassword(hashedPassword);
 		studentRepo.save(student);
 		student.setStudent_no(student.getStudent_id());
+		String hashedPassword = bcrypt.encode(student.getStudentNo());
+		student.setPassword(hashedPassword);
 		studentRepo.save(student);
+		
 		return ResponseEntity.ok().body(new ResponseModel(1, "student successfully added", null, student));
 	}
 	
@@ -95,6 +100,10 @@ public class StudentController {
 		stud.get().setSem(student.getSem());
 		stud.get().setStatus(student.getStatus());
 		stud.get().setSubject(student.getSubject());
+		stud.get().setAddress(student.getAddress());
+		stud.get().setMobileNumber(student.getMobileNumber());
+		stud.get().setEmergencyContactPerson(student.getEmergencyContactPerson());
+		stud.get().setEmergencyContactNumber(student.getEmergencyContactNumber());
 		studentRepo.save(stud.get());
 		return ResponseEntity.ok().body(new ResponseModel(1, "updated successfully", null, student));
 	}

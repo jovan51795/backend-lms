@@ -47,8 +47,7 @@ public class SubjectController {
     	if(subj.isPresent()) {
     		return ResponseEntity.ok().body(new ResponseModel(0, "Subject Code already exist", "", null));
     	}
-    	subjectRepo.save(subject);
-    	subject.setSubject_code(subject.getSubject_id());
+
     	Subject sub = subjectRepo.save(subject);
         return ResponseEntity.ok().body(new ResponseModel(1, "subject successfully added", "", sub));
     }
