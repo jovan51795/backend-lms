@@ -47,8 +47,9 @@ public class Subject  {
     @JoinColumn(name = "subject_grade")
     private Grades grades;
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name="course_fk")
+//    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE, CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH, CascadeType.ALL}, optional = true)
+    @ManyToOne
+    @JoinColumn(name="course_fk", nullable = true)
 	private Course course;
 
     

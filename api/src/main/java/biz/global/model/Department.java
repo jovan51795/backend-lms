@@ -2,6 +2,7 @@ package biz.global.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -27,8 +28,8 @@ public class Department {
 	
 	private String departmentName;
 	
-	@OneToMany(targetEntity = Course.class, cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-	@JoinColumn(name = "department", referencedColumnName = "departmentId")
+	@OneToMany(targetEntity = Course.class, cascade = CascadeType.ALL,fetch = FetchType.LAZY, orphanRemoval = true)
+	@JoinColumn(name = "department", referencedColumnName = "departmentId", nullable = true , updatable = true)
 	@ElementCollection
 	private List<Course> course = new ArrayList<>();
 	
@@ -67,6 +68,26 @@ public class Department {
 	public void setCourse(List<Course> course) {
 		this.course = course;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(course, departmentId, departmentName, student);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Department)) {
+			return false;
+		}
+		Department other = (Department) obj;
+		return Objects.equals(course, other.course) && Objects.equals(departmentId, other.departmentId)
+				&& Objects.equals(departmentName, other.departmentName) && Objects.equals(student, other.student);
+	}
+	
+	
 	
 
 }

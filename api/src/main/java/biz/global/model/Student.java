@@ -69,7 +69,7 @@ public class Student  implements  Serializable{
 
 
 
-	@ManyToMany(targetEntity = Subject.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(targetEntity = Subject.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinTable(name ="student_subject",
 	joinColumns = @JoinColumn(name = "student_id"),
 	inverseJoinColumns =  @JoinColumn(name = "subject_id")
@@ -105,12 +105,14 @@ public class Student  implements  Serializable{
 	}
 
 	 
-	 @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	 @JoinColumn(name="department_fk", updatable = true, insertable = true)
+//	 @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH, CascadeType.ALL})
+	@ManyToOne 
+	@JoinColumn(name="department_fk", updatable = true, insertable = true)
 	 private Department department;
 	 
-	 @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	 @JoinColumn(name="course_fk")
+//	 @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.PERSIST,CascadeType.DETACH, CascadeType.ALL, CascadeType.REFRESH} )
+	 @ManyToOne
+	 @JoinColumn(name="course_fk",  nullable = true, updatable = true)
 	 private Course course;
 	 
 	
