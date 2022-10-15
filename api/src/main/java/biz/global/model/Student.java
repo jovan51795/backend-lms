@@ -52,25 +52,21 @@ public class Student  implements  Serializable{
 
 	 private String academicYear;
 	 
+	 private String address;
+	 
+	 private String mobileNumber;
+	 
+	 private String emergencyContactPerson;
+	 
+	 private String emergencyContactNumber;
+	 
 	 private Boolean active_deactive = false;
 	
 	@OneToMany(targetEntity = Program.class, cascade = CascadeType.ALL)
 	 @JoinColumn(referencedColumnName = "student_id", name = "student_program")
 	 private List<Program> program;
-	 
-	 public List<Subject> getSubject() {
-		return subject;
-	}
-
-
-	public void setSubject(List<Subject> subject) {
-		this.subject = subject;
-	}
-
-
 
 	@ManyToMany(targetEntity = Subject.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-
 	@JoinTable(name ="student_subject",
 	joinColumns = @JoinColumn(name = "student_id", updatable = true, insertable = true),
 	inverseJoinColumns =  @JoinColumn(name = "subject_id", updatable = true, insertable = true)
@@ -114,6 +110,15 @@ public class Student  implements  Serializable{
 	 @JoinColumn(name="course_fk", updatable = true, insertable = true)
 	 private Course course;
 	 
+	 
+	 public List<Subject> getSubject() {
+		return subject;
+	}
+
+
+	public void setSubject(List<Subject> subject) {
+		this.subject = subject;
+	}
 	
 	public Course getCourse() {
 		return course;
@@ -279,6 +284,53 @@ public class Student  implements  Serializable{
 	
 	public void setActive_deactive(Boolean active_deactive) {
 		this.active_deactive = active_deactive;
+	}
+
+
+
+
+	public String getAddress() {
+		return address;
+	}
+
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+
+	public String getEmergencyContactPerson() {
+		return emergencyContactPerson;
+	}
+
+
+	public void setEmergencyContactPerson(String emergencyContactPerson) {
+		this.emergencyContactPerson = emergencyContactPerson;
+	}
+
+
+	public String getEmergencyContactNumber() {
+		return emergencyContactNumber;
+	}
+
+
+	public void setEmergencyContactNumber(String emergencyContactNumber) {
+		this.emergencyContactNumber = emergencyContactNumber;
+	}
+
+
+	public void setStudentNo(String studentNo) {
+		this.studentNo = studentNo;
 	}
 	
 }

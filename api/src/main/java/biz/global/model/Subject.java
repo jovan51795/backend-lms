@@ -60,7 +60,6 @@ public class Subject  {
     
 
     @ManyToMany(cascade =  CascadeType.ALL)
-
     private List<Student> student = new ArrayList<>();
     
     @OneToMany()
@@ -110,8 +109,12 @@ public class Subject  {
 		this.subjectTitle = subjectTitle;
 	}
 
-	public void setSubject_code(Long subject_id) {
-		this.subjectCode = "SUBJ-"  +  String.format("%03d",subject_id);
+
+	public List<Attendance> getAttendance() {
+		return attendance;
+	}
+	public void setAttendance(List<Attendance> attendance) {
+		this.attendance = attendance;
 	}
 	public Integer getUnits() {
 		return units;
