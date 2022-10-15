@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,7 +27,7 @@ public class Department {
 	
 	private String departmentName;
 	
-	@OneToMany(targetEntity = Course.class, cascade = CascadeType.ALL)
+	@OneToMany(targetEntity = Course.class, cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	@JoinColumn(name = "department", referencedColumnName = "departmentId")
 	@ElementCollection
 	private List<Course> course = new ArrayList<>();

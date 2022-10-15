@@ -44,7 +44,7 @@ public class Course {
 	private String courseCode;
 	
 
-	@OneToMany(cascade = CascadeType.MERGE,  fetch = FetchType.LAZY)
+	@OneToMany(cascade = CascadeType.ALL,  fetch = FetchType.LAZY)
 	@JoinColumn(name = "course", referencedColumnName = "courseId")
 	private List<Student> student = new ArrayList<>();
 	
