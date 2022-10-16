@@ -1,17 +1,14 @@
 package biz.global.model;
-import biz.global.util.Generator;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashSet;
+import java.util.Date;
 import java.util.List;
-import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,10 +19,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -61,34 +54,32 @@ public class Student  implements  Serializable{
 
 	 private String academicYear;
 	 
+	 private String address;
+	 
+	 private String mobileNumber;
+	 
+	 private String emergencyContactPerson;
+	 
+	 private String emergencyContactNumber;
+	 
 	 private Boolean active_deactive = false;
+	 
+	 private LocalDate data_modified = LocalDate.now();
 	
 	@OneToMany(targetEntity = Program.class, cascade = CascadeType.ALL)
 	 @JoinColumn(referencedColumnName = "student_id", name = "student_program")
 	 private List<Program> program;
-	 
-	 public List<Subject> getSubject() {
-		return subject;
-	}
-
-
-	public void setSubject(List<Subject> subject) {
-		this.subject = subject;
-	}
-
-
 
 	@ManyToMany(targetEntity = Subject.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-
 	@JoinTable(name ="student_subject",
-	joinColumns = @JoinColumn(name = "student_id", updatable = true, insertable = true),
-	inverseJoinColumns =  @JoinColumn(name = "subject_id", updatable = true, insertable = true)
+	joinColumns = @JoinColumn(name = "student_id"),
+	inverseJoinColumns =  @JoinColumn(name = "subject_id")
 			)
 	 private List<Subject> subject = new ArrayList<>();
 	 
-	 @OneToMany(targetEntity = Grades.class, cascade = CascadeType.ALL)
-	 @JoinColumn(name = "student_grades", referencedColumnName = "student_id" )
-	 private List<Grades> grades;
+//	 @OneToMany(targetEntity = Grades.class, cascade = CascadeType.ALL)
+//	 @JoinColumn(name = "student_grades", referencedColumnName = "student_id" )
+//	 private List<Grades> grades;
 	 
 	 private String type = "student";
 	 
@@ -115,15 +106,33 @@ public class Student  implements  Serializable{
 	}
 
 	 
-	 @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-	 @JoinColumn(name="department_fk", updatable = true, insertable = true)
+//	 @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH, CascadeType.ALL})
+	@ManyToOne 
+	@JoinColumn(name="department_fk", updatable = true, insertable = true)
 	 private Department department;
 	 
-	 @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-	 @JoinColumn(name="course_fk", updatable = true, insertable = true)
+//	 @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.PERSIST,CascadeType.DETACH, CascadeType.ALL, CascadeType.REFRESH} )
+	 @ManyToOne
+	 @JoinColumn(name="course_fk",  nullable = true, updatable = true)
 	 private Course course;
-
 	 
+	 
+	 public List<Subject> getSubject() {
+		return subject;
+	}
+
+
+	public LocalDate getData_modified() {
+		return data_modified;
+	}
+
+	public void setData_modified(LocalDate data_modified) {
+		this.data_modified = data_modified;
+	}
+
+	public void setSubject(List<Subject> subject) {
+		this.subject = subject;
+	}
 	
 	public Course getCourse() {
 		return course;
@@ -155,14 +164,14 @@ public class Student  implements  Serializable{
 	}
 
 
-	public List<Grades> getGrades() {
-		return grades;
-	}
-
-
-	public void setGrades(List<Grades> grades) {
-		this.grades = grades;
-	}
+//	public List<Grades> getGrades() {
+//		return grades;
+//	}
+//
+//
+//	public void setGrades(List<Grades> grades) {
+//		this.grades = grades;
+//	}
 
 
 	public String getPassword() {
@@ -232,12 +241,14 @@ public class Student  implements  Serializable{
 	}
 	
 	
+	
 	public String getStudentNo() {
 		return studentNo;
 	}
 	
-	public void setStudent_no(Long student_id) {
-		this.studentNo  = "SN-" + Integer.toString(LocalDate.now().getYear()) + "-" +String.format("%04d",student_id);
+	public void setStudentNo(Long id) {
+
+		this.studentNo  = "SN-" + Integer.toString(LocalDate.now().getYear()) + "-" +String.format("%04d",id);
 	}
 
 
@@ -288,6 +299,53 @@ public class Student  implements  Serializable{
 	
 	public void setActive_deactive(Boolean active_deactive) {
 		this.active_deactive = active_deactive;
+	}
+
+
+
+
+	public String getAddress() {
+		return address;
+	}
+
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+
+	public String getEmergencyContactPerson() {
+		return emergencyContactPerson;
+	}
+
+
+	public void setEmergencyContactPerson(String emergencyContactPerson) {
+		this.emergencyContactPerson = emergencyContactPerson;
+	}
+
+
+	public String getEmergencyContactNumber() {
+		return emergencyContactNumber;
+	}
+
+
+	public void setEmergencyContactNumber(String emergencyContactNumber) {
+		this.emergencyContactNumber = emergencyContactNumber;
+	}
+
+
+	public void setStudentNo(String studentNo) {
+		this.studentNo = studentNo;
 	}
 	
 }

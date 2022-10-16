@@ -42,9 +42,9 @@ public class Professor {
 	
 	private String password;
 	
-	private Boolean activeDeactive =true;
+	private Boolean activeDeactive = true;
 	
-	private String type = "faculty";
+	private String type= "faculty";
 	
 	public String getType() {
 		return type;

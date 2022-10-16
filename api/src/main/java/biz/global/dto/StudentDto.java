@@ -32,6 +32,14 @@ public class StudentDto{
 	 private String academicYear;
 	 
 	 private Boolean active_deactive=true;
+	 
+	 private String address;
+	 
+	 private String mobileNumber;
+	 
+	 private String emergencyContactPerson;
+	 
+	 private String emergencyContactNumber;
 	
 	
 	 private List<Program> program;
@@ -189,5 +197,46 @@ public class StudentDto{
 	public void setActive_deactive(Boolean active_deactive) {
 		this.active_deactive = active_deactive;
 	}
+
+
+	public String getAddress() {
+		return address;
+	}
+
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+
+	public String getEmergencyContactPerson() {
+		return emergencyContactPerson;
+	}
+
+
+	public void setEmergencyContactPerson(String emergencyContactPerson) {
+		this.emergencyContactPerson = emergencyContactPerson;
+	}
+
+
+	public String getEmergencyContactNumber() {
+		return emergencyContactNumber;
+	}
+
+
+	public void setEmergencyContactNumber(String emergencyContactNumber) {
+		this.emergencyContactNumber = emergencyContactNumber;
+	}
+	
 	
 }

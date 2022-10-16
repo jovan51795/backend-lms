@@ -1,11 +1,7 @@
 package biz.global.model;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,13 +9,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 public class Subject  {
@@ -32,12 +26,17 @@ public class Subject  {
 	private String subjectCode;
 	 
 	private String subjectTitle;
-	 
+
 	private Integer units;
 	 
 	private String prerequisites;
 	
     private Boolean activeDeactive = true;
+    
+    
+    @OneToMany(targetEntity = Grades.class, cascade = CascadeType.ALL)
+	 @JoinColumn(name = "student_grades", referencedColumnName = "subject_id" )
+	 private List<Grades> grades;
 
 	@ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="load_id", referencedColumnName = "load_id")
@@ -49,18 +48,18 @@ public class Subject  {
 	private Professor professor;
     
     
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "subject_grade")
-    private Grades grades;
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "subject_grade")
+//    private Grades grades;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="course_fk")
+//    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE, CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH, CascadeType.ALL}, optional = true)
+    @ManyToOne
+    @JoinColumn(name="course_fk", nullable = true)
 	private Course course;
 
     
 
     @ManyToMany(cascade =  CascadeType.ALL)
-
     private List<Student> student = new ArrayList<>();
     
     @OneToMany()
@@ -86,14 +85,20 @@ public class Subject  {
 	public void setCourse(Course course) {
 		this.course = course;
 	}
-	public Grades getGrades() {
-		return grades;
-	}
-	public void setGrades(Grades grades) {
-		this.grades = grades;
-	}
+//	public Grades getGrades() {
+//		return grades;
+//	}
+//	public void setGrades(Grades grades) {
+//		this.grades = grades;
+//	}
 	public Subject() {
 		super();
+	}
+	public List<Grades> getGrades() {
+		return grades;
+	}
+	public void setGrades(List<Grades> grades) {
+		this.grades = grades;
 	}
 	public Long getSubject_id() {
 		return subject_id;
@@ -110,8 +115,12 @@ public class Subject  {
 		this.subjectTitle = subjectTitle;
 	}
 
-	public void setSubject_code(Long subject_id) {
-		this.subjectCode = "SUBJ-"  +  String.format("%03d",subject_id);
+
+	public List<Attendance> getAttendance() {
+		return attendance;
+	}
+	public void setAttendance(List<Attendance> attendance) {
+		this.attendance = attendance;
 	}
 	public Integer getUnits() {
 		return units;

@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import biz.global.model.Professor;
 import biz.global.model.ResponseModel;
 import biz.global.model.Subject;
+import biz.global.model.SubjectDetailHistory;
 import biz.global.repo.ProfessorRepo;
+import biz.global.repo.SubjectDetailHistoryRepo;
 import biz.global.repo.SubjectRepo;
 
 
@@ -35,9 +37,12 @@ public class SubjectController {
 	@Autowired
 	private ProfessorRepo professorRepo;
 	
+	@Autowired
+	private SubjectDetailHistoryRepo subjectDetailHistoryRepo;
+	
 	@GetMapping(value= "all")
     List<Subject> getSubjects() {
-        return subjectRepo.getAllSubject();
+        return subjectRepo.findAll();
     }
 
     @PostMapping(value="add")
@@ -47,8 +52,7 @@ public class SubjectController {
     	if(subj.isPresent()) {
     		return ResponseEntity.ok().body(new ResponseModel(0, "Subject Code already exist", "", null));
     	}
-    	subjectRepo.save(subject);
-    	subject.setSubject_code(subject.getSubject_id());
+
     	Subject sub = subjectRepo.save(subject);
         return ResponseEntity.ok().body(new ResponseModel(1, "subject successfully added", "", sub));
     }
@@ -64,8 +68,7 @@ public class SubjectController {
     	return ResponseEntity.ok().body(new ResponseModel(1, "updated successfully", null, subject));
     }
     
-    @PutMapping("/{subjectID}/prof/{professorId}")Subject assignProfessorToSubject(@PathVariable Long subjectID, @PathVariable Long professorId
-    ) {
+    @PutMapping("/{subjectID}/prof/{professorId}")Subject assignProfessorToSubject(@PathVariable Long subjectID, @PathVariable Long professorId) {
         Subject subject = subjectRepo.findById(subjectID).get();
         Professor prof = professorRepo.findById(professorId).get();
         subject.setProfessor(prof);
@@ -83,14 +86,31 @@ public class SubjectController {
     	return ResponseEntity.ok().body(new ResponseModel(1, "subject deleted successfully", null, null));
     }
 
-    @PutMapping("/{subjectId}/professor/{professorId}")
-    Subject addProfessorToSubject(
+    @PutMapping("/{subjectId}/professor/{professorId}")ResponseEntity<ResponseModel> addProfessorToSubject(
             @PathVariable Long subjectId,
             @PathVariable Long professorId
     ) {
         Subject subject = subjectRepo.findById(subjectId).get();
         Professor professor = professorRepo.findById(professorId).get();
-        subject.setProfessor(professor);
-        return subjectRepo.save(subject);
+        SubjectDetailHistory history = new SubjectDetailHistory("2022-2023", "1st", "9am","1", "Freshmen",
+    			"Not Completed", true, subject, professor);
+        
+        subjectDetailHistoryRepo.save(history);
+        
+        subject.setProfessor(professor);	
+        subjectRepo.save(subject);
+        return ResponseEntity.ok().body(new ResponseModel(1, "Added successfully", null, null));
     }
+    
+    @GetMapping(value = "getbyid/{id}")
+    private ResponseEntity<ResponseModel> getSubjectByID(@PathVariable Long id) {
+    	Optional<Subject> sub = subjectRepo.findById(id);
+    	if(sub.isEmpty()) {
+    		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(0, "subject does not exist", null, null));
+    	}
+    	
+    	return ResponseEntity.ok().body(new ResponseModel(1, "subject exist", null, sub.get()));
+    	
+    }
+    
 }

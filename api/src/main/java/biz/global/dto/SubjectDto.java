@@ -26,29 +26,14 @@ public class SubjectDto  {
     
     private GradesDto grades;
     
-	private CourseDto course;
-    
-    private List<StudentDto> student = new ArrayList<>();
 
-
-	public List<StudentDto> getStudent() {
-		return student;
-	}
-	public void setStudent(List<StudentDto> student) {
-		this.student = student;
-	}
 	public String getSubjectCode() {
 		return subjectCode;
 	}
 	public void setSubjectCode(String subjectCode) {
 		this.subjectCode = subjectCode;
 	}
-	public CourseDto getCourse() {
-		return course;
-	}
-	public void setCourse(CourseDto course) {
-		this.course = course;
-	}
+
 	public GradesDto getGrades() {
 		return grades;
 	}
