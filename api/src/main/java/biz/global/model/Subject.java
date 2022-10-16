@@ -26,12 +26,17 @@ public class Subject  {
 	private String subjectCode;
 	 
 	private String subjectTitle;
-	 
+
 	private Integer units;
 	 
 	private String prerequisites;
 	
     private Boolean activeDeactive = true;
+    
+    
+    @OneToMany(targetEntity = Grades.class, cascade = CascadeType.ALL)
+	 @JoinColumn(name = "student_grades", referencedColumnName = "subject_id" )
+	 private List<Grades> grades;
 
 	@ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="load_id", referencedColumnName = "load_id")
@@ -43,9 +48,9 @@ public class Subject  {
 	private Professor professor;
     
     
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "subject_grade")
-    private Grades grades;
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "subject_grade")
+//    private Grades grades;
     
 //    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE, CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH, CascadeType.ALL}, optional = true)
     @ManyToOne
@@ -80,14 +85,20 @@ public class Subject  {
 	public void setCourse(Course course) {
 		this.course = course;
 	}
-	public Grades getGrades() {
-		return grades;
-	}
-	public void setGrades(Grades grades) {
-		this.grades = grades;
-	}
+//	public Grades getGrades() {
+//		return grades;
+//	}
+//	public void setGrades(Grades grades) {
+//		this.grades = grades;
+//	}
 	public Subject() {
 		super();
+	}
+	public List<Grades> getGrades() {
+		return grades;
+	}
+	public void setGrades(List<Grades> grades) {
+		this.grades = grades;
 	}
 	public Long getSubject_id() {
 		return subject_id;
