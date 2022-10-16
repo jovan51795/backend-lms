@@ -4,7 +4,9 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -61,6 +63,8 @@ public class Student  implements  Serializable{
 	 private String emergencyContactNumber;
 	 
 	 private Boolean active_deactive = false;
+	 
+	 private LocalDate data_modified = LocalDate.now();
 	
 	@OneToMany(targetEntity = Program.class, cascade = CascadeType.ALL)
 	 @JoinColumn(referencedColumnName = "student_id", name = "student_program")
@@ -73,9 +77,9 @@ public class Student  implements  Serializable{
 			)
 	 private List<Subject> subject = new ArrayList<>();
 	 
-	 @OneToMany(targetEntity = Grades.class, cascade = CascadeType.ALL)
-	 @JoinColumn(name = "student_grades", referencedColumnName = "student_id" )
-	 private List<Grades> grades;
+//	 @OneToMany(targetEntity = Grades.class, cascade = CascadeType.ALL)
+//	 @JoinColumn(name = "student_grades", referencedColumnName = "student_id" )
+//	 private List<Grades> grades;
 	 
 	 private String type = "student";
 	 
@@ -118,6 +122,14 @@ public class Student  implements  Serializable{
 	}
 
 
+	public LocalDate getData_modified() {
+		return data_modified;
+	}
+
+	public void setData_modified(LocalDate data_modified) {
+		this.data_modified = data_modified;
+	}
+
 	public void setSubject(List<Subject> subject) {
 		this.subject = subject;
 	}
@@ -152,14 +164,14 @@ public class Student  implements  Serializable{
 	}
 
 
-	public List<Grades> getGrades() {
-		return grades;
-	}
-
-
-	public void setGrades(List<Grades> grades) {
-		this.grades = grades;
-	}
+//	public List<Grades> getGrades() {
+//		return grades;
+//	}
+//
+//
+//	public void setGrades(List<Grades> grades) {
+//		this.grades = grades;
+//	}
 
 
 	public String getPassword() {
@@ -234,8 +246,9 @@ public class Student  implements  Serializable{
 		return studentNo;
 	}
 	
-	public void setStudent_no(Long student_id) {
-		this.studentNo  = "SN-" + Integer.toString(LocalDate.now().getYear()) + "-" +String.format("%04d",student_id);
+	public void setStudentNo(Long id) {
+
+		this.studentNo  = "SN-" + Integer.toString(LocalDate.now().getYear()) + "-" +String.format("%04d",id);
 	}
 
 
