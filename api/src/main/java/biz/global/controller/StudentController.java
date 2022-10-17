@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import biz.global.dto.StudentDto;
 import biz.global.model.Admin;
@@ -29,7 +27,6 @@ import biz.global.model.AdminResponse;
 import biz.global.model.Professor;
 import biz.global.model.ResponseModel;
 import biz.global.model.Student;
-import biz.global.model.Subject;
 import biz.global.repo.StudentRepo;
 import biz.global.service.AuthService;
 import biz.global.util.JWTUtility;
