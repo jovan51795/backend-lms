@@ -42,6 +42,7 @@ import biz.global.repo.GradesRepo;
 import biz.global.repo.ProfessorRepo;
 import biz.global.repo.StudentRepo;
 import biz.global.repo.SubjectRepo;
+import biz.global.util.JWTUtility;
 
 @RestController
 @RequestMapping("api/professor/")
@@ -62,13 +63,18 @@ public class ProfessorController {
 	@Autowired
 	private GradesRepo gradesRepo;
 	
+	@Autowired
+	private JWTUtility jwtUtility;
+	
+	BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+	
 	
 	@GetMapping(value= "all")
     List<Professor> getprofessors() {
         return professorRepo.findAll();
     }
 	
-	BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+	
 	
 	
 	 public ResponseEntity<ResponseModel> checker(List<Object> get){
@@ -92,21 +98,22 @@ public class ProfessorController {
         return ResponseEntity.ok().body(new ResponseModel(1, "professor added successfully", null, professor));
     }
     
+   
+    
     @PostMapping(value = "login")
-    public ResponseEntity<ResponseModel> login(@RequestBody Admin admin) {
+    public ResponseEntity<ResponseModel> loginsa(@RequestBody Admin admin) {	
+    	Optional<Professor> professor = Optional.ofNullable(professorRepo.findByProfessorNo(admin.getUsername()));
+    	Professor prof = professorRepo.findByProfessorNo(admin.getUsername());
     	try {
-    		Optional<Professor> prof = Optional.ofNullable(professorRepo.findByProfessorNo(admin.getUsername()));
-        	if(prof.isPresent() && prof.get().getProfessorNo().equals(admin.getUsername()) && bcrypt.matches(admin.getPassword(), prof.get().getPassword()) && prof.get().getActiveDeactive()) {
-        		prof.get().setPassword("");
-        		return ResponseEntity.ok().body(new ResponseModel(1, "login successful", "", prof.get()));
-        	}else if(!prof.get().getActiveDeactive()) {
-        		return ResponseEntity.ok().body(new ResponseModel(0, "your account has been deactivated", "", null));
+    		if(professor.isPresent() && prof.getProfessorNo().equals(admin.getUsername()) && bcrypt.matches(admin.getPassword(), prof.getPassword()) && prof.getActiveDeactive()) {
+        		return ResponseEntity.ok().body(new ResponseModel(1, "Login successful", jwtUtility.generateToken(prof.getProfessorNo()),professor.get().getProfessorNo()));
+        	}else if(!prof.getActiveDeactive()) {
+        		return ResponseEntity.ok().body(new ResponseModel(0, "Your account has been deactivated", "", null));
         	}
-        	return ResponseEntity.ok().body(new ResponseModel(0, "username or password is incorrect", "", null));
+    		return ResponseEntity.ok().body(new ResponseModel(0, "Username and password is incorrect", "", null));
     	}catch (NoSuchElementException e) {
-    		return ResponseEntity.ok().body(new ResponseModel(0, "username or password is incorrect", "", null));
-		}
-    	
+    		return ResponseEntity.ok().body(new ResponseModel(0, "No data found", "", null));
+		}	
     }
     
  
