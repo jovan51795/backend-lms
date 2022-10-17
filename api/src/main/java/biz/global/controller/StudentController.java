@@ -88,7 +88,7 @@ public class StudentController {
 //		}	
 //    }
 	
-	@PostMapping(value = "login") 
+	@PostMapping(value = "student-login") 
 	public ResponseEntity<ResponseModel> login(@RequestBody Admin model) throws IOException{
 		return authService.loginStudent(model);
 	}
