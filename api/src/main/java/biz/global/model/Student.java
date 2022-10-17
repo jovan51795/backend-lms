@@ -22,6 +22,8 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import biz.global.Table.tables.pojos.Schedule;
+
 
 
 @Entity
@@ -66,7 +68,7 @@ public class Student  implements  Serializable{
 	 
 	 private LocalDate data_modified = LocalDate.now();
 	
-	@OneToMany(targetEntity = Program.class, cascade = CascadeType.ALL)
+	 @OneToMany(targetEntity = Program.class, cascade = CascadeType.ALL)
 	 @JoinColumn(referencedColumnName = "student_id", name = "student_program")
 	 private List<Program> program;
 
@@ -79,6 +81,9 @@ public class Student  implements  Serializable{
 
 	 
 	 private String type = "student";
+	 
+//	 @OneToMany (targetEntity = Schedule.class, cascade = CascadeType.ALL)
+//	 @JoinColumn(name = "student_schedule", re)
 	 
 	 
 	 
