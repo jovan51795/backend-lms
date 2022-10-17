@@ -25,11 +25,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import biz.global.dto.StudentDto;
 import biz.global.model.Admin;
+import biz.global.model.AdminResponse;
 import biz.global.model.Professor;
 import biz.global.model.ResponseModel;
 import biz.global.model.Student;
 import biz.global.model.Subject;
 import biz.global.repo.StudentRepo;
+import biz.global.service.AuthService;
 import biz.global.util.JWTUtility;
 
 @RestController
@@ -39,6 +41,9 @@ public class StudentController {
 	
 	@Autowired
 	StudentRepo studentRepo;
+	
+	@Autowired
+	private AuthService authService;
 	
 	
 	
@@ -66,21 +71,27 @@ public class StudentController {
 		return studentRepo.findAll();
 	}
 	
-    @PostMapping(value = "login")
-    public ResponseEntity<ResponseModel> login(@RequestBody Admin admin) {	
-    	Optional<Student> students = Optional.ofNullable(studentRepo.findByStudentNo(admin.getUsername()));
-    	Student student = studentRepo.findByStudentNo(admin.getUsername());
-    	try {
-    		if(students.isPresent() && student.getStudentNo().equals(admin.getUsername()) && bcrypt.matches(admin.getPassword(), student.getPassword()) && student.getActive_deactive()) {
-        		return ResponseEntity.ok().body(new ResponseModel(1, "Login successful",jwtUtility.generateToken(student.getStudentNo()) ,students.get().getStudentNo()));
-        	}else if(!student.getActive_deactive()) {
-        		return ResponseEntity.ok().body(new ResponseModel(0, "Your account has been deactivated", "", null));
-        	}
-    		return ResponseEntity.ok().body(new ResponseModel(0, "Username and password is incorrect", "", null));
-    	}catch (NoSuchElementException e) {
-    		return ResponseEntity.ok().body(new ResponseModel(0, "No data found", "", null));
-		}	
-    }
+//    @PostMapping(value = "login")
+//    public ResponseEntity<ResponseModel> login(@RequestBody Admin admin) {	
+//    	Optional<Student> students = Optional.ofNullable(studentRepo.findByStudentNo(admin.getUsername()));
+//    	Student student = studentRepo.findByStudentNo(admin.getUsername());
+//    	try {
+//    		if(students.isPresent() && student.getStudentNo().equals(admin.getUsername()) && bcrypt.matches(admin.getPassword(), student.getPassword()) && student.getActive_deactive()) {
+//    			ResponseModel responseModel = new ResponseModel(1, "Login successful",jwtUtility.generateToken(student.getStudentNo()) ,students.get().);
+//        		return ResponseEntity.ok().body(responseModel);
+//        	}else if(!student.getActive_deactive()) {
+//        		return ResponseEntity.ok().body(new ResponseModel(0, "Your account has been deactivated", "", null));
+//        	}
+//    		return ResponseEntity.ok().body(new ResponseModel(0, "Username and password is incorrect", "", null));
+//    	}catch (NoSuchElementException e) {
+//    		return ResponseEntity.ok().body(new ResponseModel(0, "No data found", "", null));
+//		}	
+//    }
+	
+	@PostMapping(value = "login") 
+	public ResponseEntity<ResponseModel> login(@RequestBody Admin model) throws IOException{
+		return authService.loginStudent(model);
+	}
     
 	
 	

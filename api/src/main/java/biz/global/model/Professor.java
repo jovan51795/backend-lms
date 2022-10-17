@@ -76,6 +76,34 @@ public class Professor {
 	  private List<Subject> subjects;
 	 
 	
+	public Professor() {
+		super();
+	}
+
+	public Professor(
+			Long professor_id, 
+			String professorNo, 
+			String professorName, 
+			String work, 
+			String gender,
+			String status, 
+			String birthdate, 
+			String password, 
+			Boolean activeDeactive, 
+			String type) {
+		super();
+		this.professor_id = professor_id;
+		this.professorNo = professorNo;
+		this.professorName = professorName;
+		this.work = work;
+		this.gender = gender;
+		this.status = status;
+		this.birthdate = birthdate;
+		this.password = password;
+		this.activeDeactive = activeDeactive;
+		this.type = type;
+	}
+
 	public Long getProfessor_id() {
 		return professor_id;
 	}
