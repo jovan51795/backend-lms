@@ -138,7 +138,8 @@ public class AuthService {
 			professorModel =	new Professor(
 					result.getProfessorId(),
 					result.getProfessorNo(),
-					result.getProfessorName(),
+					result.getFirstName(),
+					result.getLastName(),
 					result.getWork(),
 					result.getGender(),
 					result.getStatus(),
