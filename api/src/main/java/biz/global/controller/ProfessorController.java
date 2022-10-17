@@ -102,23 +102,7 @@ public class ProfessorController {
         return ResponseEntity.ok().body(new ResponseModel(1, "professor added successfully", null, professor));
     }
     
-   
-    
-//    @PostMapping(value = "login")
-//    public ResponseEntity<ResponseModel> loginsa(@RequestBody Admin admin) {	
-//    	Optional<Professor> professor = Optional.ofNullable(professorRepo.findByProfessorNo(admin.getUsername()));
-//    	Professor prof = professorRepo.findByProfessorNo(admin.getUsername());
-//    	try {
-//    		if(professor.isPresent() && prof.getProfessorNo().equals(admin.getUsername()) && bcrypt.matches(admin.getPassword(), prof.getPassword()) && prof.getActiveDeactive()) {
-//        		return ResponseEntity.ok().body(new ResponseModel(1, "Login successful", jwtUtility.generateToken(prof.getProfessorNo()),professor.get().getProfessorNo()));
-//        	}else if(!prof.getActiveDeactive()) {
-//        		return ResponseEntity.ok().body(new ResponseModel(0, "Your account has been deactivated", "", null));
-//        	}
-//    		return ResponseEntity.ok().body(new ResponseModel(0, "Username and password is incorrect", "", null));
-//    	}catch (NoSuchElementException e) {
-//    		return ResponseEntity.ok().body(new ResponseModel(0, "No data found", "", null));
-//		}	
-//    }
+  
     																						
     @PostMapping(value = "login") 
 	public ResponseEntity<ResponseModel> login(@RequestBody Admin model) throws IOException{
@@ -126,7 +110,7 @@ public class ProfessorController {
 	}
  
     @GetMapping("{id}")
-    public ResponseEntity<Professor> getEmployeeById(@PathVariable Long id){
+    public ResponseEntity<Professor> getProfessorById(@PathVariable Long id){
     	Professor professor = professorRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not exist with id:" + id));
         return ResponseEntity.ok(professor);
@@ -169,8 +153,8 @@ public class ProfessorController {
     }
     
     @GetMapping(value="studentlist")
-    public ResponseEntity<ResponseModel> studentList(@RequestParam Long subID,@RequestParam Long id){ 	
-    	List<Object> get = attendanceRepo.studentListbySubject(subID, id);
+    public ResponseEntity<ResponseModel> studentList(@RequestParam Long subID,@RequestParam Long profID){ 	
+    	List<Object> get = attendanceRepo.studentListbySubject(subID, profID);
     	return checker(get);	
     }
     
@@ -187,7 +171,6 @@ public class ProfessorController {
     	Subject subject = subjectRepo.findById(subjectID).get();
     	Student student = studentRepo.findById(subjectID).get();
     	Professor prof = professorRepo.findById(profID).get();
-    	
     	model.setSubject(subject);
     	model.setStudent(student);
     	model.setProf(prof);

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.jooq.DSLContext;
+import org.jooq.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import biz.global.Table.Tables;
 import biz.global.Table.tables.records.AdminRecord;
 import biz.global.Table.tables.records.ProfessorRecord;
 import biz.global.Table.tables.records.StudentRecord;
+import biz.global.Table.tables.records.StudentSubjectRecord;
 import biz.global.model.Admin;
 import biz.global.model.AdminResponse;
 import biz.global.model.Course;
@@ -84,6 +86,7 @@ public class AuthService {
 	
 	public  Boolean findByStudentno(String username) throws IOException{
 		StudentRecord result = context.fetchOne(Tables.STUDENT, Tables.STUDENT.LAST_NAME.eq(username));
+//		Result<StudentSubjectRecord> resultstusub = context.fetch(Tables.STUDENT_SUBJECT, Tables.STUDENT_SUBJECT.STUDENT_ID.eq(result.getStudentId()));
 		Optional<StudentRecord> data = Optional.ofNullable(result);
 		if(data.isPresent()) {
 			
@@ -104,7 +107,8 @@ public class AuthService {
 					result.getEmergencyContactNumber(), 
 					result.getActiveDeactive(),
 					result.getDataModified(), 
-					result.getType());
+					result.getType()
+					);
 			return data.isPresent();
 		}else if(data.isEmpty()) {
 			data.isEmpty();
