@@ -83,7 +83,7 @@ public class AuthService {
 	
 	
 	public  Boolean findByStudentno(String username) throws IOException{
-		StudentRecord result = context.fetchOne(Tables.STUDENT, Tables.STUDENT.STUDENT_NO.eq(username));
+		StudentRecord result = context.fetchOne(Tables.STUDENT, Tables.STUDENT.LAST_NAME.eq(username));
 		Optional<StudentRecord> data = Optional.ofNullable(result);
 		if(data.isPresent()) {
 			
@@ -169,5 +169,5 @@ public class AuthService {
     	}
 		return ResponseEntity.ok().body(new ResponseModel(0, "Username and Password is invalid", "", null));
 	}
-
+	
 }
