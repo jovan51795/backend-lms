@@ -42,6 +42,7 @@ import biz.global.repo.GradesRepo;
 import biz.global.repo.ProfessorRepo;
 import biz.global.repo.StudentRepo;
 import biz.global.repo.SubjectRepo;
+import biz.global.service.AuthService;
 import biz.global.util.JWTUtility;
 
 @RestController
@@ -62,6 +63,9 @@ public class ProfessorController {
 	
 	@Autowired
 	private GradesRepo gradesRepo;
+	
+	@Autowired
+	private AuthService authService;
 	
 	@Autowired
 	private JWTUtility jwtUtility;
@@ -100,22 +104,26 @@ public class ProfessorController {
     
    
     
-    @PostMapping(value = "login")
-    public ResponseEntity<ResponseModel> loginsa(@RequestBody Admin admin) {	
-    	Optional<Professor> professor = Optional.ofNullable(professorRepo.findByProfessorNo(admin.getUsername()));
-    	Professor prof = professorRepo.findByProfessorNo(admin.getUsername());
-    	try {
-    		if(professor.isPresent() && prof.getProfessorNo().equals(admin.getUsername()) && bcrypt.matches(admin.getPassword(), prof.getPassword()) && prof.getActiveDeactive()) {
-        		return ResponseEntity.ok().body(new ResponseModel(1, "Login successful", jwtUtility.generateToken(prof.getProfessorNo()),professor.get().getProfessorNo()));
-        	}else if(!prof.getActiveDeactive()) {
-        		return ResponseEntity.ok().body(new ResponseModel(0, "Your account has been deactivated", "", null));
-        	}
-    		return ResponseEntity.ok().body(new ResponseModel(0, "Username and password is incorrect", "", null));
-    	}catch (NoSuchElementException e) {
-    		return ResponseEntity.ok().body(new ResponseModel(0, "No data found", "", null));
-		}	
-    }
-    
+//    @PostMapping(value = "login")
+//    public ResponseEntity<ResponseModel> loginsa(@RequestBody Admin admin) {	
+//    	Optional<Professor> professor = Optional.ofNullable(professorRepo.findByProfessorNo(admin.getUsername()));
+//    	Professor prof = professorRepo.findByProfessorNo(admin.getUsername());
+//    	try {
+//    		if(professor.isPresent() && prof.getProfessorNo().equals(admin.getUsername()) && bcrypt.matches(admin.getPassword(), prof.getPassword()) && prof.getActiveDeactive()) {
+//        		return ResponseEntity.ok().body(new ResponseModel(1, "Login successful", jwtUtility.generateToken(prof.getProfessorNo()),professor.get().getProfessorNo()));
+//        	}else if(!prof.getActiveDeactive()) {
+//        		return ResponseEntity.ok().body(new ResponseModel(0, "Your account has been deactivated", "", null));
+//        	}
+//    		return ResponseEntity.ok().body(new ResponseModel(0, "Username and password is incorrect", "", null));
+//    	}catch (NoSuchElementException e) {
+//    		return ResponseEntity.ok().body(new ResponseModel(0, "No data found", "", null));
+//		}	
+//    }
+    																						
+    @PostMapping(value = "login") 
+	public ResponseEntity<ResponseModel> login(@RequestBody Admin model) throws IOException{
+		return authService.loginProfessor(model);
+	}
  
     @GetMapping("{id}")
     public ResponseEntity<Professor> getEmployeeById(@PathVariable Long id){
