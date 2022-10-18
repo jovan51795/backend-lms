@@ -30,7 +30,9 @@ public class Professor {
 	
 	private String professorNo;
 
-	private String professorName;
+	private String firstName;
+	
+	private String lastName;
 	
 	private String work;
 	
@@ -76,6 +78,36 @@ public class Professor {
 	  private List<Subject> subjects;
 	 
 	
+	public Professor() {
+		super();
+	}
+
+	public Professor(
+			Long professor_id, 
+			String professorNo, 
+			String firstName,  
+			String lastName,
+			String work, 
+			String gender,
+			String status, 
+			String birthdate, 
+			String password, 
+			Boolean activeDeactive, 
+			String type) {
+		super();
+		this.professor_id = professor_id;
+		this.professorNo = professorNo;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.work = work;
+		this.gender = gender;
+		this.status = status;
+		this.birthdate = birthdate;
+		this.password = password;
+		this.activeDeactive = activeDeactive;
+		this.type = type;
+	}
+
 	public Long getProfessor_id() {
 		return professor_id;
 	}
@@ -107,13 +139,23 @@ public class Professor {
 	}
 
 
-	public String getProfessorName() {
-		return professorName;
+
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setProfessorName(String professorName) {
-		this.professorName = professorName;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
 
 	public String getWork() {
 		return work;

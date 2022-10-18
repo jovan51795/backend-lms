@@ -14,12 +14,24 @@ import biz.global.model.Subject;
 
 public interface AttendanceRepo extends JpaRepository<Attendance, Long> {
 	
-	@Query(nativeQuery = true,  value="SELECT DISTINCT stu.student_id, stu.first_name, stu.middle_name, stu.last_name, subject.subject_id, subject.subject_title, subject.subject_code FROM student as stu, student_subject as stusub JOIN (SELECT * FROM subject WHERE subject.subject_code LIKE :subjectCode%) as subject ON stusub.subject_id = stusub.student_id")
-	List<Object> getAllStudentsEnrolledSubject(@Param("subjectCode") String subjectCode);
+
 	
-	@Query(nativeQuery = true,  value="SELECT DISTINCT stu.student_id, stu.first_name, stu.middle_name, stu.last_name, subject.subject_id, subject.subject_title, subject.subject_code, subject.professor_name \r\n"
-			+ "FROM student as stu, student_subject as stusub JOIN \r\n"
-			+ "(SELECT sub.subject_id, sub.subject_title, sub.subject_code, prof.professor_name  FROM subject AS sub JOIN (SELECT prof.professor_name, prof.professor_id  FROM professor AS prof where prof.professor_id= :profID) AS prof "
-			+ "ON  sub.professor_id = prof.professor_id  WHERE sub.subject_code LIKE :subjectCode%) as subject ON stusub.subject_id = stusub.student_id")
-	List<Object> studentList(@Param("subjectCode") String subjectCode, @Param("profID") Long profID);
+	@Query(nativeQuery = true,  value="SELECT DISTINCT stu.student_id, stu.first_name, stu.middle_name, stu.last_name, subject.subject_id, subject.subject_title, subject.subject_code FROM student as stu, student_subject as stusub JOIN \r\n"
+			+ "(SELECT  sub.subject_title, sub.subject_code,sub.subject_id,  sub.professor_id, prof.professor_name\r\n"
+			+ "FROM  subject AS sub JOIN (SELECT professor_name, professor_id \r\n"
+			+ "FROM professor WHERE professor_id = :profID) as prof ON sub.professor_id = prof.professor_id WHERE sub.subject_id = :subjectID) as subject \r\n"
+			+ "ON stusub.subject_id = subject.subject_id WHERE stusub.student_id = stu.student_id")
+	List<Object> studentListbySubject(@Param("subjectID") Long subjectID, @Param("profID") Long profID);
+	
+	@Query(nativeQuery = true,  value="SELECT DISTINCT stu.student_id, stu.first_name, stu.middle_name, stu.last_name, subject.subject_id, subject.subject_title, subject.subject_code FROM student as stu, student_subject as stusub JOIN \r\n"
+			+ "(SELECT  sub.subject_title, sub.subject_code,sub.subject_id,  sub.professor_id, prof.professor_name\r\n"
+			+ "FROM  subject AS sub JOIN (SELECT professor_name, professor_id \r\n"
+			+ "FROM professor WHERE professor_id = :profID) as prof ON sub.professor_id = prof.professor_id WHERE sub.subject_id = :subjectID) as subject \r\n"
+			+ "ON stusub.subject_id = subject.subject_id WHERE stu.student_id = :studentID")
+	List<Object> getstudentInSubjectByStudentID(@Param("subjectID") Long subjectID, @Param("profID") Long profID, @Param("studentID") Long studentID);
+	
+	@Query(nativeQuery = true,  value="SELECT DISTINCT sub.subject_title, sub.subject_code,sub.subject_id,  sub.professor_id, prof.professor_name\r\n"
+			+ "FROM  subject AS sub JOIN (SELECT professor_name, professor_id \r\n"
+			+ "FROM professor where professor_id = 1) as prof ON sub.professor_id = prof.professor_id\r\n")
+	List<Object> getSubjectByProfessor(@Param("profID") Long profID);
 }

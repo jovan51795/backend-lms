@@ -1,9 +1,11 @@
 package biz.global.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 @Entity
@@ -11,8 +13,6 @@ public class SubjectDetailHistory {
 	 @Id
 	 @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long session_id;
-	 
-	 private Long subject_id;
 
 	private String academicYear;
 	
@@ -28,6 +28,43 @@ public class SubjectDetailHistory {
 	
 	private Boolean active_deactive;
 	
+	 @ManyToOne(cascade=CascadeType.ALL)
+	 @JoinColumn(name="subject_id", referencedColumnName = "subject_id")
+	 private Subject subject;
+	 
+	 @ManyToOne(cascade=CascadeType.ALL)
+	 @JoinColumn(name="professor_id", referencedColumnName = "professor_id")
+	 private Professor prof;
+	 
+	 
+	
+	public SubjectDetailHistory() {
+		
+	}
+	public SubjectDetailHistory(String academicYear, String sem, String schedule, String section, String yearLevel,
+			String status, Boolean active_deactive, Subject subject, Professor prof) {
+		this.academicYear = academicYear;
+		this.sem = sem;
+		this.schedule = schedule;
+		this.section = section;
+		this.yearLevel = yearLevel;
+		this.status = status;
+		this.active_deactive = active_deactive;
+		this.subject = subject;
+		this.prof = prof;
+	}
+	public Subject getSubject() {
+		return subject;
+	}
+	public void setSubject(Subject subject) {
+		this.subject = subject;
+	}
+	public Professor getProf() {
+		return prof;
+	}
+	public void setProf(Professor prof) {
+		this.prof = prof;
+	}
 	public Long getSession_id() {
 		return session_id;
 	}
@@ -35,12 +72,7 @@ public class SubjectDetailHistory {
 		this.session_id = session_id;
 	}
 
-	public Long getSubject_id() {
-		return subject_id;
-	}
-	public void setSubject_id(Long subject_id) {
-		this.subject_id = subject_id;
-	}
+
 	public String getAcademicYear() {
 		return academicYear;
 	}
