@@ -126,7 +126,11 @@ public class StudentController {
 	}
 	
 	
-	
+	@GetMapping("grades/{id}")
+	private ResponseEntity<ResponseModel> getGrades(@PathVariable Long id){
+		List<Object> studentData =studentRepo.getGradesofStudent(id);
+		return ResponseEntity.ok().body(new ResponseModel(1,"Student grades", null, studentData));
+	}
 	
 
 }
