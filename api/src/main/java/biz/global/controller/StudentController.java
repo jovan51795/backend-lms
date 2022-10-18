@@ -30,6 +30,7 @@ import biz.global.model.Student;
 import biz.global.repo.StudentRepo;
 import biz.global.service.AuthService;
 import biz.global.util.JWTUtility;
+import biz.global.util.NumberGenerator;
 
 @RestController
 @RequestMapping(value = "api/student/")
@@ -51,10 +52,13 @@ public class StudentController {
 	
 	@PostMapping(value = "add")
 	public ResponseEntity<ResponseModel> register(@RequestBody Student student) throws IOException {
+		NumberGenerator  numGenerator = new NumberGenerator();
 		Optional<Student> stu = Optional.ofNullable(studentRepo.findByStudentNo(student.getStudentNo()));
 		if(!stu.isEmpty()) {
 			return ResponseEntity.ok().body(new ResponseModel(0, "student number already exist", null, null));
 		}
+		
+		student.setStudentNo(numGenerator.generator(studentRepo.findAll().size()));
 		String hashedPassword = bcrypt.encode(student.getStudentNo());
 		student.setPassword(hashedPassword);
 		studentRepo.save(student);
@@ -68,27 +72,27 @@ public class StudentController {
 		return studentRepo.findAll();
 	}
 	
-//    @PostMapping(value = "login")
-//    public ResponseEntity<ResponseModel> login(@RequestBody Admin admin) {	
-//    	Optional<Student> students = Optional.ofNullable(studentRepo.findByStudentNo(admin.getUsername()));
-//    	Student student = studentRepo.findByStudentNo(admin.getUsername());
-//    	try {
-//    		if(students.isPresent() && student.getStudentNo().equals(admin.getUsername()) && bcrypt.matches(admin.getPassword(), student.getPassword()) && student.getActive_deactive()) {
-//    			ResponseModel responseModel = new ResponseModel(1, "Login successful",jwtUtility.generateToken(student.getStudentNo()) ,students.get().);
-//        		return ResponseEntity.ok().body(responseModel);
-//        	}else if(!student.getActive_deactive()) {
-//        		return ResponseEntity.ok().body(new ResponseModel(0, "Your account has been deactivated", "", null));
-//        	}
-//    		return ResponseEntity.ok().body(new ResponseModel(0, "Username and password is incorrect", "", null));
-//    	}catch (NoSuchElementException e) {
-//    		return ResponseEntity.ok().body(new ResponseModel(0, "No data found", "", null));
-//		}	
-//    }
+    @PostMapping(value = "student-login")
+    public ResponseEntity<ResponseModel> login(@RequestBody Admin admin) {	
+    	Optional<Student> students = Optional.ofNullable(studentRepo.findByStudentNo(admin.getUsername()));
+    	Student student = studentRepo.findByStudentNo(admin.getUsername());
+    	try {
+    		if(students.isPresent() && student.getStudentNo().equals(admin.getUsername()) && bcrypt.matches(admin.getPassword(), student.getPassword()) && student.getActive_deactive()) {
+    			ResponseModel responseModel = new ResponseModel(1, "Login successful",jwtUtility.generateToken(student.getStudentNo()) ,students.get());
+        		return ResponseEntity.ok().body(responseModel);
+        	}else if(!student.getActive_deactive()) {
+        		return ResponseEntity.ok().body(new ResponseModel(0, "Your account has been deactivated", "", null));
+        	}
+    		return ResponseEntity.ok().body(new ResponseModel(0, "Username and password is incorrect", "", null));
+    	}catch (NoSuchElementException e) {
+    		return ResponseEntity.ok().body(new ResponseModel(0, "No data found", "", null));
+		}	
+    }
 	
-	@PostMapping(value = "student-login") 
-	public ResponseEntity<ResponseModel> login(@RequestBody Admin model) throws IOException{
-		return authService.loginStudent(model);
-	}
+//	@PostMapping(value = "student-login") 
+//	public ResponseEntity<ResponseModel> login(@RequestBody Admin model) throws IOException{
+//		return authService.loginStudent(model);
+//	}
     
 	
 	

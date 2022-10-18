@@ -60,7 +60,7 @@ public class Student  implements  Serializable{
 	 
 	 private String emergencyContactNumber;
 	 
-	 private Boolean active_deactive = false;
+	 private Boolean active_deactive = true;
 	 
 	 private LocalDate data_modified = LocalDate.now();
 	
