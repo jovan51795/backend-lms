@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import biz.global.model.Professor;
+import biz.global.model.ProfessorLoad;
 import biz.global.model.ResponseModel;
 import biz.global.model.Subject;
 import biz.global.model.SubjectDetailHistory;
+import biz.global.repo.ProfessorLoadRepo;
 import biz.global.repo.ProfessorRepo;
 import biz.global.repo.SubjectDetailHistoryRepo;
 import biz.global.repo.SubjectRepo;
@@ -39,6 +41,9 @@ public class SubjectController {
 	
 	@Autowired
 	private SubjectDetailHistoryRepo subjectDetailHistoryRepo;
+	
+	@Autowired
+	private ProfessorLoadRepo professorLoadRepo;
 	
 	@GetMapping(value= "all")
     List<Subject> getSubjects() {
@@ -68,13 +73,6 @@ public class SubjectController {
     	return ResponseEntity.ok().body(new ResponseModel(1, "updated successfully", null, subject));
     }
     
-    @PutMapping("/{subjectID}/prof/{professorId}")Subject assignProfessorToSubject(@PathVariable Long subjectID, @PathVariable Long professorId) {
-        Subject subject = subjectRepo.findById(subjectID).get();
-        Professor prof = professorRepo.findById(professorId).get();
-        subject.setProfessor(prof);
-        return subjectRepo.save(subject);
-    }
-    
     @DeleteMapping("delete")
     public ResponseEntity<ResponseModel> deleteSubject(@RequestBody String subject_code) {
     	Optional<Subject> sub = Optional.ofNullable(subjectRepo.findBySubjectCode(subject_code));
@@ -88,17 +86,20 @@ public class SubjectController {
 
     @PutMapping("/{subjectId}/professor/{professorId}")ResponseEntity<ResponseModel> addProfessorToSubject(
             @PathVariable Long subjectId,
-            @PathVariable Long professorId
+            @PathVariable Long professorId,
+            @RequestBody SubjectDetailHistory subhistory
     ) {
         Subject subject = subjectRepo.findById(subjectId).get();
         Professor professor = professorRepo.findById(professorId).get();
-        SubjectDetailHistory history = new SubjectDetailHistory("2022-2023", "1st", "9am","1", "Freshmen",
-    			"Not Completed", true, subject, professor);
         
-        subjectDetailHistoryRepo.save(history);
+        SubjectDetailHistory history = new SubjectDetailHistory(subhistory.getAcademicYear(), subhistory.getSem(), subhistory.getSchedule(),subhistory.getSection(), 
+        		subhistory.getYearLevel(),subhistory.getStatus(), subhistory.getActive_deactive(), subject, professor);
         
+        ProfessorLoad profLoad = new ProfessorLoad(subject.getSubjectTitle(), subhistory.getSection(), subhistory.getYearLevel());
         subject.setProfessor(professor);	
         subjectRepo.save(subject);
+        subjectDetailHistoryRepo.save(history);
+        professorLoadRepo.save(profLoad);
         return ResponseEntity.ok().body(new ResponseModel(1, "Added successfully", null, null));
     }
     

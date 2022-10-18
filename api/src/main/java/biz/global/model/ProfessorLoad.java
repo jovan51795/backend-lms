@@ -17,6 +17,19 @@ public class ProfessorLoad {
 	 private String section;
 	 
 	 private String yearLevel;
+	 
+	 
+
+	public ProfessorLoad() {
+		super();
+	}
+
+	public ProfessorLoad(String courseTitle, String section, String yearLevel) {
+
+		this.courseTitle = courseTitle;
+		this.section = section;
+		this.yearLevel = yearLevel;
+	}
 
 	public Long getLoad_id() {
 		return load_id;

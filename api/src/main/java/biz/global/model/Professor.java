@@ -55,20 +55,22 @@ public class Professor {
 	public void setType(String type) {
 		this.type = type;
 	}
-
+	@JsonIgnore
 	@OneToMany(targetEntity = Grades.class, cascade = CascadeType.ALL)
 	@JoinColumn(name = "encode", referencedColumnName = "professor_id" )
 	private List<Grades> grades;
+	
 	
 	@OneToMany(targetEntity = Student.class, cascade = CascadeType.ALL)
 	@JoinColumn(name = "evaluate", referencedColumnName = "professor_id" )
 	private List<Student> student;
 	
-	
+	@JsonIgnore
 	@OneToMany(targetEntity = ProfessorLoad.class, cascade = CascadeType.ALL)
 	@JoinColumn(name = "professor_id", referencedColumnName = "professor_id" )
 	private List<ProfessorLoad> professorLoad;
 	
+	@JsonIgnore
 	@OneToMany(targetEntity = SubjectDetailHistory.class, cascade = CascadeType.ALL)
 	@JoinColumn(name = "professor_id", referencedColumnName = "professor_id" )
 	private List<SubjectDetailHistory> subjectDetailHistory;

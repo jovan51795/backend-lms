@@ -67,8 +67,6 @@ public class ProfessorController {
 	@Autowired
 	private AuthService authService;
 	
-	@Autowired
-	private JWTUtility jwtUtility;
 	
 	BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 	
@@ -77,9 +75,6 @@ public class ProfessorController {
     List<Professor> getprofessors() {
         return professorRepo.findAll();
     }
-	
-	
-	
 	
 	 public ResponseEntity<ResponseModel> checker(List<Object> get){
 	    	if(get.isEmpty()) {
