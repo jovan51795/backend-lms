@@ -93,9 +93,9 @@ public class SubjectController {
         Professor professor = professorRepo.findById(professorId).get();
         
         SubjectDetailHistory history = new SubjectDetailHistory(subhistory.getAcademicYear(), subhistory.getSem(), subhistory.getSchedule(),subhistory.getSection(), 
-        		subhistory.getYearLevel(),subhistory.getStatus(), subhistory.getActive_deactive(), subject, professor);
+        		subhistory.getYearLevel(),subhistory.getStatus(),  subject, professor);
         
-        ProfessorLoad profLoad = new ProfessorLoad(subject.getSubjectTitle(), subhistory.getSection(), subhistory.getYearLevel());
+        ProfessorLoad profLoad = new ProfessorLoad(subject.getSubjectTitle(), subhistory.getSection(), subhistory.getYearLevel(),professor);
         subject.setProfessor(professor);	
         subjectRepo.save(subject);
         subjectDetailHistoryRepo.save(history);
