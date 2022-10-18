@@ -83,9 +83,30 @@ public class Student  implements  Serializable{
 	 }
 	
 
-	public Student(Long student_id, String firstName, String middleName,
-			String lastName, List<Program> program,
-			List<Subject> subjects ,String sem, String academicYear, Boolean active_deactive) {
+
+
+	 
+
+	public Student(
+			
+			Long student_id, 
+			String password,
+			String studentNo, 
+			String firstName, 
+			String middleName, 
+			String lastName,
+			String birthDate, 
+			String status, 
+			String sem, 
+			String academicYear, 
+			String address,
+			String mobileNumber, 
+			String emergencyContactPerson, 
+			String emergencyContactNumber, 
+			Boolean active_deactive,
+			LocalDate data_modified, 
+			String type) {
+
 		super();
 		this.student_id = student_id;
 		this.password = password;

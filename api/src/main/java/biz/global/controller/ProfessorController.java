@@ -168,16 +168,21 @@ public class ProfessorController {
     
     @PostMapping(value="/setgradesto/{studentID}/subject/{subjectID}/prof/{profID}")
     public ResponseEntity<ResponseModel> setGrades( @PathVariable Long studentID, @PathVariable Long subjectID,@PathVariable Long profID, @RequestBody Grades model) {
+    	
+
+    	
+    	Student student = studentRepo.findById(studentID).get();
     	Subject subject = subjectRepo.findById(subjectID).get();
-    	Student student = studentRepo.findById(subjectID).get();
     	Professor prof = professorRepo.findById(profID).get();
-    	model.setSubject(subject);
+    	
+
     	model.setStudent(student);
+    	model.setSubject(subject);
     	model.setProf(prof);
     	model.setFinalGrade(model.getPrelimGrade(), model.getMidtermGrade());
     	model.setStatus(model.getPrelimGrade(), model.getMidtermGrade());
     	Grades save = gradesRepo.save(model);
-    	return ResponseEntity.ok().body(new ResponseModel(1, "Recorded successfully", null, save));
+    	return ResponseEntity.ok().body(new ResponseModel(1, "Recorded successfully", null, ""));
     }
     
     @PostMapping(value="attendancesheet")
