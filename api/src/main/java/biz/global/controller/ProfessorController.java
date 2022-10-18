@@ -122,4 +122,13 @@ public class ProfessorController {
     	return "attendance ok";
     }
     
+    @GetMapping(value = "details/{id}")
+    public ResponseEntity<ResponseModel> details(@PathVariable Long id) {
+    	Optional<Professor> prof = professorRepo.findById(id);
+    	if(prof.isEmpty()) {
+    		return ResponseEntity.ok().body(new ResponseModel(0, "professor does not exist", "", null));
+    	}
+    	return ResponseEntity.ok().body(new ResponseModel(1, "professor details", "", prof.get()));
+    }
+    
 }
