@@ -26,7 +26,7 @@ public class SubjectDetailHistory {
 	
 	private String status;
 	
-	private Boolean active_deactive;
+	private Boolean active_deactive = true;
 	
 	 @ManyToOne(cascade=CascadeType.ALL)
 	 @JoinColumn(name="subject_id", referencedColumnName = "subject_id")
@@ -42,14 +42,14 @@ public class SubjectDetailHistory {
 		
 	}
 	public SubjectDetailHistory(String academicYear, String sem, String schedule, String section, String yearLevel,
-			String status, Boolean active_deactive, Subject subject, Professor prof) {
+			String status, Subject subject, Professor prof) {
 		this.academicYear = academicYear;
 		this.sem = sem;
 		this.schedule = schedule;
 		this.section = section;
 		this.yearLevel = yearLevel;
 		this.status = status;
-		this.active_deactive = active_deactive;
+		
 		this.subject = subject;
 		this.prof = prof;
 	}

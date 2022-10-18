@@ -1,12 +1,8 @@
 package biz.global.model;
-import lombok.Data;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -21,6 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.Data;
 
 
 
@@ -62,56 +60,80 @@ public class Student  implements  Serializable{
 	 
 	 private String emergencyContactNumber;
 	 
-	 private Boolean active_deactive = false;
+	 private Boolean active_deactive = true;
 	 
 	 private LocalDate data_modified = LocalDate.now();
 	
-	@OneToMany(targetEntity = Program.class, cascade = CascadeType.ALL)
+	 @OneToMany(targetEntity = Program.class, cascade = CascadeType.ALL)
 	 @JoinColumn(referencedColumnName = "student_id", name = "student_program")
 	 private List<Program> program;
 
-	@ManyToMany(targetEntity = Subject.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-	@JoinTable(name ="student_subject",
-	joinColumns = @JoinColumn(name = "student_id"),
-	inverseJoinColumns =  @JoinColumn(name = "subject_id")
-			)
+	 @ManyToMany(targetEntity = Subject.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	 @JoinTable(name ="student_subject",
+	 joinColumns = @JoinColumn(name = "student_id"),
+	 inverseJoinColumns =  @JoinColumn(name = "subject_id"))
 	 private List<Subject> subject = new ArrayList<>();
-	 
-//	 @OneToMany(targetEntity = Grades.class, cascade = CascadeType.ALL)
-//	 @JoinColumn(name = "student_grades", referencedColumnName = "student_id" )
-//	 private List<Grades> grades;
+
 	 
 	 private String type = "student";
-	 
-	 
+	
 	 
 	 public Student() {
 		 super();
 	 }
 	
-	public Student(Long student_id, String firstName, String middleName,
-			String lastName, List<Program> program,
-			List<Subject> subjects, String sem, String academicYear, Boolean active_deactive) {
+
+
+
+	 
+
+	public Student(
+			
+			Long student_id, 
+			String password,
+			String studentNo, 
+			String firstName, 
+			String middleName, 
+			String lastName,
+			String birthDate, 
+			String status, 
+			String sem, 
+			String academicYear, 
+			String address,
+			String mobileNumber, 
+			String emergencyContactPerson, 
+			String emergencyContactNumber, 
+			Boolean active_deactive,
+			LocalDate data_modified, 
+			String type) {
+
 		super();
-	
 		this.student_id = student_id;
+		this.password = password;
+		this.studentNo = studentNo;
 		this.firstName = firstName;
 		this.middleName = middleName;
 		this.lastName = lastName;
-		this.program = program;
-		this.subject = subjects;
+		this.birthDate = birthDate;
+		this.status = status;
 		this.sem = sem;
 		this.academicYear = academicYear;
+		this.address = address;
+		this.mobileNumber = mobileNumber;
+		this.emergencyContactPerson = emergencyContactPerson;
+		this.emergencyContactNumber = emergencyContactNumber;
 		this.active_deactive = active_deactive;
+		this.data_modified = data_modified;
+		this.type = type;
 	}
 
 	 
 //	 @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH, CascadeType.ALL})
-	@ManyToOne 
-	@JoinColumn(name="department_fk", updatable = true, insertable = true)
+	 @ManyToOne 
+	 @JoinColumn(name="department_fk", updatable = true, insertable = true)
 	 private Department department;
 	 
-//	 @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.PERSIST,CascadeType.DETACH, CascadeType.ALL, CascadeType.REFRESH} )
+
 	 @ManyToOne
 	 @JoinColumn(name="course_fk",  nullable = true, updatable = true)
 	 private Course course;
@@ -164,14 +186,6 @@ public class Student  implements  Serializable{
 	}
 
 
-//	public List<Grades> getGrades() {
-//		return grades;
-//	}
-//
-//
-//	public void setGrades(List<Grades> grades) {
-//		this.grades = grades;
-//	}
 
 
 	public String getPassword() {
@@ -228,9 +242,6 @@ public class Student  implements  Serializable{
 		this.academicYear = academicYear;
 		this.active_deactive = active_deactive;
 	}
-
-
-
 
 	public Long getStudent_id() {
 		return student_id;

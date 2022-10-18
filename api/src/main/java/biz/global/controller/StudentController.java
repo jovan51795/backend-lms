@@ -2,9 +2,9 @@ package biz.global.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +20,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import biz.global.dto.StudentDto;
 import biz.global.model.Admin;
+import biz.global.model.AdminResponse;
+import biz.global.model.Professor;
 import biz.global.model.ResponseModel;
 import biz.global.model.Student;
-import biz.global.model.Subject;
 import biz.global.repo.StudentRepo;
+import biz.global.service.AuthService;
 import biz.global.util.JWTUtility;
+import biz.global.util.NumberGenerator;
 
 @RestController
 @RequestMapping(value = "api/student/")
@@ -37,6 +39,9 @@ public class StudentController {
 	
 	@Autowired
 	StudentRepo studentRepo;
+	
+	@Autowired
+	private AuthService authService;
 	
 	
 	
@@ -47,10 +52,13 @@ public class StudentController {
 	
 	@PostMapping(value = "add")
 	public ResponseEntity<ResponseModel> register(@RequestBody Student student) throws IOException {
+		NumberGenerator  numGenerator = new NumberGenerator();
 		Optional<Student> stu = Optional.ofNullable(studentRepo.findByStudentNo(student.getStudentNo()));
 		if(!stu.isEmpty()) {
 			return ResponseEntity.ok().body(new ResponseModel(0, "student number already exist", null, null));
 		}
+		
+		student.setStudentNo(numGenerator.generator(studentRepo.findAll().size()));
 		String hashedPassword = bcrypt.encode(student.getStudentNo());
 		student.setPassword(hashedPassword);
 		studentRepo.save(student);
@@ -64,20 +72,28 @@ public class StudentController {
 		return studentRepo.findAll();
 	}
 	
-	@PostMapping("student-login")
-	public ResponseEntity<ResponseModel> studentLogin(@RequestBody Admin student) throws JsonProcessingException {
-		Optional<Student> stu = Optional.ofNullable(studentRepo.findByLastName(student.getUsername()));
-		if(stu.isPresent() && stu.get().getLastName().equals(student.getUsername()) && bcrypt.matches(student.getPassword(), stu.get().getPassword()) && stu.get().getActive_deactive()) {
-			stu.get().setPassword("");
-			ResponseModel responseModel = new ResponseModel(1, "logged in",jwtUtility.generateToken(student.getLastName()), stu.get() );
-			return ResponseEntity.ok().body(responseModel);
-		}
-		else if(!stu.get().getActive_deactive()) {
-			return ResponseEntity.ok().body(new ResponseModel(0, "your account has been deactivated", "", null));
-		}
-		ResponseModel responseModel = new ResponseModel(0, "Invalid lastname or password",null, null );
-		return ResponseEntity.ok().body(responseModel);
-	}
+    @PostMapping(value = "student-login")
+    public ResponseEntity<ResponseModel> login(@RequestBody Admin admin) {	
+    	Optional<Student> student = Optional.ofNullable(studentRepo.findByStudentNo(admin.getUsername()));
+    	
+    	try {
+    		if(student.isPresent() && student.get().getStudentNo().equals(admin.getUsername()) && bcrypt.matches(admin.getPassword(), student.get().getPassword()) && student.get().getActive_deactive()) {
+    			ResponseModel responseModel = new ResponseModel(1, "Login successful",jwtUtility.generateToken(student.get().getStudentNo()) ,student.get());
+        		return ResponseEntity.ok().body(responseModel);
+        	}else if(!student.get().getActive_deactive()) {
+        		return ResponseEntity.ok().body(new ResponseModel(0, "Your account has been deactivated", "", null));
+        	}
+    		return ResponseEntity.ok().body(new ResponseModel(0, "Username and password is incorrect", "", null));
+    	}catch (NoSuchElementException e) {
+    		return ResponseEntity.ok().body(new ResponseModel(0, "Username and password is incorrect", "", null));
+		}	
+    }
+	
+//	@PostMapping(value = "student-login") 
+//	public ResponseEntity<ResponseModel> login(@RequestBody Admin model) throws IOException{
+//		return authService.loginStudent(model);
+//	}
+    
 	
 	
 	@PatchMapping("update-student-info/{id}")
