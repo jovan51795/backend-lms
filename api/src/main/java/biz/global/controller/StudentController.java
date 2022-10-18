@@ -74,18 +74,18 @@ public class StudentController {
 	
     @PostMapping(value = "student-login")
     public ResponseEntity<ResponseModel> login(@RequestBody Admin admin) {	
-    	Optional<Student> students = Optional.ofNullable(studentRepo.findByStudentNo(admin.getUsername()));
-    	Student student = studentRepo.findByStudentNo(admin.getUsername());
+    	Optional<Student> student = Optional.ofNullable(studentRepo.findByStudentNo(admin.getUsername()));
+    	
     	try {
-    		if(students.isPresent() && student.getStudentNo().equals(admin.getUsername()) && bcrypt.matches(admin.getPassword(), student.getPassword()) && student.getActive_deactive()) {
-    			ResponseModel responseModel = new ResponseModel(1, "Login successful",jwtUtility.generateToken(student.getStudentNo()) ,students.get());
+    		if(student.isPresent() && student.get().getStudentNo().equals(admin.getUsername()) && bcrypt.matches(admin.getPassword(), student.get().getPassword()) && student.get().getActive_deactive()) {
+    			ResponseModel responseModel = new ResponseModel(1, "Login successful",jwtUtility.generateToken(student.get().getStudentNo()) ,student.get());
         		return ResponseEntity.ok().body(responseModel);
-        	}else if(!student.getActive_deactive()) {
+        	}else if(!student.get().getActive_deactive()) {
         		return ResponseEntity.ok().body(new ResponseModel(0, "Your account has been deactivated", "", null));
         	}
     		return ResponseEntity.ok().body(new ResponseModel(0, "Username and password is incorrect", "", null));
     	}catch (NoSuchElementException e) {
-    		return ResponseEntity.ok().body(new ResponseModel(0, "No data found", "", null));
+    		return ResponseEntity.ok().body(new ResponseModel(0, "Username and password is incorrect", "", null));
 		}	
     }
 	
