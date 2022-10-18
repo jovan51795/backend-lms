@@ -1,12 +1,8 @@
 package biz.global.model;
-import lombok.Data;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -21,6 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.Data;
 
 
 
@@ -66,26 +64,25 @@ public class Student  implements  Serializable{
 	 
 	 private LocalDate data_modified = LocalDate.now();
 	
-	@OneToMany(targetEntity = Program.class, cascade = CascadeType.ALL)
+	 @OneToMany(targetEntity = Program.class, cascade = CascadeType.ALL)
 	 @JoinColumn(referencedColumnName = "student_id", name = "student_program")
 	 private List<Program> program;
 
-	@ManyToMany(targetEntity = Subject.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-	@JoinTable(name ="student_subject",
-	joinColumns = @JoinColumn(name = "student_id"),
-	inverseJoinColumns =  @JoinColumn(name = "subject_id")
-			)
+	 @ManyToMany(targetEntity = Subject.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	 @JoinTable(name ="student_subject",
+	 joinColumns = @JoinColumn(name = "student_id"),
+	 inverseJoinColumns =  @JoinColumn(name = "subject_id"))
 	 private List<Subject> subject = new ArrayList<>();
 
 	 
 	 private String type = "student";
-	 
-	 
+	
 	 
 	 public Student() {
 		 super();
 	 }
 	
+
 
 
 	 
@@ -109,9 +106,7 @@ public class Student  implements  Serializable{
 			Boolean active_deactive,
 			LocalDate data_modified, 
 			String type) {
-		
-		
-		
+
 		super();
 		this.student_id = student_id;
 		this.password = password;
@@ -132,12 +127,10 @@ public class Student  implements  Serializable{
 		this.type = type;
 	}
 
-
-
-
-
-	@ManyToOne 
-	@JoinColumn(name="department_fk", updatable = true, insertable = true)
+	 
+//	 @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH, CascadeType.ALL})
+	 @ManyToOne 
+	 @JoinColumn(name="department_fk", updatable = true, insertable = true)
 	 private Department department;
 	 
 
@@ -234,9 +227,21 @@ public class Student  implements  Serializable{
 		this.program = program;
 	}
 	
-	
-
-
+	public Student(Long student_id, String student_no, String firstName, String middleName,
+			String lastName, List<Program> program,
+			List<Subject> subjects, String sem, String academicYear, Boolean active_deactive) {
+		super();
+		this.student_id = student_id;
+		this.studentNo = student_no;
+		this.firstName = firstName;
+		this.middleName = middleName;
+		this.lastName = lastName;
+		this.program = program;
+		this.subject = subjects;
+		this.sem = sem;
+		this.academicYear = academicYear;
+		this.active_deactive = active_deactive;
+	}
 
 	public Long getStudent_id() {
 		return student_id;

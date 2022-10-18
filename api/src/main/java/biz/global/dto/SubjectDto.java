@@ -20,7 +20,6 @@ public class SubjectDto  {
 
 	private ProfessorLoadDto professorLoad;
     
-    
 	private ProfessorDto professor;
     
     
