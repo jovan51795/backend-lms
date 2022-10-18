@@ -185,7 +185,12 @@ public class ProfessorController {
     	Attendance save = attendanceRepo.save(model);
     	return ResponseEntity.ok().body(new ResponseModel(1, "Recorded successfully", null, save));
     }
-    
-    
-   
+    @GetMapping(value = "details/{id}")
+    public ResponseEntity<ResponseModel> details(@PathVariable Long id) {
+    	Optional<Professor> prof = professorRepo.findById(id);
+    	if(prof.isEmpty()) {
+    		return ResponseEntity.ok().body(new ResponseModel(0, "professor does not exist", "", null));
+    	}
+    	return ResponseEntity.ok().body(new ResponseModel(1, "professor details", "", prof.get()));
+    }
 }
