@@ -174,7 +174,7 @@ public class ProfessorController {
     		findGrade.get().setFinalGrade(model.getPrelimGrade(), model.getMidtermGrade());
     		findGrade.get().setStatus(model.getPrelimGrade(), model.getMidtermGrade());
         	Grades save = gradesRepo.save(findGrade.get());
-    		return ResponseEntity.ok().body(new ResponseModel(0, "Record already exist",  null, save));
+    		return ResponseEntity.ok().body(new ResponseModel(1, "Record has been modified",  null, save));
     	}else {
     		model.setStudent(studentData.get());
         	model.setSubject(subjectData.get());
@@ -186,11 +186,33 @@ public class ProfessorController {
     	}
     }
     
-    @PostMapping(value="attendancesheet")
-    public ResponseEntity<ResponseModel> attendanceChecking( @RequestBody Attendance model) {
-    	Attendance save = attendanceRepo.save(model);
-    	return ResponseEntity.ok().body(new ResponseModel(1, "Recorded successfully", null, save));
+    
+    
+    
+    @PostMapping(value="/attendancesheet/{studentID}/subject/{subjectID}/prof/{profID}")
+    public ResponseEntity<ResponseModel> attendanceChecking( @PathVariable Long studentID, @PathVariable Long subjectID,@PathVariable Long profID, @RequestBody Attendance model) {
+        
+        Optional<Student> studentData= studentRepo.findById(studentID);
+        Optional<Subject> subjectData= subjectRepo.findById(subjectID);
+        Optional<Professor> profData =professorRepo.findById(profID);
+        Optional<Attendance> attendance =Optional.ofNullable(attendanceRepo.findAttendace(studentID, subjectID, profID));
+        if(attendance.isPresent()) {
+            attendance.get().setIsPresent(model.getIsPresent());
+            Attendance save = attendanceRepo.save(attendance.get());
+            return ResponseEntity.ok().body(new ResponseModel(1, "Record has been modified",  null, save));
+        }else {
+            model.setStudent(studentData.get());
+            model.setSubject(subjectData.get());
+            model.setProf(profData.get());
+            Attendance save = attendanceRepo.save(model);
+            return ResponseEntity.ok().body(new ResponseModel(1, "Recorded successfully", null, save));
+        }    	
     }
+    
+    
+    
+    
+    
     @GetMapping(value = "details/{id}")
     public ResponseEntity<ResponseModel> details(@PathVariable Long id) {
     	Optional<Professor> prof = professorRepo.findById(id);
