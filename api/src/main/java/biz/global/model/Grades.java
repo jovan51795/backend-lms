@@ -136,6 +136,8 @@ public class Grades {
 		Double compute = (prelimGrade+midtermGrade)/2;
 		if(compute<=3.0) {
 			this.status = "Pass";
+		}else if(compute > 3.0 && compute <= 3.5){
+		    this.status = "Conditional";
 		}
 		else {
 			this.status = "Fail";
