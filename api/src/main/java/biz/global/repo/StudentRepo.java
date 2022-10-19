@@ -29,4 +29,12 @@ public interface StudentRepo extends JpaRepository<Student, Long> {
 	
 	
 	
+	@Query(nativeQuery = true, value="SELECT stu.student_id,sub.schedule,sub.start_date, sub.subject_id, sub.subject_title, sub.subject_code from student AS stu, student_subject AS stusub\r\n"
+	        + "JOIN (SELECT DISTINCT subdetail.schedule,subdetail.start_date, subdetail.professor_id, subdetail.subject_id, sub.subject_code, sub.subject_title  from subject_detail_history AS subdetail\r\n"
+	        + "JOIN (SELECT sub.subject_id, sub.subject_code, sub.subject_title FROM subject as sub) AS sub ON sub.subject_id = subdetail.subject_id) AS sub ON sub.subject_id = stusub.subject_id\r\n"
+	        + "WHERE stu.student_id = ?1 AND stusub.student_id = stu.student_id")
+	List<Object> getSchedule(Long id);
+	
+	
+	
 }

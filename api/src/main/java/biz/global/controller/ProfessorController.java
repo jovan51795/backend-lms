@@ -240,6 +240,6 @@ public class ProfessorController {
     public ResponseEntity<ResponseModel> getSchedule(@PathVariable Long id) {
         List<Object> getSchedule = professorRepo.listOfSchedule(id);
         
-        return ResponseEntity.ok().body(new ResponseModel(1, "professor details", "", getSchedule));
+        return ResponseEntity.ok().body(new ResponseModel(1, "Schedule ", "", getSchedule));
     }
 }
