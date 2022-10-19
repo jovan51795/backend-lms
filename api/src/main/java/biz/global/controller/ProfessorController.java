@@ -209,10 +209,6 @@ public class ProfessorController {
         }    	
     }
     
-    
-    
-    
-    
     @GetMapping(value = "details/{id}")
     public ResponseEntity<ResponseModel> details(@PathVariable Long id) {
     	Optional<Professor> prof = professorRepo.findById(id);
@@ -238,5 +234,12 @@ public class ProfessorController {
     @GetMapping(value="getconditional/{id}")
     public String getConditional(@PathVariable Long id) {
        return professorRepo.getConditional(id);
+    }
+    
+    @GetMapping(value="schedule/{id}")
+    public ResponseEntity<ResponseModel> getSchedule(@PathVariable Long id) {
+        List<Object> getSchedule = professorRepo.listOfSchedule(id);
+        
+        return ResponseEntity.ok().body(new ResponseModel(1, "professor details", "", getSchedule));
     }
 }

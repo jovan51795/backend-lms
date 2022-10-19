@@ -85,7 +85,7 @@ public class SubjectController {
     	return ResponseEntity.ok().body(new ResponseModel(1, "subject deleted successfully", null, null));
     }
 
-    @PutMapping("/{subjectID}/professor/{profID}")ResponseEntity<ResponseModel> addProfessorToSubject(
+    @PostMapping("/{subjectID}/professor/{profID}")ResponseEntity<ResponseModel> addProfessorToSubject(
             @PathVariable Long subjectID,
             @PathVariable Long profID,
             @RequestBody SubjectDetailHistory subhistory
@@ -93,18 +93,28 @@ public class SubjectController {
         Optional<Subject> subjectData= subjectRepo.findById(subjectID);
         Optional<Professor> profData =professorRepo.findById(profID);
         Optional<SubjectDetailHistory> findDetail =Optional.ofNullable(subjectDetailHistoryRepo.findHistory(subjectID, profID));
+        Optional<ProfessorLoad> findLoad =Optional.ofNullable(professorLoadRepo.findProfessorLoad(subjectID, profID));
         
         if (findDetail.isPresent()) {
-            SubjectDetailHistory history = new SubjectDetailHistory(subhistory.getAcademicYear(), subhistory.getSem(), subhistory.getSchedule(),subhistory.getSection(), subhistory.getYearLevel(),subhistory.getStatus(),  subjectData.get(), profData.get());
-            ProfessorLoad profLoad = new ProfessorLoad(subjectData.get().getSubjectTitle(), subhistory.getSection(), subhistory.getYearLevel(),profData.get());
+            findDetail.get().setAcademicYear(subhistory.getAcademicYear());
+            findDetail.get().setSem(subhistory.getSem());
+            findDetail.get().setSchedule(subhistory.getSchedule());
+            findDetail.get().setSection(subhistory.getSection());
+            findDetail.get().setYearLevel(subhistory.getYearLevel());
+            findDetail.get().setStatus(subhistory.getStatus());
+            findDetail.get().setStartDate(subhistory.getStartDate());
+            findLoad.get().setSubjectTitle(subjectData.get().getSubjectTitle());
+            findLoad.get().setSection(subhistory.getSection());
+            findLoad.get().setYearLevel(subhistory.getYearLevel());
+
             subjectData.get().setProfessor(profData.get()); 
             subjectRepo.save(subjectData.get());
-            subjectDetailHistoryRepo.save(history);
-            professorLoadRepo.save(profLoad);
+            subjectDetailHistoryRepo.save(findDetail.get());
+//            professorLoadRepo.save(findLoad.get());
             return ResponseEntity.ok().body(new ResponseModel(1, "Record has been modified", null, findDetail));
         }else {
-            SubjectDetailHistory history = new SubjectDetailHistory(subhistory.getAcademicYear(), subhistory.getSem(), subhistory.getSchedule(),subhistory.getSection(), subhistory.getYearLevel(),subhistory.getStatus(),  subjectData.get(), profData.get());
-            ProfessorLoad profLoad = new ProfessorLoad(subjectData.get().getSubjectTitle(), subhistory.getSection(), subhistory.getYearLevel(),profData.get());
+            SubjectDetailHistory history = new SubjectDetailHistory(subhistory.getAcademicYear(), subhistory.getSem(), subhistory.getSchedule(),subhistory.getSection(), subhistory.getYearLevel(),subhistory.getStatus(), subhistory.getStartDate(), subjectData.get(), profData.get());
+            ProfessorLoad profLoad = new ProfessorLoad(subjectData.get().getSubjectTitle(), subhistory.getSection(), subhistory.getYearLevel(),profData.get(), subjectData.get());
             subjectData.get().setProfessor(profData.get()); 
             subjectRepo.save(subjectData.get());
             subjectDetailHistoryRepo.save(history);
