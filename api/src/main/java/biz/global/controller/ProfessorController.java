@@ -199,4 +199,22 @@ public class ProfessorController {
     	}
     	return ResponseEntity.ok().body(new ResponseModel(1, "professor details", "", prof.get()));
     }
+    
+    
+    @GetMapping(value="getpass/{id}")
+    public String getPass(@PathVariable Long id) {
+     
+       return professorRepo.getPass(id);
+    }
+    
+
+    @GetMapping(value="getfail/{id}")
+    public String getFail(@PathVariable Long id) {
+       return professorRepo.getFail(id);
+    }
+    
+    @GetMapping(value="getconditional/{id}")
+    public String getConditional(@PathVariable Long id) {
+       return professorRepo.getConditional(id);
+    }
 }

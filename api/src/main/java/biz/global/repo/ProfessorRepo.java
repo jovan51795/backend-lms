@@ -16,5 +16,14 @@ public interface ProfessorRepo extends JpaRepository<Professor, Long> {
 
 	@Query(nativeQuery = true, value="SELECT * FROM profesor WHERE professor_no LIKE :profNumber%")
 	Professor findProfessor(String profNumber);
+	
+	@Query(nativeQuery = true, value="SELECT COUNT(grade.status) FROM grades AS grade where professor_id = ?1 AND grade.status ='Pass'")
+	String getPass(Long id);
+	
+	@Query(nativeQuery = true, value="SELECT COUNT(grade.status) FROM grades AS grade where professor_id = ?1 AND grade.status ='Fail'")
+	String getFail(Long id);
+	
+	@Query(nativeQuery = true, value="SELECT COUNT(grade.status) FROM grades AS grade where professor_id = ?1 AND grade.status ='Conditional'")
+	String getConditional(Long id);
 
 }
