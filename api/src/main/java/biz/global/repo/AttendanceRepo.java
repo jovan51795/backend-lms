@@ -34,4 +34,7 @@ public interface AttendanceRepo extends JpaRepository<Attendance, Long> {
 			+ "FROM  subject AS sub JOIN (SELECT professor_name, professor_id \r\n"
 			+ "FROM professor where professor_id = :profID) as prof ON sub.professor_id = prof.professor_id\r\n")
 	List<Object> getSubjectByProfessor(@Param("profID") Long profID);
+	
+	@Query(nativeQuery = true, value="select * from attendance WHERE student_id = ?1 AND subject_id = ?2 AND  professor_id =?3  LIMIT 1")
+    Attendance findAttendace(Long studentID, Long subjectID, Long profID);
 }
