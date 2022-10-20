@@ -40,6 +40,10 @@ import biz.global.repo.GradesRepo;
 import biz.global.repo.ProfessorRepo;
 import biz.global.repo.StudentRepo;
 import biz.global.repo.SubjectRepo;
+<<<<<<< Updated upstream
+=======
+import biz.global.util.JWTUtility;
+>>>>>>> Stashed changes
 
 @RestController
 @RequestMapping("api/professor/")
@@ -145,6 +149,18 @@ public class ProfessorController {
     public ResponseEntity<ResponseModel> getSubjectByProfessor(@RequestParam Long id){
     	List<Object> get = attendanceRepo.getSubjectByProfessor(id);
     	return checker(get);
+    }
+    
+    @GetMapping(value="gradesbysubject")
+    public ResponseEntity<ResponseModel> getAllGradesbySubject(@RequestParam Long id){
+        List<Object> get = professorRepo.getAllGradesbySubject(id);
+        return checker(get);
+    }
+    
+    @GetMapping(value="getAllGradesbySubjectbyStudents")
+    public ResponseEntity<ResponseModel> getAllGradesbySubjectbyStudents(@RequestParam Long profID, @RequestParam Long subID){
+        List<Object> get = professorRepo.getAllGradesbySubjectbyStudents(profID, subID);
+        return checker(get);
     }
     
     
