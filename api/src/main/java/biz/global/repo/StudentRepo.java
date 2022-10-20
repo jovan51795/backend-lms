@@ -35,6 +35,14 @@ public interface StudentRepo extends JpaRepository<Student, Long> {
 	List<Object> getSchedule(Long id);
 	
 	
+	@Query(nativeQuery = true, value="SELECT DISTINCT attendance.is_present, attendance.datemodified FROM student AS stu\r\n"
+	        + "        JOIN (select * from attendance AS attendance\r\n"
+	        + "        JOIN (SELECT sub.subject_code, sub.subject_title,sub.units, sub.subject_id FROM subject AS sub) AS sub\r\n"
+	        + "        ON attendance.subject_id = sub.subject_id WHERE student_id = ?1) AS attendance\r\n"
+	        + "        ON attendance.student_id = stu.student_id")
+	List<Object> getAttendanceofStudent(Long id);
+	
+	
 	@Query(nativeQuery = true, value="SELECT COUNT(student.student_id) FROM STUDENT")
 	String getTotalStudents();
 	
