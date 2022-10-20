@@ -29,4 +29,8 @@ public interface ProfessorRepo extends JpaRepository<Professor, Long> {
 	        + "JOIN (SELECT sub.subject_id, sub.subject_code, sub.subject_title FROM subject as sub) AS sub ON sub.subject_id = subdetail.subject_id\r\n"
 	        + "      WHERE subdetail.professor_id = ?1) as subdetail ON subdetail.professor_id = prof.professor_id\r\n")
 	List<Object> listOfSchedule(Long id);
+	
+	
+	@Query(nativeQuery = true, value="SELECT COUNT(professor_id) FROM professor")
+    String getTotalFacultyMembers();
 }
