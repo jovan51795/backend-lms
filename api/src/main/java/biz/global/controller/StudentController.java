@@ -26,7 +26,6 @@ import biz.global.model.Admin;
 import biz.global.model.ResponseModel;
 import biz.global.model.Student;
 import biz.global.repo.StudentRepo;
-import biz.global.service.AuthService;
 import biz.global.util.JWTUtility;
 import biz.global.util.NumberGenerator;
 

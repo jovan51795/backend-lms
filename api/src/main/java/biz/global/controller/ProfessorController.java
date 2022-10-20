@@ -31,7 +31,7 @@ import biz.global.repo.GradesRepo;
 import biz.global.repo.ProfessorRepo;
 import biz.global.repo.StudentRepo;
 import biz.global.repo.SubjectRepo;
-import biz.global.service.AuthService;
+import biz.global.util.JWTUtility;
 
 
 
@@ -53,6 +53,9 @@ public class ProfessorController {
 	
 	@Autowired
 	private GradesRepo gradesRepo;
+	
+	@Autowired
+    private JWTUtility jwtUtility;
 	
 
 	

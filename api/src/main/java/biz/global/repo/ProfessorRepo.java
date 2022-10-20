@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import biz.global.model.Professor;
@@ -30,6 +31,8 @@ public interface ProfessorRepo extends JpaRepository<Professor, Long> {
 	        + "      WHERE subdetail.professor_id = ?1) as subdetail ON subdetail.professor_id = prof.professor_id\r\n")
 	List<Object> listOfSchedule(Long id);
 	
+	@Query(nativeQuery = true, value="SELECT COUNT(professor_id) FROM professor")
+    String getTotalFacultyMembers();
 	
 	@Query(nativeQuery = true, value="SELECT DISTINCT sub.subject_id, sub.subject_title, sub.subject_code, grades.prelim_grade, grades.midterm_grade, grades.final_grade, grades.remarks, grades.status FROM grades AS grades\r\n"
 	        + "    JOIN (SELECT  sub.subject_title, sub.subject_code,sub.subject_id,  sub.professor_id, prof.first_name\r\n"
