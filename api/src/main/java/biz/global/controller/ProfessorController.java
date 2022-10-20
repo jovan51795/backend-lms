@@ -2,6 +2,7 @@ package biz.global.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,7 @@ import biz.global.repo.ProfessorRepo;
 import biz.global.repo.StudentRepo;
 import biz.global.repo.SubjectRepo;
 import biz.global.service.AuthService;
+import biz.global.util.JWTUtility;
 
 @RestController
 @RequestMapping("api/professor/")
@@ -52,7 +54,7 @@ public class ProfessorController {
 	private GradesRepo gradesRepo;
 	
 	@Autowired
-	private AuthService authService;
+    private JWTUtility jwtUtility;
 	
 	
 	BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
@@ -87,9 +89,21 @@ public class ProfessorController {
   
     																						
     @PostMapping(value = "login") 
-	public ResponseEntity<ResponseModel> login(@RequestBody Admin model) throws IOException{
-		return authService.loginProfessor(model);
-	}
+    public ResponseEntity<ResponseModel> login(@RequestBody Admin admin) {  
+        Optional<Professor> professor = Optional.ofNullable(professorRepo.findByProfessorNo(admin.getUsername()));
+        
+        try {
+            if(professor.isPresent() && professor.get().getProfessorNo().equals(admin.getUsername()) && bcrypt.matches(admin.getPassword(), professor.get().getPassword()) && professor.get().getActiveDeactive()) {
+                ResponseModel responseModel = new ResponseModel(1, "Login successful",jwtUtility.generateToken(professor.get().getProfessorNo()) ,professor.get());
+                return ResponseEntity.ok().body(responseModel);
+            }else if(!professor.get().getActiveDeactive()) {
+                return ResponseEntity.ok().body(new ResponseModel(0, "Your account has been deactivated", "", null));
+            }
+            return ResponseEntity.ok().body(new ResponseModel(0, "Username and password is incorrect", "", null));
+        }catch (NoSuchElementException e) {
+            return ResponseEntity.ok().body(new ResponseModel(0, "Username and password is incorrect", "", null));
+        }   
+    }
  
     @GetMapping("{id}")
     public ResponseEntity<Professor> getProfessorById(@PathVariable Long id){

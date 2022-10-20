@@ -83,12 +83,7 @@ public class StudentController {
 		}	
     }
 	
-//	@PostMapping(value = "student-login") 
-//	public ResponseEntity<ResponseModel> login(@RequestBody Admin model) throws IOException{
-//		return authService.loginStudent(model);
-//	}
-    
-	
+   	
 	
 	@PatchMapping("update-student-info/{id}")
 	public ResponseEntity<ResponseModel> updateStudentInfo( @PathVariable Long id,@RequestBody StudentDto student) throws IllegalArgumentException, JsonProcessingException {
