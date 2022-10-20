@@ -37,6 +37,9 @@ public interface StudentRepo extends JpaRepository<Student, Long> {
 	@Query(nativeQuery = true, value="SELECT COUNT(student.student_id) FROM STUDENT")
 	String getTotalStudents();
 	
+	@Query(nativeQuery = true, value="SELECT COUNT(student_id) FROM student WHERE data_modified >= (NOW() - INTERVAL '20 days')")
+    String getNewStudents();
+	
 	
 	
 }
