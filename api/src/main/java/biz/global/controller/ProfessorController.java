@@ -2,14 +2,8 @@ package biz.global.controller;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-
-import javax.persistence.EntityManager;
-
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +14,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import biz.global.dto.AttendanceDto;
 import biz.global.exception.ResourceNotFoundException;
+import biz.global.model.Admin;
 import biz.global.model.Attendance;
 import biz.global.model.Grades;
 import biz.global.model.Professor;
@@ -40,10 +31,9 @@ import biz.global.repo.GradesRepo;
 import biz.global.repo.ProfessorRepo;
 import biz.global.repo.StudentRepo;
 import biz.global.repo.SubjectRepo;
-<<<<<<< Updated upstream
-=======
-import biz.global.util.JWTUtility;
->>>>>>> Stashed changes
+import biz.global.service.AuthService;
+
+
 
 @RestController
 @RequestMapping("api/professor/")
@@ -64,14 +54,16 @@ public class ProfessorController {
 	@Autowired
 	private GradesRepo gradesRepo;
 	
+
+	
+	
+	BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+	
 	
 	@GetMapping(value= "all")
     List<Professor> getprofessors() {
         return professorRepo.findAll();
     }
-	
-	BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
-	
 	
 	 public ResponseEntity<ResponseModel> checker(List<Object> get){
 	    	if(get.isEmpty()) {
@@ -94,9 +86,27 @@ public class ProfessorController {
         return ResponseEntity.ok().body(new ResponseModel(1, "professor added successfully", null, professor));
     }
     
+  
+    																						
+    @PostMapping(value = "login") 
+    public ResponseEntity<ResponseModel> login(@RequestBody Admin admin) {  
+        Optional<Professor> professor = Optional.ofNullable(professorRepo.findByProfessorNo(admin.getUsername()));
+        
+        try {
+            if(professor.isPresent() && professor.get().getProfessorNo().equals(admin.getUsername()) && bcrypt.matches(admin.getPassword(), professor.get().getPassword()) && professor.get().getActiveDeactive()) {
+                ResponseModel responseModel = new ResponseModel(1, "Login successful",jwtUtility.generateToken(professor.get().getProfessorNo()) ,professor.get());
+                return ResponseEntity.ok().body(responseModel);
+            }else if(!professor.get().getActiveDeactive()) {
+                return ResponseEntity.ok().body(new ResponseModel(0, "Your account has been deactivated", "", null));
+            }
+            return ResponseEntity.ok().body(new ResponseModel(0, "Username and password is incorrect", "", null));
+        }catch (NoSuchElementException e) {
+            return ResponseEntity.ok().body(new ResponseModel(0, "Username and password is incorrect", "", null));
+        }   
+    }
  
     @GetMapping("{id}")
-    public ResponseEntity<Professor> getEmployeeById(@PathVariable Long id){
+    public ResponseEntity<Professor> getProfessorById(@PathVariable Long id){
     	Professor professor = professorRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not exist with id:" + id));
         return ResponseEntity.ok(professor);
@@ -139,8 +149,8 @@ public class ProfessorController {
     }
     
     @GetMapping(value="studentlist")
-    public ResponseEntity<ResponseModel> studentList(@RequestParam Long subID,@RequestParam Long id){ 	
-    	List<Object> get = attendanceRepo.studentListbySubject(subID, id);
+    public ResponseEntity<ResponseModel> studentList(@RequestParam Long subID,@RequestParam Long profID){ 	
+    	List<Object> get = attendanceRepo.studentListbySubject(subID, profID);
     	return checker(get);	
     }
     
@@ -166,25 +176,82 @@ public class ProfessorController {
     
     @PostMapping(value="/setgradesto/{studentID}/subject/{subjectID}/prof/{profID}")
     public ResponseEntity<ResponseModel> setGrades( @PathVariable Long studentID, @PathVariable Long subjectID,@PathVariable Long profID, @RequestBody Grades model) {
-    	Subject subject = subjectRepo.findById(subjectID).get();
-    	Student student = studentRepo.findById(subjectID).get();
-    	Professor prof = professorRepo.findById(profID).get();
     	
-    	model.setSubject(subject);
-    	model.setStudent(student);
-    	model.setProf(prof);
-    	model.setFinalGrade(model.getPrelimGrade(), model.getMidtermGrade());
-    	model.setStatus(model.getPrelimGrade(), model.getMidtermGrade());
-    	Grades save = gradesRepo.save(model);
-    	return ResponseEntity.ok().body(new ResponseModel(1, "Recorded successfully", null, save));
+    	Optional<Student> studentData= studentRepo.findById(studentID);
+    	Optional<Subject> subjectData= subjectRepo.findById(subjectID);
+    	Optional<Professor> profData =professorRepo.findById(profID);
+    	Optional<Grades> findGrade =Optional.ofNullable(gradesRepo.findGrade(studentID, subjectID, profID));
+    	if(findGrade.isPresent()) {
+
+    		findGrade.get().setFinalGrade(model.getPrelimGrade(), model.getMidtermGrade());
+    		findGrade.get().setStatus(model.getPrelimGrade(), model.getMidtermGrade());
+        	Grades save = gradesRepo.save(findGrade.get());
+    		return ResponseEntity.ok().body(new ResponseModel(1, "Record has been modified",  null, save));
+    	}else {
+    		model.setStudent(studentData.get());
+        	model.setSubject(subjectData.get());
+        	model.setProf(profData.get());
+        	model.setFinalGrade(model.getPrelimGrade(), model.getMidtermGrade());
+        	model.setStatus(model.getPrelimGrade(), model.getMidtermGrade());
+        	Grades save = gradesRepo.save(model);
+        	return ResponseEntity.ok().body(new ResponseModel(1, "Recorded successfully", null, save));
+    	}
     }
     
-    @PostMapping(value="attendancesheet")
-    public ResponseEntity<ResponseModel> attendanceChecking( @RequestBody Attendance model) {
-    	Attendance save = attendanceRepo.save(model);
-    	return ResponseEntity.ok().body(new ResponseModel(1, "Recorded successfully", null, save));
+    
+    
+    
+    @PostMapping(value="/attendancesheet/{studentID}/subject/{subjectID}/prof/{profID}")
+    public ResponseEntity<ResponseModel> attendanceChecking( @PathVariable Long studentID, @PathVariable Long subjectID,@PathVariable Long profID, @RequestBody Attendance model) {
+        
+        Optional<Student> studentData= studentRepo.findById(studentID);
+        Optional<Subject> subjectData= subjectRepo.findById(subjectID);
+        Optional<Professor> profData =professorRepo.findById(profID);
+        Optional<Attendance> attendance =Optional.ofNullable(attendanceRepo.findAttendace(studentID, subjectID, profID));
+        if(attendance.isPresent()) {
+            attendance.get().setIsPresent(model.getIsPresent());
+            Attendance save = attendanceRepo.save(attendance.get());
+            return ResponseEntity.ok().body(new ResponseModel(1, "Record has been modified",  null, save));
+        }else {
+            model.setStudent(studentData.get());
+            model.setSubject(subjectData.get());
+            model.setProf(profData.get());
+            Attendance save = attendanceRepo.save(model);
+            return ResponseEntity.ok().body(new ResponseModel(1, "Recorded successfully", null, save));
+        }    	
+    }
+    
+    @GetMapping(value = "details/{id}")
+    public ResponseEntity<ResponseModel> details(@PathVariable Long id) {
+    	Optional<Professor> prof = professorRepo.findById(id);
+    	if(prof.isEmpty()) {
+    		return ResponseEntity.ok().body(new ResponseModel(0, "professor does not exist", "", null));
+    	}
+    	return ResponseEntity.ok().body(new ResponseModel(1, "professor details", "", prof.get()));
     }
     
     
-   
+    @GetMapping(value="getpass/{id}")
+    public String getPass(@PathVariable Long id) {
+     
+       return professorRepo.getPass(id);
+    }
+    
+
+    @GetMapping(value="getfail/{id}")
+    public String getFail(@PathVariable Long id) {
+       return professorRepo.getFail(id);
+    }
+    
+    @GetMapping(value="getconditional/{id}")
+    public String getConditional(@PathVariable Long id) {
+       return professorRepo.getConditional(id);
+    }
+    
+    @GetMapping(value="schedule/{id}")
+    public ResponseEntity<ResponseModel> getSchedule(@PathVariable Long id) {
+        List<Object> getSchedule = professorRepo.listOfSchedule(id);
+        
+        return ResponseEntity.ok().body(new ResponseModel(1, "Schedule ", "", getSchedule));
+    }
 }

@@ -1,7 +1,6 @@
 package biz.global.dto;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class SubjectDto  {
 	
@@ -19,7 +18,6 @@ public class SubjectDto  {
     private Boolean activeDeactive = true;
 
 	private ProfessorLoadDto professorLoad;
-    
     
 	private ProfessorDto professor;
     

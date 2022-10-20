@@ -12,15 +12,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import biz.global.model.Professor;
+import biz.global.model.ProfessorLoad;
 import biz.global.model.ResponseModel;
 import biz.global.model.Subject;
 import biz.global.model.SubjectDetailHistory;
+import biz.global.repo.ProfessorLoadRepo;
 import biz.global.repo.ProfessorRepo;
 import biz.global.repo.SubjectDetailHistoryRepo;
 import biz.global.repo.SubjectRepo;
@@ -40,6 +41,9 @@ public class SubjectController {
 	@Autowired
 	private SubjectDetailHistoryRepo subjectDetailHistoryRepo;
 	
+	@Autowired
+	private ProfessorLoadRepo professorLoadRepo;
+	
 	@GetMapping(value= "all")
     List<Subject> getSubjects() {
         return subjectRepo.findAll();
@@ -57,22 +61,15 @@ public class SubjectController {
         return ResponseEntity.ok().body(new ResponseModel(1, "subject successfully added", "", sub));
     }
     
-    @PatchMapping("update")
-    public ResponseEntity<ResponseModel> updateSubject(@RequestBody Subject subject) {
-    	Optional<Subject> sub = Optional.ofNullable(subjectRepo.findBySubjectCode(subject.getSubjectCode()));
+    @PatchMapping("update/{id}")
+    public ResponseEntity<ResponseModel> updateSubject(@PathVariable Long id,@RequestBody Subject subject) {
+    	Optional<Subject> sub = subjectRepo.findById(id);
     	if(sub.isEmpty()) {
     		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(0, "subject does not exist", null, null));
     	}
     	subject.setSubject_id(sub.get().getSubject_id());
     	subjectRepo.save(subject);
     	return ResponseEntity.ok().body(new ResponseModel(1, "updated successfully", null, subject));
-    }
-    
-    @PutMapping("/{subjectID}/prof/{professorId}")Subject assignProfessorToSubject(@PathVariable Long subjectID, @PathVariable Long professorId) {
-        Subject subject = subjectRepo.findById(subjectID).get();
-        Professor prof = professorRepo.findById(professorId).get();
-        subject.setProfessor(prof);
-        return subjectRepo.save(subject);
     }
     
     @DeleteMapping("delete")
@@ -86,20 +83,44 @@ public class SubjectController {
     	return ResponseEntity.ok().body(new ResponseModel(1, "subject deleted successfully", null, null));
     }
 
-    @PutMapping("/{subjectId}/professor/{professorId}")ResponseEntity<ResponseModel> addProfessorToSubject(
-            @PathVariable Long subjectId,
-            @PathVariable Long professorId
+    @PostMapping("/{subjectID}/professor/{profID}")ResponseEntity<ResponseModel> addProfessorToSubject(
+            @PathVariable Long subjectID,
+            @PathVariable Long profID,
+            @RequestBody SubjectDetailHistory subhistory
     ) {
-        Subject subject = subjectRepo.findById(subjectId).get();
-        Professor professor = professorRepo.findById(professorId).get();
-        SubjectDetailHistory history = new SubjectDetailHistory("2022-2023", "1st", "9am","1", "Freshmen",
-    			"Not Completed", true, subject, professor);
+        Optional<Subject> subjectData= subjectRepo.findById(subjectID);
+        Optional<Professor> profData =professorRepo.findById(profID);
+        Optional<SubjectDetailHistory> findDetail =Optional.ofNullable(subjectDetailHistoryRepo.findHistory(subjectID, profID));
+        Optional<ProfessorLoad> findLoad =Optional.ofNullable(professorLoadRepo.findProfessorLoad(subjectID, profID));
         
-        subjectDetailHistoryRepo.save(history);
+        if (findDetail.isPresent()) {
+            findDetail.get().setAcademicYear(subhistory.getAcademicYear());
+            findDetail.get().setSem(subhistory.getSem());
+            findDetail.get().setSchedule(subhistory.getSchedule());
+            findDetail.get().setSection(subhistory.getSection());
+            findDetail.get().setYearLevel(subhistory.getYearLevel());
+            findDetail.get().setStatus(subhistory.getStatus());
+            findDetail.get().setStartDate(subhistory.getStartDate());
+            findLoad.get().setSubjectTitle(subjectData.get().getSubjectTitle());
+            findLoad.get().setSection(subhistory.getSection());
+            findLoad.get().setYearLevel(subhistory.getYearLevel());
+
+            subjectData.get().setProfessor(profData.get()); 
+            subjectRepo.save(subjectData.get());
+            subjectDetailHistoryRepo.save(findDetail.get());
+//            professorLoadRepo.save(findLoad.get());
+            return ResponseEntity.ok().body(new ResponseModel(1, "Record has been modified", null, findDetail));
+        }else {
+            SubjectDetailHistory history = new SubjectDetailHistory(subhistory.getAcademicYear(), subhistory.getSem(), subhistory.getSchedule(),subhistory.getSection(), subhistory.getYearLevel(),subhistory.getStatus(), subhistory.getStartDate(), subjectData.get(), profData.get());
+            ProfessorLoad profLoad = new ProfessorLoad(subjectData.get().getSubjectTitle(), subhistory.getSection(), subhistory.getYearLevel(),profData.get(), subjectData.get());
+            subjectData.get().setProfessor(profData.get()); 
+            subjectRepo.save(subjectData.get());
+            subjectDetailHistoryRepo.save(history);
+            professorLoadRepo.save(profLoad);
+            return ResponseEntity.ok().body(new ResponseModel(1, "Record successfully added", null, history));
+        }
         
-        subject.setProfessor(professor);	
-        subjectRepo.save(subject);
-        return ResponseEntity.ok().body(new ResponseModel(1, "Added successfully", null, null));
+        
     }
     
     @GetMapping(value = "getbyid/{id}")

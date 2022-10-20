@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,10 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.OnDelete;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 public class Department {
@@ -27,6 +24,10 @@ public class Department {
 	private Long departmentId;
 	
 	private String departmentName;
+	
+	private String logo;
+	private String altlogo;
+	private String link;
 	
 	@OneToMany(targetEntity = Course.class, cascade = CascadeType.ALL,fetch = FetchType.LAZY, orphanRemoval = true)
 	@JoinColumn(name = "department", referencedColumnName = "departmentId", nullable = true , updatable = true)
@@ -69,7 +70,31 @@ public class Department {
 		this.course = course;
 	}
 
-	@Override
+	public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public String getAltlogo() {
+        return altlogo;
+    }
+
+    public void setAltlogo(String altlogo) {
+        this.altlogo = altlogo;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    @Override
 	public int hashCode() {
 		return Objects.hash(course, departmentId, departmentName, student);
 	}
