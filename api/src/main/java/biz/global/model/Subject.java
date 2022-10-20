@@ -81,12 +81,6 @@ public class Subject {
 		this.course = course;
 	}
 
-//	public Grades getGrades() {
-//		return grades;
-//	}
-//	public void setGrades(Grades grades) {
-//		this.grades = grades;
-//	}
 	public Subject() {
 		super();
 	}

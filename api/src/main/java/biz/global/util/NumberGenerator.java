@@ -2,7 +2,6 @@ package biz.global.util;
 
 import java.time.LocalDate;
 
-import biz.global.model.Student;
 
 public class NumberGenerator {
 	

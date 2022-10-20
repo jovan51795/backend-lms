@@ -3,8 +3,6 @@ package biz.global.repo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import biz.global.model.Grades;
-import biz.global.model.ProfessorLoad;
 import biz.global.model.SubjectDetailHistory;
 
 public interface SubjectDetailHistoryRepo extends JpaRepository<SubjectDetailHistory, Long> {
