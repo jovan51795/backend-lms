@@ -26,6 +26,8 @@ public class SubjectDetailHistory {
 	
 	private String status;
 	
+	private String startDate;
+	
 	private Boolean active_deactive = true;
 	
 	 @ManyToOne(cascade=CascadeType.ALL)
@@ -42,14 +44,14 @@ public class SubjectDetailHistory {
 		
 	}
 	public SubjectDetailHistory(String academicYear, String sem, String schedule, String section, String yearLevel,
-			String status, Subject subject, Professor prof) {
+			String status, String startDate, Subject subject, Professor prof) {
 		this.academicYear = academicYear;
 		this.sem = sem;
 		this.schedule = schedule;
 		this.section = section;
 		this.yearLevel = yearLevel;
 		this.status = status;
-		
+		this.startDate = startDate;
 		this.subject = subject;
 		this.prof = prof;
 	}
@@ -72,8 +74,13 @@ public class SubjectDetailHistory {
 		this.session_id = session_id;
 	}
 
-
-	public String getAcademicYear() {
+	public String getStartDate() {
+        return startDate;
+    }
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+    public String getAcademicYear() {
 		return academicYear;
 	}
 	public void setAcademicYear(String academicYear) {

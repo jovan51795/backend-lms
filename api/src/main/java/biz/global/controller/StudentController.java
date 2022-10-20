@@ -148,5 +148,16 @@ public class StudentController {
 		return ResponseEntity.ok().body(new ResponseModel(1,"Student grades", null, studentData));
 	}
 	
-
+	@GetMapping("attendance/{id}")
+    private ResponseEntity<ResponseModel> getAttendance(@PathVariable Long id){
+        List<Object> studentData =studentRepo.getGradesofStudent(id);
+        return ResponseEntity.ok().body(new ResponseModel(1,"Student attendance", null, studentData));
+    }
+	
+	 @GetMapping(value="schedule/{id}")
+	    public ResponseEntity<ResponseModel> getSchedule(@PathVariable Long id) {
+	        List<Object> getSchedule = studentRepo.getSchedule(id);
+	        
+	        return ResponseEntity.ok().body(new ResponseModel(1, "Schedule ", "", getSchedule));
+	    }
 }

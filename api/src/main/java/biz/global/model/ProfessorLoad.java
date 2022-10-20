@@ -18,7 +18,7 @@ public class ProfessorLoad {
 	 @GeneratedValue(strategy=GenerationType.IDENTITY)	
 	 private Long load_id;
 	 
-	 private String courseTitle;
+	 private String subjectTitle;
 	 
 	 private String section;
 	 
@@ -31,19 +31,53 @@ public class ProfessorLoad {
 	 private Professor prof;
 	 
 	 
+	 @ManyToOne(cascade=CascadeType.ALL)
+     @JoinColumn(name="subject_id", referencedColumnName = "subject_id")
+     private Subject subject;
+	 
 
 	public ProfessorLoad() {
 		super();
 	}
 
-	public ProfessorLoad(String courseTitle, String section, String yearLevel, Professor prof) {
-		this.prof=prof;
-		this.courseTitle = courseTitle;
-		this.section = section;
-		this.yearLevel = yearLevel;
-	}
 
-	public Long getLoad_id() {
+
+
+
+
+    public ProfessorLoad(String subjectTitle, String section, String yearLevel, Professor prof, Subject subject) {
+        super();
+        this.subjectTitle = subjectTitle;
+        this.section = section;
+        this.yearLevel = yearLevel;
+        this.prof = prof;
+        this.subject = subject;
+    }
+
+
+
+
+
+
+    public String getSubjectTitle() {
+        return subjectTitle;
+    }
+
+
+
+
+
+
+    public void setSubjectTitle(String subjectTitle) {
+        this.subjectTitle = subjectTitle;
+    }
+
+
+
+
+
+
+    public Long getLoad_id() {
 		return load_id;
 	}
 
@@ -51,15 +85,17 @@ public class ProfessorLoad {
 		this.load_id = load_id;
 	}
 
-	public String getCourseTitle() {
-		return courseTitle;
-	}
 
-	public void setCourseTitle(String courseTitle) {
-		this.courseTitle = courseTitle;
-	}
 
-	public Professor getProf() {
+	public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+    }
+
+    public Professor getProf() {
 		return prof;
 	}
 

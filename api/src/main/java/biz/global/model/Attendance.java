@@ -55,13 +55,17 @@ public class Attendance implements  Serializable{
 	 
 	 
 	 
-	 @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-	 @JoinColumn(name="attendance_student", updatable = true, insertable = true)
-	 private Student student;
-	 
-	 @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-	 @JoinColumn(name="attendance_subject", updatable = true, insertable = true)
-	 private Subject subject;
+	 @ManyToOne(cascade=CascadeType.ALL)
+     @JoinColumn(name="student_id", referencedColumnName = "student_id")
+     private Student student;
+     
+     @ManyToOne(cascade=CascadeType.ALL)
+     @JoinColumn(name="subject_id", referencedColumnName = "subject_id")
+     private Subject subject;
+     
+     @ManyToOne(cascade=CascadeType.ALL)
+     @JoinColumn(name="professor_id", referencedColumnName = "professor_id")
+     private Professor prof;
 	 
 	 private Boolean isPresent;
 
@@ -106,6 +110,14 @@ public class Attendance implements  Serializable{
 	public void setIsPresent(Boolean isPresent) {
 		this.isPresent = isPresent;
 	}
+
+    public Professor getProf() {
+        return prof;
+    }
+
+    public void setProf(Professor prof) {
+        this.prof = prof;
+    }
 	 
 	 
 	 

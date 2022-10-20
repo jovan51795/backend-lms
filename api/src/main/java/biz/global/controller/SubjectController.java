@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import biz.global.model.Grades;
 import biz.global.model.Professor;
 import biz.global.model.ProfessorLoad;
 import biz.global.model.ResponseModel;
@@ -84,23 +85,44 @@ public class SubjectController {
     	return ResponseEntity.ok().body(new ResponseModel(1, "subject deleted successfully", null, null));
     }
 
-    @PutMapping("/{subjectId}/professor/{professorId}")ResponseEntity<ResponseModel> addProfessorToSubject(
-            @PathVariable Long subjectId,
-            @PathVariable Long professorId,
+    @PostMapping("/{subjectID}/professor/{profID}")ResponseEntity<ResponseModel> addProfessorToSubject(
+            @PathVariable Long subjectID,
+            @PathVariable Long profID,
             @RequestBody SubjectDetailHistory subhistory
     ) {
-        Subject subject = subjectRepo.findById(subjectId).get();
-        Professor professor = professorRepo.findById(professorId).get();
+        Optional<Subject> subjectData= subjectRepo.findById(subjectID);
+        Optional<Professor> profData =professorRepo.findById(profID);
+        Optional<SubjectDetailHistory> findDetail =Optional.ofNullable(subjectDetailHistoryRepo.findHistory(subjectID, profID));
+        Optional<ProfessorLoad> findLoad =Optional.ofNullable(professorLoadRepo.findProfessorLoad(subjectID, profID));
         
-        SubjectDetailHistory history = new SubjectDetailHistory(subhistory.getAcademicYear(), subhistory.getSem(), subhistory.getSchedule(),subhistory.getSection(), 
-        		subhistory.getYearLevel(),subhistory.getStatus(),  subject, professor);
+        if (findDetail.isPresent()) {
+            findDetail.get().setAcademicYear(subhistory.getAcademicYear());
+            findDetail.get().setSem(subhistory.getSem());
+            findDetail.get().setSchedule(subhistory.getSchedule());
+            findDetail.get().setSection(subhistory.getSection());
+            findDetail.get().setYearLevel(subhistory.getYearLevel());
+            findDetail.get().setStatus(subhistory.getStatus());
+            findDetail.get().setStartDate(subhistory.getStartDate());
+            findLoad.get().setSubjectTitle(subjectData.get().getSubjectTitle());
+            findLoad.get().setSection(subhistory.getSection());
+            findLoad.get().setYearLevel(subhistory.getYearLevel());
+
+            subjectData.get().setProfessor(profData.get()); 
+            subjectRepo.save(subjectData.get());
+            subjectDetailHistoryRepo.save(findDetail.get());
+//            professorLoadRepo.save(findLoad.get());
+            return ResponseEntity.ok().body(new ResponseModel(1, "Record has been modified", null, findDetail));
+        }else {
+            SubjectDetailHistory history = new SubjectDetailHistory(subhistory.getAcademicYear(), subhistory.getSem(), subhistory.getSchedule(),subhistory.getSection(), subhistory.getYearLevel(),subhistory.getStatus(), subhistory.getStartDate(), subjectData.get(), profData.get());
+            ProfessorLoad profLoad = new ProfessorLoad(subjectData.get().getSubjectTitle(), subhistory.getSection(), subhistory.getYearLevel(),profData.get(), subjectData.get());
+            subjectData.get().setProfessor(profData.get()); 
+            subjectRepo.save(subjectData.get());
+            subjectDetailHistoryRepo.save(history);
+            professorLoadRepo.save(profLoad);
+            return ResponseEntity.ok().body(new ResponseModel(1, "Record successfully added", null, history));
+        }
         
-        ProfessorLoad profLoad = new ProfessorLoad(subject.getSubjectTitle(), subhistory.getSection(), subhistory.getYearLevel(),professor);
-        subject.setProfessor(professor);	
-        subjectRepo.save(subject);
-        subjectDetailHistoryRepo.save(history);
-        professorLoadRepo.save(profLoad);
-        return ResponseEntity.ok().body(new ResponseModel(1, "Added successfully", null, null));
+        
     }
     
     @GetMapping(value = "getbyid/{id}")
