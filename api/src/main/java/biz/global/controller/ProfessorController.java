@@ -32,7 +32,8 @@ import biz.global.repo.ProfessorRepo;
 import biz.global.repo.StudentRepo;
 import biz.global.repo.SubjectRepo;
 import biz.global.service.AuthService;
-import biz.global.util.JWTUtility;
+
+
 
 @RestController
 @RequestMapping("api/professor/")
@@ -53,8 +54,7 @@ public class ProfessorController {
 	@Autowired
 	private GradesRepo gradesRepo;
 	
-	@Autowired
-    private JWTUtility jwtUtility;
+
 	
 	
 	BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
@@ -159,6 +159,18 @@ public class ProfessorController {
     public ResponseEntity<ResponseModel> getSubjectByProfessor(@RequestParam Long id){
     	List<Object> get = attendanceRepo.getSubjectByProfessor(id);
     	return checker(get);
+    }
+    
+    @GetMapping(value="gradesbysubject")
+    public ResponseEntity<ResponseModel> getAllGradesbySubject(@RequestParam Long id){
+        List<Object> get = professorRepo.getAllGradesbySubject(id);
+        return checker(get);
+    }
+    
+    @GetMapping(value="getAllGradesbySubjectbyStudents")
+    public ResponseEntity<ResponseModel> getAllGradesbySubjectbyStudents(@RequestParam Long profID, @RequestParam Long subID){
+        List<Object> get = professorRepo.getAllGradesbySubjectbyStudents(profID, subID);
+        return checker(get);
     }
     
     
