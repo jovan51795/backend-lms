@@ -34,5 +34,9 @@ public interface StudentRepo extends JpaRepository<Student, Long> {
 	List<Object> getSchedule(Long id);
 	
 	
+	@Query(nativeQuery = true, value="SELECT COUNT(student.student_id) FROM STUDENT")
+	String getTotalStudents();
+	
+	
 	
 }
