@@ -28,6 +28,10 @@ public class Department {
 	
 	private String departmentName;
 	
+	private String logo;
+	private String altlogo;
+	private String link;
+	
 	@OneToMany(targetEntity = Course.class, cascade = CascadeType.ALL,fetch = FetchType.LAZY, orphanRemoval = true)
 	@JoinColumn(name = "department", referencedColumnName = "departmentId", nullable = true , updatable = true)
 	@ElementCollection
@@ -69,7 +73,31 @@ public class Department {
 		this.course = course;
 	}
 
-	@Override
+	public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public String getAltlogo() {
+        return altlogo;
+    }
+
+    public void setAltlogo(String altlogo) {
+        this.altlogo = altlogo;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    @Override
 	public int hashCode() {
 		return Objects.hash(course, departmentId, departmentName, student);
 	}
