@@ -23,8 +23,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import biz.global.dto.StudentDto;
 import biz.global.model.Admin;
-import biz.global.model.AdminResponse;
-import biz.global.model.Professor;
 import biz.global.model.ResponseModel;
 import biz.global.model.Student;
 import biz.global.repo.StudentRepo;
@@ -39,10 +37,6 @@ public class StudentController {
 	
 	@Autowired
 	StudentRepo studentRepo;
-	
-	@Autowired
-	private AuthService authService;
-	
 	
 	
 	@Autowired

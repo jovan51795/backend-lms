@@ -1,26 +1,18 @@
 package biz.global.model;
 
-import java.sql.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotBlank;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import biz.global.util.Generator;
 
 @Entity
 public class Professor {

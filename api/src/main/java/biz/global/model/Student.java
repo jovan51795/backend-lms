@@ -127,8 +127,7 @@ public class Student  implements  Serializable{
 		this.type = type;
 	}
 
-	 
-//	 @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH, CascadeType.ALL})
+
 	 @ManyToOne 
 	 @JoinColumn(name="department_fk", updatable = true, insertable = true)
 	 private Department department;
