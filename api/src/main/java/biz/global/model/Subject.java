@@ -53,6 +53,9 @@ public class Subject {
 	@OneToMany()
 	private List<Attendance> attendance = new ArrayList<>();
 	
+	@OneToMany()
+    private List<SubjectDetailHistory> subject_detail_history = new ArrayList<>();
+	
 	private Long department_id;
 	
 	private String departmentName;
@@ -113,7 +116,15 @@ public class Subject {
 		super();
 	}
 
-	public List<Grades> getGrades() {
+	public List<SubjectDetailHistory> getSubject_detail_history() {
+        return subject_detail_history;
+    }
+
+    public void setSubject_detail_history(List<SubjectDetailHistory> subject_detail_history) {
+        this.subject_detail_history = subject_detail_history;
+    }
+
+    public List<Grades> getGrades() {
 		return grades;
 	}
 
