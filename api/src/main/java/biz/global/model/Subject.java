@@ -42,11 +42,7 @@ public class Subject {
 	@JoinColumn(name = "professor_id", referencedColumnName = "professor_id")
 	private Professor professor;
 
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "subject_grade")
-//    private Grades grades;
 
-//   @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE, CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH, CascadeType.ALL}, optional = true)
 	@ManyToOne
 	@JoinColumn(name = "course_fk", nullable = true)
 	private Course course;
@@ -56,6 +52,38 @@ public class Subject {
 
 	@OneToMany()
 	private List<Attendance> attendance = new ArrayList<>();
+	
+	private Long department_id;
+	
+	private String departmentName;
+
+	/**
+	 * @return the department_id
+	 */
+	public Long getDepartment_id() {
+		return department_id;
+	}
+
+	/**
+	 * @param department_id the department_id to set
+	 */
+	public void setDepartment_id(Long department_id) {
+		this.department_id = department_id;
+	}
+
+	/**
+	 * @return the departmentName
+	 */
+	public String getDepartmentName() {
+		return departmentName;
+	}
+
+	/**
+	 * @param departmentName the departmentName to set
+	 */
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
+	}
 
 	public List<Student> getStudent() {
 		return student;
