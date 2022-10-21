@@ -54,6 +54,16 @@ public class SubjectDetailHistory {
 		this.subject = subject;
 		this.prof = prof;
 	}
+	
+	public SubjectDetailHistory(String academicYear, String sem, String schedule, String section, String yearLevel, Subject subject) {
+        this.academicYear = academicYear;
+        this.sem = sem;
+        this.schedule = schedule;
+        this.section = section;
+        this.yearLevel = yearLevel;
+        this.subject = subject;
+       
+    }
 	public Subject getSubject() {
 		return subject;
 	}

@@ -25,6 +25,7 @@ import biz.global.repo.ProfessorLoadRepo;
 import biz.global.repo.ProfessorRepo;
 import biz.global.repo.SubjectDetailHistoryRepo;
 import biz.global.repo.SubjectRepo;
+import biz.global.wrapper.SubjectSubjectDetailHistoryWrapper;
 
 
 @RestController
@@ -75,15 +76,24 @@ public class SubjectController {
 	//////////////////////////////////////////////////////////////////////////////////  POST MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	    
 	@PostMapping(value="add")
-    public ResponseEntity<ResponseModel> createSubject(@RequestBody Subject subject) {
-        
-        Optional<Subject> subj = Optional.ofNullable(subjectRepo.findBySubjectCode(subject.getSubjectCode()));
-        if(subj.isPresent()) {
-            return ResponseEntity.ok().body(new ResponseModel(0, "Subject Code already exist", "", null));
-        }
+	
+    public ResponseEntity<ResponseModel> createSubject( 
+            @RequestBody SubjectSubjectDetailHistoryWrapper wrapper) {
 
-        Subject sub = subjectRepo.save(subject);
-        return ResponseEntity.ok().body(new ResponseModel(1, "subject successfully added", "", sub));
+        Optional<Subject> subj = Optional.ofNullable(subjectRepo.findBySubjectCode(wrapper.getSubject().getSubjectCode()));
+        
+        SubjectDetailHistory subhistory = wrapper.getSubjectDetailHistory();
+        if(subj.isPresent()) {
+            return ResponseEntity.ok().body(new ResponseModel(0, "Subject code already exist", "", ""));
+        }
+        else {
+            Subject sub = subjectRepo.save(wrapper.getSubject());
+            SubjectDetailHistory history1 = new SubjectDetailHistory(subhistory.getAcademicYear(), subhistory.getSem(), subhistory.getSchedule(),"A", subhistory.getYearLevel(), sub);
+            SubjectDetailHistory history2 = new SubjectDetailHistory(subhistory.getAcademicYear(), subhistory.getSem(), subhistory.getSchedule(),"B", subhistory.getYearLevel(), sub);
+            subjectDetailHistoryRepo.save(history1);
+            subjectDetailHistoryRepo.save(history2);
+            return ResponseEntity.ok().body(new ResponseModel(1, "Subject added", "", sub));
+        }
     }
 	
 	
