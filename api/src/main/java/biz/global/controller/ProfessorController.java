@@ -185,9 +185,14 @@ public class ProfessorController {
     	Optional<Professor> profData =professorRepo.findById(profID);
     	Optional<Grades> findGrade =Optional.ofNullable(gradesRepo.findGrade(studentID, subjectID, profID));
     	if(findGrade.isPresent()) {
-
+    	    
+    	    findGrade.get().setComment(model.getComment());
+    	    findGrade.get().setRemarks(model.getRemarks());
     		findGrade.get().setFinalGrade(model.getPrelimGrade(), model.getMidtermGrade());
     		findGrade.get().setStatus(model.getPrelimGrade(), model.getMidtermGrade());
+    		findGrade.get().setPrelimGrade(model.getPrelimGrade());
+    		findGrade.get().setMidtermGrade(model.getMidtermGrade());
+    		
         	Grades save = gradesRepo.save(findGrade.get());
     		return ResponseEntity.ok().body(new ResponseModel(1, "Record has been modified",  null, save));
     	}else {
