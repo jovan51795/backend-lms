@@ -44,50 +44,55 @@ public class SubjectController {
 	@Autowired
 	private ProfessorLoadRepo professorLoadRepo;
 	
-	@GetMapping(value= "all")
+	
+	
+	
+	//////////////////////////////////////////////////////////////////////////////////  GET MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    
+    
+    @GetMapping(value= "all")
     List<Subject> getSubjects() {
         return subjectRepo.findAll();
     }
 
-    @PostMapping(value="add")
+    
+    @GetMapping(value = "getbyid/{id}")
+    private ResponseEntity<ResponseModel> getSubjectByID(@PathVariable Long id) {
+        Optional<Subject> sub = subjectRepo.findById(id);
+        if(sub.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(0, "subject does not exist", null, null));
+        }
+        
+        return ResponseEntity.ok().body(new ResponseModel(1, "subject exist", null, sub.get()));
+        
+    }
+    
+	
+	
+    
+    
+    
+	//////////////////////////////////////////////////////////////////////////////////  POST MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	    
+	@PostMapping(value="add")
     public ResponseEntity<ResponseModel> createSubject(@RequestBody Subject subject) {
-    	
-    	Optional<Subject> subj = Optional.ofNullable(subjectRepo.findBySubjectCode(subject.getSubjectCode()));
-    	if(subj.isPresent()) {
-    		return ResponseEntity.ok().body(new ResponseModel(0, "Subject Code already exist", "", null));
-    	}
+        
+        Optional<Subject> subj = Optional.ofNullable(subjectRepo.findBySubjectCode(subject.getSubjectCode()));
+        if(subj.isPresent()) {
+            return ResponseEntity.ok().body(new ResponseModel(0, "Subject Code already exist", "", null));
+        }
 
-    	Subject sub = subjectRepo.save(subject);
+        Subject sub = subjectRepo.save(subject);
         return ResponseEntity.ok().body(new ResponseModel(1, "subject successfully added", "", sub));
     }
-    
-    @PatchMapping("update/{id}")
-    public ResponseEntity<ResponseModel> updateSubject(@PathVariable Long id,@RequestBody Subject subject) {
-    	Optional<Subject> sub = subjectRepo.findById(id);
-    	if(sub.isEmpty()) {
-    		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(0, "subject does not exist", null, null));
-    	}
-    	subject.setSubject_id(sub.get().getSubject_id());
-    	subjectRepo.save(subject);
-    	return ResponseEntity.ok().body(new ResponseModel(1, "updated successfully", null, subject));
-    }
-    
-    @DeleteMapping("delete")
-    public ResponseEntity<ResponseModel> deleteSubject(@RequestBody String subject_code) {
-    	Optional<Subject> sub = Optional.ofNullable(subjectRepo.findBySubjectCode(subject_code));
-    	if(sub.isEmpty()) {
-    		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(0, "subject does not exist", null, null));
-    	}
-    	
-    	subjectRepo.deleteById(sub.get().getSubject_id());
-    	return ResponseEntity.ok().body(new ResponseModel(1, "subject deleted successfully", null, null));
-    }
+	
+	
 
-    @PostMapping("/{subjectID}/professor/{profID}")ResponseEntity<ResponseModel> addProfessorToSubject(
+    @PostMapping("/{subjectID}/professor/{profID}")
+    ResponseEntity<ResponseModel> addProfessorToSubject(
             @PathVariable Long subjectID,
             @PathVariable Long profID,
-            @RequestBody SubjectDetailHistory subhistory
-    ) {
+            @RequestBody SubjectDetailHistory subhistory) {
         Optional<Subject> subjectData= subjectRepo.findById(subjectID);
         Optional<Professor> profData =professorRepo.findById(profID);
         Optional<SubjectDetailHistory> findDetail =Optional.ofNullable(subjectDetailHistoryRepo.findHistory(subjectID, profID));
@@ -108,7 +113,6 @@ public class SubjectController {
             subjectData.get().setProfessor(profData.get()); 
             subjectRepo.save(subjectData.get());
             subjectDetailHistoryRepo.save(findDetail.get());
-//            professorLoadRepo.save(findLoad.get());
             return ResponseEntity.ok().body(new ResponseModel(1, "Record has been modified", null, findDetail));
         }else {
             SubjectDetailHistory history = new SubjectDetailHistory(subhistory.getAcademicYear(), subhistory.getSem(), subhistory.getSchedule(),subhistory.getSection(), subhistory.getYearLevel(),subhistory.getStatus(), subhistory.getStartDate(), subjectData.get(), profData.get());
@@ -122,16 +126,47 @@ public class SubjectController {
         
         
     }
-    
-    @GetMapping(value = "getbyid/{id}")
-    private ResponseEntity<ResponseModel> getSubjectByID(@PathVariable Long id) {
-    	Optional<Subject> sub = subjectRepo.findById(id);
-    	if(sub.isEmpty()) {
-    		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(0, "subject does not exist", null, null));
-    	}
-    	
-    	return ResponseEntity.ok().body(new ResponseModel(1, "subject exist", null, sub.get()));
-    	
+	
+	
+	    
+	    
+	//////////////////////////////////////////////////////////////////////////////////  DELETE MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
+	    
+	@DeleteMapping("delete")
+    public ResponseEntity<ResponseModel> deleteSubject(@RequestBody String subject_code) {
+        Optional<Subject> sub = Optional.ofNullable(subjectRepo.findBySubjectCode(subject_code));
+        if(sub.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(0, "subject does not exist", null, null));
+        }
+        
+        subjectRepo.deleteById(sub.get().getSubject_id());
+        return ResponseEntity.ok().body(new ResponseModel(1, "subject deleted successfully", null, null));
     }
-    
+	    
+	
+	
+	
+	
+	//////////////////////////////////////////////////////////////////////////////////  PATCH MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
+	
+	@PatchMapping("update/{id}")
+    public ResponseEntity<ResponseModel> updateSubject(@PathVariable Long id,@RequestBody Subject subject) {
+        Optional<Subject> sub = subjectRepo.findById(id);
+        if(sub.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(0, "subject does not exist", null, null));
+        }
+        subject.setSubject_id(sub.get().getSubject_id());
+        subjectRepo.save(subject);
+        return ResponseEntity.ok().body(new ResponseModel(1, "updated successfully", null, subject));
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
 }
