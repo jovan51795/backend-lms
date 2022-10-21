@@ -21,11 +21,29 @@ public class CourseController {
 	@Autowired
 	private CourseRepo courseRepo;
 	
-	@GetMapping(value = "all")
-	public List<Course> getAllCourse() throws JsonProcessingException {
-		
-		List<Course> course = courseRepo.findAll();
-		return course;
-	}
+	
+	//////////////////////////////////////////////////////////////////////////////////  GET MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    
+
+    @GetMapping(value = "all")
+    public List<Course> getAllCourse() throws JsonProcessingException {
+        
+        List<Course> course = courseRepo.findAll();
+        return course;
+    }
+    
+    
+    
+	//////////////////////////////////////////////////////////////////////////////////  POST MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	    
+
+	    
+	    
+	//////////////////////////////////////////////////////////////////////////////////  DELETE MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
+	    
+	    
+	    
+	//////////////////////////////////////////////////////////////////////////////////  PATCH MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
+	
 
 }

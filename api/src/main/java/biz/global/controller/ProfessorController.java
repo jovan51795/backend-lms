@@ -56,12 +56,14 @@ public class ProfessorController {
 	
 	@Autowired
     private JWTUtility jwtUtility;
-	
 
-	
-	
 	BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 	
+	
+	
+	
+	
+//////////////////////////////////////////////////////////////////////////////////  GET MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\  
 	
 	@GetMapping(value= "all")
     List<Professor> getprofessors() {
@@ -75,39 +77,7 @@ public class ProfessorController {
 	    	 return ResponseEntity.ok().body(new ResponseModel(1, "Success", null, get));
 	    }
 
-    @PostMapping(value="add")
-    public ResponseEntity<ResponseModel> addProfessor(@RequestBody Professor professor) throws IOException {
-    	Optional<Professor> prof = Optional.ofNullable(professorRepo.findByProfessorNo(professor.getProfessorNo()));
-    	if(prof.isPresent()) {
-    		return ResponseEntity.ok().body(new ResponseModel(0, "professor code already exist", null, null));
-    	}
-		
-    	String hashedPassword = bcrypt.encode(professor.getProfessorNo());
-    	professor.setPassword(hashedPassword);
-    	professorRepo.save(professor);
 
-        return ResponseEntity.ok().body(new ResponseModel(1, "professor added successfully", null, professor));
-    }
-    
-  
-    																						
-    @PostMapping(value = "login") 
-    public ResponseEntity<ResponseModel> login(@RequestBody Admin admin) {  
-        Optional<Professor> professor = Optional.ofNullable(professorRepo.findByProfessorNo(admin.getUsername()));
-        
-        try {
-            if(professor.isPresent() && professor.get().getProfessorNo().equals(admin.getUsername()) && bcrypt.matches(admin.getPassword(), professor.get().getPassword()) && professor.get().getActiveDeactive()) {
-                ResponseModel responseModel = new ResponseModel(1, "Login successful",jwtUtility.generateToken(professor.get().getProfessorNo()) ,professor.get());
-                return ResponseEntity.ok().body(responseModel);
-            }else if(!professor.get().getActiveDeactive()) {
-                return ResponseEntity.ok().body(new ResponseModel(0, "Your account has been deactivated", "", null));
-            }
-            return ResponseEntity.ok().body(new ResponseModel(0, "Username and password is incorrect", "", null));
-        }catch (NoSuchElementException e) {
-            return ResponseEntity.ok().body(new ResponseModel(0, "Username and password is incorrect", "", null));
-        }   
-    }
- 
     @GetMapping("{id}")
     public ResponseEntity<Professor> getProfessorById(@PathVariable Long id){
     	Professor professor = professorRepo.findById(id)
@@ -115,27 +85,38 @@ public class ProfessorController {
         return ResponseEntity.ok(professor);
     }
     
-    @PatchMapping(value="/update/{id}")
-	private ResponseEntity<ResponseModel> updateProfessor(@PathVariable Long id, @RequestBody Professor professor) {
-		Optional<Professor> prof = professorRepo.findById(id);
-		if(prof.isPresent()) {
-			professorRepo.save(professor);
-			return ResponseEntity.ok().body(new ResponseModel(1, "professor updated successfully", "", professor));
-		}
-		return ResponseEntity.ok().body(new ResponseModel(0, "An unexpected error occurred", "", null));
-	}
+   
+    @GetMapping(value="getpass/{id}")
+    public String getPass(@PathVariable Long id) {
+     
+       return professorRepo.getPass(id);
+    }
     
-    @DeleteMapping("{id}")
-    public ResponseEntity<ResponseModel> deleteProfessor(@PathVariable Long id){
-    	Optional<Professor> professor = professorRepo.findById(id);
-    	if(professor.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(0, "professor does not exist", null, null));
-		}
-    	
-		professorRepo.deleteById(professor.get().getProfessor_id());
-		
-		return ResponseEntity.ok().body(new ResponseModel(1, "successfully deleted", null, null));
 
+    @GetMapping(value="getfail/{id}")
+    public String getFail(@PathVariable Long id) {
+       return professorRepo.getFail(id);
+    }
+    
+    @GetMapping(value="getconditional/{id}")
+    public String getConditional(@PathVariable Long id) {
+       return professorRepo.getConditional(id);
+    }
+    
+    @GetMapping(value="schedule/{id}")
+    public ResponseEntity<ResponseModel> getSchedule(@PathVariable Long id) {
+        List<Object> getSchedule = professorRepo.listOfSchedule(id);
+        
+        return ResponseEntity.ok().body(new ResponseModel(1, "Schedule ", "", getSchedule));
+    }
+    
+    @GetMapping(value = "details/{id}")
+    public ResponseEntity<ResponseModel> details(@PathVariable Long id) {
+        Optional<Professor> prof = professorRepo.findById(id);
+        if(prof.isEmpty()) {
+            return ResponseEntity.ok().body(new ResponseModel(0, "professor does not exist", "", null));
+        }
+        return ResponseEntity.ok().body(new ResponseModel(1, "professor details", "", prof.get()));
     }
     
     @GetMapping(value="attendance")
@@ -176,6 +157,46 @@ public class ProfessorController {
         return checker(get);
     }
     
+    
+    
+    
+    
+    
+//////////////////////////////////////////////////////////////////////////////////  POST MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    
+    
+    @PostMapping(value="add")
+    public ResponseEntity<ResponseModel> addProfessor(@RequestBody Professor professor) throws IOException {
+        Optional<Professor> prof = Optional.ofNullable(professorRepo.findByProfessorNo(professor.getProfessorNo()));
+        if(prof.isPresent()) {
+            return ResponseEntity.ok().body(new ResponseModel(0, "professor code already exist", null, null));
+        }
+        
+        String hashedPassword = bcrypt.encode(professor.getProfessorNo());
+        professor.setPassword(hashedPassword);
+        professorRepo.save(professor);
+
+        return ResponseEntity.ok().body(new ResponseModel(1, "professor added successfully", null, professor));
+    }
+    
+  
+                                                                                            
+    @PostMapping(value = "login") 
+    public ResponseEntity<ResponseModel> login(@RequestBody Admin admin) {  
+        Optional<Professor> professor = Optional.ofNullable(professorRepo.findByProfessorNo(admin.getUsername()));
+        
+        try {
+            if(professor.isPresent() && professor.get().getProfessorNo().equals(admin.getUsername()) && bcrypt.matches(admin.getPassword(), professor.get().getPassword()) && professor.get().getActiveDeactive()) {
+                ResponseModel responseModel = new ResponseModel(1, "Login successful",jwtUtility.generateToken(professor.get().getProfessorNo()) ,professor.get());
+                return ResponseEntity.ok().body(responseModel);
+            }else if(!professor.get().getActiveDeactive()) {
+                return ResponseEntity.ok().body(new ResponseModel(0, "Your account has been deactivated", "", null));
+            }
+            return ResponseEntity.ok().body(new ResponseModel(0, "Username and password is incorrect", "", null));
+        }catch (NoSuchElementException e) {
+            return ResponseEntity.ok().body(new ResponseModel(0, "Username and password is incorrect", "", null));
+        }   
+    }
     
     @PostMapping(value="/setgradesto/{studentID}/subject/{subjectID}/prof/{profID}")
     public ResponseEntity<ResponseModel> setGrades( @PathVariable Long studentID, @PathVariable Long subjectID,@PathVariable Long profID, @RequestBody Grades model) {
@@ -229,37 +250,40 @@ public class ProfessorController {
         }    	
     }
     
-    @GetMapping(value = "details/{id}")
-    public ResponseEntity<ResponseModel> details(@PathVariable Long id) {
-    	Optional<Professor> prof = professorRepo.findById(id);
-    	if(prof.isEmpty()) {
-    		return ResponseEntity.ok().body(new ResponseModel(0, "professor does not exist", "", null));
-    	}
-    	return ResponseEntity.ok().body(new ResponseModel(1, "professor details", "", prof.get()));
-    }
+   
     
     
-    @GetMapping(value="getpass/{id}")
-    public String getPass(@PathVariable Long id) {
-     
-       return professorRepo.getPass(id);
-    }
     
-
-    @GetMapping(value="getfail/{id}")
-    public String getFail(@PathVariable Long id) {
-       return professorRepo.getFail(id);
-    }
     
-    @GetMapping(value="getconditional/{id}")
-    public String getConditional(@PathVariable Long id) {
-       return professorRepo.getConditional(id);
-    }
+//////////////////////////////////////////////////////////////////////////////////  DELETE MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\    
+   
     
-    @GetMapping(value="schedule/{id}")
-    public ResponseEntity<ResponseModel> getSchedule(@PathVariable Long id) {
-        List<Object> getSchedule = professorRepo.listOfSchedule(id);
+    @DeleteMapping("{id}")
+    public ResponseEntity<ResponseModel> deleteProfessor(@PathVariable Long id){
+        Optional<Professor> professor = professorRepo.findById(id);
+        if(professor.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(0, "professor does not exist", null, null));
+        }
         
-        return ResponseEntity.ok().body(new ResponseModel(1, "Schedule ", "", getSchedule));
+        professorRepo.deleteById(professor.get().getProfessor_id());
+        
+        return ResponseEntity.ok().body(new ResponseModel(1, "successfully deleted", null, null));
+    }
+    
+    
+    
+    
+    
+ //////////////////////////////////////////////////////////////////////////////////  PATCH MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    
+    
+    @PatchMapping(value="/update/{id}")
+    private ResponseEntity<ResponseModel> updateProfessor(@PathVariable Long id, @RequestBody Professor professor) {
+        Optional<Professor> prof = professorRepo.findById(id);
+        if(prof.isPresent()) {
+            professorRepo.save(professor);
+            return ResponseEntity.ok().body(new ResponseModel(1, "professor updated successfully", "", professor));
+        }
+        return ResponseEntity.ok().body(new ResponseModel(0, "An unexpected error occurred", "", null));
     }
 }
