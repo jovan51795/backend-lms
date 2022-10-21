@@ -25,44 +25,66 @@ import biz.global.service.AuthService;
 @CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
 
-	@Autowired
-	private AuthService authService;
-	
-	@Autowired
-	private AdminRepo adminRepo;
-	
-	BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
-	
-	@PostMapping(value = "register")
-	public AdminResponse register(@RequestBody Admin model) throws IOException {
-		return authService.saveAdminData(model);
-	}
-	
-	@PostMapping(value = "login") 
-	public AdminResponse login(@RequestBody Admin model) throws IOException{
-		return authService.login(model);
-	}
-	
-	@PatchMapping(value = "updateadmin/{id}")
-	public ResponseEntity<ResponseModel> updateAdmin(@PathVariable Long id,@RequestBody Admin admin) {
-		Optional<Admin> model = adminRepo.findById(id);
-		if(model.isEmpty()) {
-			return ResponseEntity.ok().body(new ResponseModel(0, "admin does not exist", "", null));
-		}
-		
-		if((admin.getPassword() != null)) {
-			String hasspassword = bcrypt.encode(admin.getPassword());
-			model.get().setPassword(hasspassword);
-		}
-		model.get().setFirstName(admin.getFirstName());
-		model.get().setLastName(admin.getLastName());
-		model.get().setUsername(admin.getUsername());
-		
-		adminRepo.save(model.get());
-		return ResponseEntity.ok().body(new ResponseModel(1, "Admin details successfully updated", "", model.get()));
-	}
-	
-	
+    @Autowired
+    private AuthService authService;
+    
 
+    @Autowired
+    private AdminRepo adminRepo;
+    
+    BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+
+    
+    
+//////////////////////////////////////////////////////////////////////////////////  GET MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    
+    
+    
+    
+    
+//////////////////////////////////////////////////////////////////////////////////  POST MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+    
+    @PostMapping(value = "register")
+    public AdminResponse register(@RequestBody Admin model) throws IOException {
+        return authService.saveAdminData(model);
+    }
+    
+    @PostMapping(value = "login") 
+    public AdminResponse login(@RequestBody Admin model) throws IOException{
+        return authService.login(model);
+    }
+    
+    
+    
+    
+//////////////////////////////////////////////////////////////////////////////////  DELETE MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
+    
+    
+    
+    
+    
+//////////////////////////////////////////////////////////////////////////////////  PATCH MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    
+    @PatchMapping(value = "updateadmin/{id}")
+    public ResponseEntity<ResponseModel> updateAdmin(@PathVariable Long id,@RequestBody Admin admin) {
+        Optional<Admin> model = adminRepo.findById(id);
+        if(model.isEmpty()) {
+            return ResponseEntity.ok().body(new ResponseModel(0, "admin does not exist", "", null));
+        }
+        
+        if((admin.getPassword() != null)) {
+            String hasspassword = bcrypt.encode(admin.getPassword());
+            model.get().setPassword(hasspassword);
+        }
+        model.get().setFirstName(admin.getFirstName());
+        model.get().setLastName(admin.getLastName());
+        model.get().setUsername(admin.getUsername());
+        
+        adminRepo.save(model.get());
+        return ResponseEntity.ok().body(new ResponseModel(1, "Admin details successfully updated", "", model.get()));
+    }
+    
+    
 
 }
