@@ -48,6 +48,7 @@ public class StudentController {
 	//////////////////////////////////////////////////////////////////////////////////  GET MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     
     
+	
 	@GetMapping("studentlist")
     public List<Student> getAllStudents() {
         return studentRepo.findAll();
@@ -94,6 +95,7 @@ public class StudentController {
     
 	//////////////////////////////////////////////////////////////////////////////////  POST MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	    
+     
 	@PostMapping(value = "add")
     public ResponseEntity<ResponseModel> register(@RequestBody Student student) throws IOException {
         NumberGenerator  numGenerator = new NumberGenerator();
@@ -133,6 +135,7 @@ public class StudentController {
 	    
 	//////////////////////////////////////////////////////////////////////////////////  DELETE MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
     
+    
     @DeleteMapping("delete-student/{id}")
     public ResponseEntity<ResponseModel> deleteStudent(@PathVariable Long id) {
         Optional<Student> student = studentRepo.findById(id);
@@ -152,6 +155,7 @@ public class StudentController {
     
 	//////////////////////////////////////////////////////////////////////////////////  PATCH MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
 
+    
 	@PatchMapping("update-student-info/{id}")
 	public ResponseEntity<ResponseModel> updateStudentInfo( @PathVariable Long id,@RequestBody StudentDto student) throws IllegalArgumentException, JsonProcessingException {
 		Optional<Student> stud = studentRepo.findById(id);

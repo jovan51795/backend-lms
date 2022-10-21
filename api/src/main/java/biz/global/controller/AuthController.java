@@ -42,7 +42,9 @@ public class AuthController {
     
     
     
+    
 //////////////////////////////////////////////////////////////////////////////////  POST MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    
 
     
     @PostMapping(value = "register")
@@ -64,7 +66,9 @@ public class AuthController {
     
     
     
+    
 //////////////////////////////////////////////////////////////////////////////////  PATCH MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    
     
     @PatchMapping(value = "updateadmin/{id}")
     public ResponseEntity<ResponseModel> updateAdmin(@PathVariable Long id,@RequestBody Admin admin) {

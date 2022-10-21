@@ -39,6 +39,7 @@ public class DepartmentController {
 	
 	
 	//////////////////////////////////////////////////////////////////////////////////  GET MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	
     
 	@GetMapping(value = "/all")
     private ResponseEntity<ResponseModel> all() {
@@ -66,6 +67,7 @@ public class DepartmentController {
     
     
 	//////////////////////////////////////////////////////////////////////////////////  POST MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    
 	    
 	@PostMapping(value = "/add")
     private ResponseEntity<ResponseModel>  addDepartment(@RequestBody Department dep) {
@@ -89,6 +91,7 @@ public class DepartmentController {
 	
 	    
 	//////////////////////////////////////////////////////////////////////////////////  DELETE MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
+	
 	    
 	@DeleteMapping(value = "/delete/{id}")
     private ResponseEntity<ResponseModel> deleteDepartment(@PathVariable Long id) {
@@ -114,6 +117,7 @@ public class DepartmentController {
 	
 	    
 	//////////////////////////////////////////////////////////////////////////////////  PATCH MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
+	
 	
 	@PatchMapping(value = "/update/{id}")
 	private ResponseEntity<ResponseModel> updateDepartment(@PathVariable Long id, @RequestBody Department department) {

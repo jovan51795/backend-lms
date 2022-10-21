@@ -48,8 +48,9 @@ public class SubjectController {
 	
 	
 	//////////////////////////////////////////////////////////////////////////////////  GET MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-    
-    
+
+
+	
     @GetMapping(value= "all")
     List<Subject> getSubjects() {
         return subjectRepo.findAll();
@@ -74,6 +75,7 @@ public class SubjectController {
     
 	//////////////////////////////////////////////////////////////////////////////////  POST MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	    
+    
 	@PostMapping(value="add")
     public ResponseEntity<ResponseModel> createSubject(@RequestBody Subject subject) {
         
@@ -132,6 +134,7 @@ public class SubjectController {
 	    
 	//////////////////////////////////////////////////////////////////////////////////  DELETE MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
 	    
+    
 	@DeleteMapping("delete")
     public ResponseEntity<ResponseModel> deleteSubject(@RequestBody String subject_code) {
         Optional<Subject> sub = Optional.ofNullable(subjectRepo.findBySubjectCode(subject_code));
@@ -148,6 +151,7 @@ public class SubjectController {
 	
 	
 	//////////////////////////////////////////////////////////////////////////////////  PATCH MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
+	
 	
 	@PatchMapping("update/{id}")
     public ResponseEntity<ResponseModel> updateSubject(@PathVariable Long id,@RequestBody Subject subject) {
