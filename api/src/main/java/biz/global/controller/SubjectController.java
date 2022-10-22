@@ -106,16 +106,19 @@ public class SubjectController {
             @RequestBody SubjectDetailHistory subhistory) {
         Optional<Subject> subjectData= subjectRepo.findById(subjectID);
         Optional<Professor> profData =professorRepo.findById(profID);
+        
+        Optional<SubjectDetailHistory> findDetailNullprof =Optional.ofNullable(subjectDetailHistoryRepo.findHistorybySection(subjectID, subhistory.getSection()));
         Optional<SubjectDetailHistory> findDetail =Optional.ofNullable(subjectDetailHistoryRepo.findHistory(subjectID, profID));
-        Optional<SubjectDetailHistory> findDetailNullprof =Optional.ofNullable(subjectDetailHistoryRepo.findHistory(subjectID));
         Optional<ProfessorLoad> findLoad =Optional.ofNullable(professorLoadRepo.findProfessorLoad(subjectID, profID));
         
-        if (findDetail.isPresent()||findDetailNullprof.isPresent()) {
-            findDetail.get().setAcademicYear(subhistory.getAcademicYear());
-            findDetail.get().setSchedule(subhistory.getSchedule());
-            findDetail.get().setSection(subhistory.getSection());
-            findDetail.get().setStatus(subhistory.getStatus());
-            findDetail.get().setStartDate(subhistory.getStartDate());
+        if (findDetail.isPresent() && findDetailNullprof.isPresent()) {
+            
+            findDetailNullprof.get().setAcademicYear(subhistory.getAcademicYear());
+            findDetailNullprof.get().setSchedule(subhistory.getSchedule());
+            findDetailNullprof.get().setSection(subhistory.getSection());
+            findDetailNullprof.get().setStatus(subhistory.getStatus());
+            findDetailNullprof.get().setStartDate(subhistory.getStartDate());
+            findDetailNullprof.get().setProf(profData.get());
             findLoad.get().setSubjectTitle(subjectData.get().getSubjectTitle());
             findLoad.get().setSection(subhistory.getSection());
             findLoad.get().setYearLevel(subjectData.get().getYearLevel());
