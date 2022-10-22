@@ -28,7 +28,7 @@ public class StudentDto{
 	 
 	 private String sem;
 
-	 private String academicYear;
+	 private String yearLevel;
 	 
 	 private Boolean active_deactive=true;
 	 
@@ -181,13 +181,15 @@ public class StudentDto{
 	}
 
 
-	public String getAcademicYear() {
-		return academicYear;
+	public String getYearLevel() {
+		return yearLevel;
 	}
-	
-	public void setAcademicYear(String academic_year) {
-		this.academicYear = academic_year;
+
+
+	public void setYearLevel(String yearLevel) {
+		this.yearLevel = yearLevel;
 	}
+
 
 	public Boolean getActive_deactive() {
 		return active_deactive;

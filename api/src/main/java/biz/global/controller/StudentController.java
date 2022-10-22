@@ -178,7 +178,7 @@ public class StudentController {
 		stud.get().setMiddleName(student.getMiddleName());
 		stud.get().setLastName(student.getLastName());
 		stud.get().setBirthDate(student.getBirthDate());
-		stud.get().setAcademicYear(student.getAcademicYear());
+		stud.get().setYearLevel(student.getYearLevel());
 		stud.get().setActive_deactive(student.getActive_deactive());
 		stud.get().setProgram(student.getProgram());
 		stud.get().setSem(student.getSem());
