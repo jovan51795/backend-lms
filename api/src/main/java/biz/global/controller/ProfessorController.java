@@ -148,8 +148,8 @@ public class ProfessorController {
     }
     
     @GetMapping(value="studentlist")
-    public ResponseEntity<ResponseModel> studentList(@RequestParam Long subID,@RequestParam Long id){ 	
-    	List<Object> get = attendanceRepo.studentListbySubject(subID, id);
+    public ResponseEntity<ResponseModel> studentList(@RequestParam Long subID,@RequestParam Long profID){ 	
+    	List<Object> get = attendanceRepo.studentListbySubject(subID, profID);
     	return checker(get);	
     }
     
