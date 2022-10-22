@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
 import org.springframework.stereotype.Repository;
 
 import biz.global.model.Student;
@@ -49,6 +50,25 @@ public interface StudentRepo extends JpaRepository<Student, Long> {
 	@Query(nativeQuery = true, value="SELECT COUNT(student_id) FROM student WHERE data_modified >= (NOW() - INTERVAL '20 days')")
     String getNewStudents();
 	
-	
+	@Query(nativeQuery = true, value="SELECT * FROM subject  WHERE course_fk = ?1 AND sem= ?2 AND year_level = ?3  ORDER BY year_level")
+	List<Object> getCourseEvalution(Long id, String sem, String yrlvl);
 	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

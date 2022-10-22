@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -82,6 +83,16 @@ public class StudentController {
             List<Object> getSchedule = studentRepo.getSchedule(id);
             return ResponseEntity.ok().body(new ResponseModel(1, "Schedule ", "", getSchedule));
         }
+     
+     @GetMapping(value="evaluation")
+     public ResponseEntity<ResponseModel> getCourseEval(
+             @RequestParam Long id,
+             @RequestParam String sem,
+             @RequestParam String yrlvl
+             ) {
+         List<Object> getEval = studentRepo.getCourseEvalution(id, sem, yrlvl);
+         return ResponseEntity.ok().body(new ResponseModel(1, "Schedule ", "", getEval));
+     }
    
      
      

@@ -78,7 +78,6 @@ public class SubjectController {
 	    
     
 	@PostMapping(value="add")
-	
     public ResponseEntity<ResponseModel> createSubject( 
             @RequestBody SubjectSubjectDetailHistoryWrapper wrapper) {
 
@@ -108,11 +107,11 @@ public class SubjectController {
         Optional<Subject> subjectData= subjectRepo.findById(subjectID);
         Optional<Professor> profData =professorRepo.findById(profID);
         Optional<SubjectDetailHistory> findDetail =Optional.ofNullable(subjectDetailHistoryRepo.findHistory(subjectID, profID));
+        Optional<SubjectDetailHistory> findDetailNullprof =Optional.ofNullable(subjectDetailHistoryRepo.findHistory(subjectID));
         Optional<ProfessorLoad> findLoad =Optional.ofNullable(professorLoadRepo.findProfessorLoad(subjectID, profID));
         
-        if (findDetail.isPresent()) {
+        if (findDetail.isPresent()||findDetailNullprof.isPresent()) {
             findDetail.get().setAcademicYear(subhistory.getAcademicYear());
-
             findDetail.get().setSchedule(subhistory.getSchedule());
             findDetail.get().setSection(subhistory.getSection());
             findDetail.get().setStatus(subhistory.getStatus());
