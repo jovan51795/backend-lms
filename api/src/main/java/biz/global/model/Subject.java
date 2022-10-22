@@ -29,6 +29,10 @@ public class Subject {
 	private String prerequisites;
 
 	private Boolean activeDeactive = true;
+	
+	private String sem;
+	
+    private String yearLevel;
 
 	@OneToMany(targetEntity = Grades.class, cascade = CascadeType.ALL)
 	@JoinColumn(name = "student_grades", referencedColumnName = "subject_id")
@@ -96,7 +100,23 @@ public class Subject {
 		this.student = student;
 	}
 
-	public String getSubjectCode() {
+	public String getSem() {
+        return sem;
+    }
+
+    public void setSem(String sem) {
+        this.sem = sem;
+    }
+
+    public String getYearLevel() {
+        return yearLevel;
+    }
+
+    public void setYearLevel(String yearLevel) {
+        this.yearLevel = yearLevel;
+    }
+
+    public String getSubjectCode() {
 		return subjectCode;
 	}
 
