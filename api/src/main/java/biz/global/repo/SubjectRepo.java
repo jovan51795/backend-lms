@@ -15,4 +15,7 @@ public interface SubjectRepo extends JpaRepository<Subject, Long> {
 	List<Subject> getAllSubject();
 	
 	Subject findBySubjectCode(String subjectCode);
+	
+	@Query( nativeQuery=true, value= "SELECT * FROM subject WHERE course_fk=?1")
+	List<Object> getAllSubjectbyCourse(Long id);
 }
