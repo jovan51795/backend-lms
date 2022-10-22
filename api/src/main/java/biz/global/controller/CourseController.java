@@ -9,10 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import biz.global.model.Course;
-import biz.global.model.Student;
 import biz.global.repo.CourseRepo;
 
 @RestController
@@ -23,11 +21,31 @@ public class CourseController {
 	@Autowired
 	private CourseRepo courseRepo;
 	
-	@GetMapping(value = "all")
-	public List<Course> getAllCourse() throws JsonProcessingException {
-		
-		List<Course> course = courseRepo.findAll();
-		return course;
-	}
+	
+	//////////////////////////////////////////////////////////////////////////////////  GET MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    
+    @GetMapping(value = "all")
+    public List<Course> getAllCourse() throws JsonProcessingException {
+        
+        List<Course> course = courseRepo.findAll();
+        return course;
+    }
+    
+    
+    
+	//////////////////////////////////////////////////////////////////////////////////  POST MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    
+	    
+
+	    
+	    
+	//////////////////////////////////////////////////////////////////////////////////  DELETE MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
+    
+	    
+	    
+	    
+	//////////////////////////////////////////////////////////////////////////////////  PATCH MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
+    
+	
 
 }

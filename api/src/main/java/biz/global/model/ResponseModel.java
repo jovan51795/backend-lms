@@ -8,6 +8,7 @@ public class ResponseModel {
 	private String token;
 	private Object object;
 	private List<Subject> subjects;
+	private List<Object> data;
 	
 	public ResponseModel() {
 		
@@ -28,6 +29,21 @@ public class ResponseModel {
 		this.subjects = subjects;
 	}
 	
+	public ResponseModel(int status, String message,  List<Object> data) {
+		this.status = status;
+		this.message = message;
+		this.data = data;
+	}
+	
+	
+	public List<Object> getData() {
+		return data;
+	}
+
+	public void setData(List<Object> data) {
+		this.data = data;
+	}
+
 	public List<Subject> getSubjects() {
 		return subjects;
 	}

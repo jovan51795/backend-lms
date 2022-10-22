@@ -34,42 +34,90 @@ public class DepartmentController {
 	@Autowired
 	private SubjectRepo subjectRepo;
 	
-	@PostMapping(value = "/add")
-	private ResponseEntity<ResponseModel>  addDepartment(@RequestBody Department dep) {
-		try {
-			departmentRepo.save(dep);
-			 return ResponseEntity.ok().body(new ResponseModel(1, "department successfully added", "", dep));
-		}
-		catch (DataIntegrityViolationException e) {
-			return ResponseEntity.ok().body(new ResponseModel(0, "course code already exist", "", null));
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseModel(-1, "", null, null));
-		}
-	}
 	
+	
+	
+	
+	//////////////////////////////////////////////////////////////////////////////////  GET MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	
+    
 	@GetMapping(value = "/all")
-	private ResponseEntity<ResponseModel> all() {
-		List<Department> dep = departmentRepo.findAll();
-		return ResponseEntity.ok().body(new ResponseModel(1, "get all departments", "", dep, null));
-	}
+    private ResponseEntity<ResponseModel> all() {
+        List<Department> dep = departmentRepo.findAll();
+        return ResponseEntity.ok().body(new ResponseModel(1, "get all departments", "", dep, null));
+    }
+    
+    @GetMapping(value = "/alldepwithsub")
+    private ResponseEntity<ResponseModel> allDepartmentWithSubject() {
+        List<Department> dep = departmentRepo.findAll();
+        List<Subject> subjects = subjectRepo.findAll();
+        return ResponseEntity.ok().body(new ResponseModel(1, "get all departments", "", dep, subjects));
+    }
+    
+    @GetMapping(value = "/findbyid/{id}")
+    private ResponseEntity<ResponseModel> getDepartmentByID(@PathVariable Long id) {
+        Optional<Department> department = departmentRepo.findById(id);
+        if(department.isPresent()) {
+            return ResponseEntity.ok().body(new ResponseModel(1, "department exist", "", department));
+        }
+        return ResponseEntity.ok().body(new ResponseModel(0, "department does not exist", "", department));
+    }
+    
+    
+    
+    
+	//////////////////////////////////////////////////////////////////////////////////  POST MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    
+	    
+	@PostMapping(value = "/add")
+    private ResponseEntity<ResponseModel>  addDepartment(@RequestBody Department dep) {
+        try {
+            departmentRepo.save(dep);
+             return ResponseEntity.ok().body(new ResponseModel(1, "department successfully added", "", dep));
+        }
+        catch (DataIntegrityViolationException e) {
+            return ResponseEntity.ok().body(new ResponseModel(0, "course code already exist", "", null));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseModel(-1, "", null, null));
+        }
+    }
+	    
 	
-	@GetMapping(value = "/alldepwithsub")
-	private ResponseEntity<ResponseModel> allDepartmentWithSubject() {
-		List<Department> dep = departmentRepo.findAll();
-		List<Subject> subjects = subjectRepo.findAll();
-		return ResponseEntity.ok().body(new ResponseModel(1, "get all departments", "", dep, subjects));
-	}
 	
-	@GetMapping(value = "/findbyid/{id}")
-	private ResponseEntity<ResponseModel> getDepartmentByID(@PathVariable Long id) {
-		Optional<Department> department = departmentRepo.findById(id);
-		if(department.isPresent()) {
-			return ResponseEntity.ok().body(new ResponseModel(1, "department exist", "", department));
-		}
-		return ResponseEntity.ok().body(new ResponseModel(0, "department does not exist", "", department));
-	}
+	
+	
+	
+	    
+	//////////////////////////////////////////////////////////////////////////////////  DELETE MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
+	
+	    
+	@DeleteMapping(value = "/delete/{id}")
+    private ResponseEntity<ResponseModel> deleteDepartment(@PathVariable Long id) {
+        try {
+            Optional<Department> department = departmentRepo.findById(id);
+            if(department.isPresent()) {
+                
+                departmentRepo.deleteById(id);
+                return ResponseEntity.ok().body(new ResponseModel(1, "department successfully deleted", "", null));
+            }
+            
+            return ResponseEntity.ok().body(new ResponseModel(0, "An unexpected error occurred", "", null));
+        }catch (Exception e) {
+            return ResponseEntity.ok().body(new ResponseModel(0, "Unable to delete", "", null));
+        }
+    }
+	
+	
+	
+	
+	
+	
+	
+	    
+	//////////////////////////////////////////////////////////////////////////////////  PATCH MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
+	
 	
 	@PatchMapping(value = "/update/{id}")
 	private ResponseEntity<ResponseModel> updateDepartment(@PathVariable Long id, @RequestBody Department department) {
@@ -81,20 +129,6 @@ public class DepartmentController {
 		return ResponseEntity.ok().body(new ResponseModel(0, "An unexpected error occurred", "", null));
 	}
 	
-	@DeleteMapping(value = "/delete/{id}")
-	private ResponseEntity<ResponseModel> deleteDepartment(@PathVariable Long id) {
-		try {
-			Optional<Department> department = departmentRepo.findById(id);
-			if(department.isPresent()) {
-				
-				departmentRepo.deleteById(id);
-				return ResponseEntity.ok().body(new ResponseModel(1, "department successfully deleted", "", null));
-			}
-			
-			return ResponseEntity.ok().body(new ResponseModel(0, "An unexpected error occurred", "", null));
-		}catch (Exception e) {
-			return ResponseEntity.ok().body(new ResponseModel(0, "Unable to delete", "", null));
-		}
-	}
+	
 
 }

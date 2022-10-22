@@ -1,26 +1,18 @@
 package biz.global.model;
 
-import java.sql.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotBlank;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import biz.global.util.Generator;
 
 @Entity
 public class Professor {
@@ -30,7 +22,9 @@ public class Professor {
 	
 	private String professorNo;
 
-	private String professorName;
+	private String firstName;
+	
+	private String lastName;
 	
 	private String work;
 	
@@ -53,20 +47,22 @@ public class Professor {
 	public void setType(String type) {
 		this.type = type;
 	}
-
+	@JsonIgnore
 	@OneToMany(targetEntity = Grades.class, cascade = CascadeType.ALL)
 	@JoinColumn(name = "encode", referencedColumnName = "professor_id" )
 	private List<Grades> grades;
+	
 	
 	@OneToMany(targetEntity = Student.class, cascade = CascadeType.ALL)
 	@JoinColumn(name = "evaluate", referencedColumnName = "professor_id" )
 	private List<Student> student;
 	
-	
+	@JsonIgnore
 	@OneToMany(targetEntity = ProfessorLoad.class, cascade = CascadeType.ALL)
 	@JoinColumn(name = "professor_id", referencedColumnName = "professor_id" )
 	private List<ProfessorLoad> professorLoad;
 	
+	@JsonIgnore
 	@OneToMany(targetEntity = SubjectDetailHistory.class, cascade = CascadeType.ALL)
 	@JoinColumn(name = "professor_id", referencedColumnName = "professor_id" )
 	private List<SubjectDetailHistory> subjectDetailHistory;
@@ -76,6 +72,36 @@ public class Professor {
 	  private List<Subject> subjects;
 	 
 	
+	public Professor() {
+		super();
+	}
+
+	public Professor(
+			Long professor_id, 
+			String professorNo, 
+			String firstName,  
+			String lastName,
+			String work, 
+			String gender,
+			String status, 
+			String birthdate, 
+			String password, 
+			Boolean activeDeactive, 
+			String type) {
+		super();
+		this.professor_id = professor_id;
+		this.professorNo = professorNo;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.work = work;
+		this.gender = gender;
+		this.status = status;
+		this.birthdate = birthdate;
+		this.password = password;
+		this.activeDeactive = activeDeactive;
+		this.type = type;
+	}
+
 	public Long getProfessor_id() {
 		return professor_id;
 	}
@@ -107,13 +133,23 @@ public class Professor {
 	}
 
 
-	public String getProfessorName() {
-		return professorName;
+
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setProfessorName(String professorName) {
-		this.professorName = professorName;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
 
 	public String getWork() {
 		return work;

@@ -188,6 +188,30 @@ public class ProfessorController {
     	return ResponseEntity.ok().body(new ResponseModel(1, "Recorded successfully", null, save));
     }
     
+    @PostMapping(value="attendancelist")
+    public ResponseEntity<ResponseModel> attendanceCheckingList(@RequestBody List<Attendance> model){
+        
+            model.stream().forEach(data ->{
+                Optional<Student> studentData= studentRepo.findById(data.getStudent().getStudent_id());
+                Optional<Subject> subjectData= subjectRepo.findById(data.getSubject().getSubject_id());
+                Optional<Professor> profData =professorRepo.findById(data.getProf().getProfessor_id());
+                data.setIsPresent(data.getIsPresent());
+                data.setStudent(studentData.get());
+                data.setSubject(subjectData.get());
+                data.setProf(profData.get());
+            }
+           
+            );
+            List<Attendance> save = attendanceRepo.saveAll(model);
+            return ResponseEntity.ok().body(new ResponseModel(1, "Recorded successfully", null, save));
+
+    }
+    
+    
+    
+    
+//////////////////////////////////////////////////////////////////////////////////  DELETE MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\    
+
     
    
 }

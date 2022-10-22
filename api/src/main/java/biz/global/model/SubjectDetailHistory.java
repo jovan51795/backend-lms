@@ -7,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotBlank;
 @Entity
 public class SubjectDetailHistory {
 	 @Id
@@ -16,17 +15,18 @@ public class SubjectDetailHistory {
 
 	private String academicYear;
 	
-	private String sem;
+	
 	
 	private String schedule;
 	
 	private String section;
 	
-	private String yearLevel;
 	
 	private String status;
 	
-	private Boolean active_deactive;
+	private String startDate;
+	
+	private Boolean active_deactive = true;
 	
 	 @ManyToOne(cascade=CascadeType.ALL)
 	 @JoinColumn(name="subject_id", referencedColumnName = "subject_id")
@@ -41,18 +41,27 @@ public class SubjectDetailHistory {
 	public SubjectDetailHistory() {
 		
 	}
-	public SubjectDetailHistory(String academicYear, String sem, String schedule, String section, String yearLevel,
-			String status, Boolean active_deactive, Subject subject, Professor prof) {
+	public SubjectDetailHistory(String academicYear, String schedule, String section, String status, String startDate, Subject subject, Professor prof) {
 		this.academicYear = academicYear;
-		this.sem = sem;
+		
 		this.schedule = schedule;
 		this.section = section;
-		this.yearLevel = yearLevel;
+		
 		this.status = status;
-		this.active_deactive = active_deactive;
+		this.startDate = startDate;
 		this.subject = subject;
 		this.prof = prof;
 	}
+	
+	public SubjectDetailHistory(String academicYear,  String schedule, String section, Subject subject) {
+        this.academicYear = academicYear;
+        
+        this.schedule = schedule;
+        this.section = section;
+        
+        this.subject = subject;
+       
+    }
 	public Subject getSubject() {
 		return subject;
 	}
@@ -72,19 +81,19 @@ public class SubjectDetailHistory {
 		this.session_id = session_id;
 	}
 
-
-	public String getAcademicYear() {
+	public String getStartDate() {
+        return startDate;
+    }
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+    public String getAcademicYear() {
 		return academicYear;
 	}
 	public void setAcademicYear(String academicYear) {
 		this.academicYear = academicYear;
 	}
-	public String getSem() {
-		return sem;
-	}
-	public void setSem(String sem) {
-		this.sem = sem;
-	}
+
 	public String getSchedule() {
 		return schedule;
 	}
@@ -97,12 +106,7 @@ public class SubjectDetailHistory {
 	public void setSection(String section) {
 		this.section = section;
 	}
-	public String getYearLevel() {
-		return yearLevel;
-	}
-	public void setYearLevel(String yearLevel) {
-		this.yearLevel = yearLevel;
-	}
+
 	public String getStatus() {
 		return status;
 	}

@@ -2,9 +2,9 @@ package biz.global.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,18 +17,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import biz.global.dto.StudentDto;
 import biz.global.model.Admin;
 import biz.global.model.ResponseModel;
 import biz.global.model.Student;
-import biz.global.model.Subject;
 import biz.global.repo.StudentRepo;
 import biz.global.util.JWTUtility;
+import biz.global.util.NumberGenerator;
 
 @RestController
 @RequestMapping(value = "api/student/")
@@ -39,47 +39,134 @@ public class StudentController {
 	StudentRepo studentRepo;
 	
 	
-	
 	@Autowired
 	private JWTUtility jwtUtility;
 	
 	BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 	
-	@PostMapping(value = "add")
-	public ResponseEntity<ResponseModel> register(@RequestBody Student student) throws IOException {
-		Optional<Student> stu = Optional.ofNullable(studentRepo.findByStudentNo(student.getStudentNo()));
-		if(!stu.isEmpty()) {
-			return ResponseEntity.ok().body(new ResponseModel(0, "student number already exist", null, null));
-		}
-		String hashedPassword = bcrypt.encode(student.getStudentNo());
-		student.setPassword(hashedPassword);
-		studentRepo.save(student);
-
-		
-		return ResponseEntity.ok().body(new ResponseModel(1, "student successfully added", null, student));
-	}
+	
+	
+	//////////////////////////////////////////////////////////////////////////////////  GET MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    
+    
 	
 	@GetMapping("studentlist")
-	public List<Student> getAllStudents() {
-		return studentRepo.findAll();
-	}
+    public List<Student> getAllStudents() {
+        return studentRepo.findAll();
+    }
 	
-	@PostMapping("student-login")
-	public ResponseEntity<ResponseModel> studentLogin(@RequestBody Admin student) throws JsonProcessingException {
-		Optional<Student> stu = Optional.ofNullable(studentRepo.findByLastName(student.getUsername()));
-		if(stu.isPresent() && stu.get().getLastName().equals(student.getUsername()) && bcrypt.matches(student.getPassword(), stu.get().getPassword()) && stu.get().getActive_deactive()) {
-			stu.get().setPassword("");
-			ResponseModel responseModel = new ResponseModel(1, "logged in",jwtUtility.generateToken(student.getLastName()), stu.get() );
-			return ResponseEntity.ok().body(responseModel);
-		}
-		else if(!stu.get().getActive_deactive()) {
-			return ResponseEntity.ok().body(new ResponseModel(0, "your account has been deactivated", "", null));
-		}
-		ResponseModel responseModel = new ResponseModel(0, "Invalid lastname or password",null, null );
-		return ResponseEntity.ok().body(responseModel);
-	}
+	@GetMapping("getbyid/{id}")
+    private ResponseEntity<ResponseModel> getStudentById(@PathVariable Long id) {
+        Optional<Student> student = studentRepo.findById(id);
+        if(student.isPresent()) {
+            return ResponseEntity.ok().body(new ResponseModel(1, "student exist", null, student.get()));
+        }
+        student.get().setPassword("");
+        return ResponseEntity.ok().body(new ResponseModel(0, "student does not exist", null, null));
+    }
+    
+    
+    @GetMapping("grades/{id}")
+    private ResponseEntity<ResponseModel> getGrades(@PathVariable Long id){
+        List<Object> studentData =studentRepo.getGradesofStudent(id);
+        return ResponseEntity.ok().body(new ResponseModel(1,"Student grades", null, studentData));
+    }
+    
+    @GetMapping("attendance/{id}")
+    private ResponseEntity<ResponseModel> getAttendance(@PathVariable Long id){
+        List<Object> studentData =studentRepo.getAttendanceofStudent (id);
+        return ResponseEntity.ok().body(new ResponseModel(1,"Student attendance", null, studentData));
+    }
+    
+     @GetMapping(value="schedule/{id}")
+        public ResponseEntity<ResponseModel> getSchedule(@PathVariable Long id) {
+            List<Object> getSchedule = studentRepo.getSchedule(id);
+            return ResponseEntity.ok().body(new ResponseModel(1, "Schedule ", "", getSchedule));
+        }
+     
+     @GetMapping(value="evaluation")
+     public ResponseEntity<ResponseModel> getCourseEval(
+             @RequestParam Long id,
+             @RequestParam String sem,
+             @RequestParam String yrlvl
+             ) {
+         List<Object> getEval = studentRepo.getCourseEvalution(id, sem, yrlvl);
+         return ResponseEntity.ok().body(new ResponseModel(1, "Schedule ", "", getEval));
+     }
+   
+     
+     
+     
+     
+     
+     
+     
+     
+     
+    
+	//////////////////////////////////////////////////////////////////////////////////  POST MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	    
+     
+	@PostMapping(value = "add")
+    public ResponseEntity<ResponseModel> register(@RequestBody Student student) throws IOException {
+        NumberGenerator  numGenerator = new NumberGenerator();
+        Optional<Student> stu = Optional.ofNullable(studentRepo.findByStudentNo(student.getStudentNo()));
+        if(!stu.isEmpty()) {
+            return ResponseEntity.ok().body(new ResponseModel(0, "student number already exist", null, null));
+        }   
+        student.setStudentNo(numGenerator.generator(studentRepo.findAll().size()));
+        String hashedPassword = bcrypt.encode(student.getStudentNo());
+        student.setPassword(hashedPassword);
+        studentRepo.save(student);
+        return ResponseEntity.ok().body(new ResponseModel(1, "student successfully added", null, student));
+    }
 	
-	
+    @PostMapping(value = "student-login")
+    public ResponseEntity<ResponseModel> login(@RequestBody Admin admin) {  
+        Optional<Student> student = Optional.ofNullable(studentRepo.findByStudentNo(admin.getUsername()));
+        
+        try {
+            if(student.isPresent() && student.get().getStudentNo().equals(admin.getUsername()) && bcrypt.matches(admin.getPassword(), student.get().getPassword()) && student.get().getActive_deactive()) {
+                ResponseModel responseModel = new ResponseModel(1, "Login successful",jwtUtility.generateToken(student.get().getStudentNo()) ,student.get());
+                return ResponseEntity.ok().body(responseModel);
+            }else if(!student.get().getActive_deactive()) {
+                return ResponseEntity.ok().body(new ResponseModel(0, "Your account has been deactivated", "", null));
+            }
+            return ResponseEntity.ok().body(new ResponseModel(0, "Username and password is incorrect", "", null));
+        }catch (NoSuchElementException e) {
+            return ResponseEntity.ok().body(new ResponseModel(0, "Username and password is incorrect", "", null));
+        }   
+    }
+    
+    
+    
+    
+    
+	    
+	    
+	//////////////////////////////////////////////////////////////////////////////////  DELETE MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
+    
+    
+    @DeleteMapping("delete-student/{id}")
+    public ResponseEntity<ResponseModel> deleteStudent(@PathVariable Long id) {
+        Optional<Student> student = studentRepo.findById(id);
+        if(student.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(0, "student does not exist", null, null));
+        }
+        studentRepo.deleteById(student.get().getStudent_id());
+        return ResponseEntity.ok().body(new ResponseModel(1, "successfully deleted", null, null));
+    }
+	    
+	    
+    
+    
+    
+
+    
+    
+	//////////////////////////////////////////////////////////////////////////////////  PATCH MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
+
+    
 	@PatchMapping("update-student-info/{id}")
 	public ResponseEntity<ResponseModel> updateStudentInfo( @PathVariable Long id,@RequestBody StudentDto student) throws IllegalArgumentException, JsonProcessingException {
 		Optional<Student> stud = studentRepo.findById(id);
@@ -105,28 +192,7 @@ public class StudentController {
 		return ResponseEntity.ok().body(new ResponseModel(1, "updated successfully", null, student));
 	}
 	
-	@DeleteMapping("delete-student/{id}")
-	public ResponseEntity<ResponseModel> deleteStudent(@PathVariable Long id) {
-		Optional<Student> student = studentRepo.findById(id);
-		if(student.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(0, "student does not exist", null, null));
-		}
-		studentRepo.deleteById(student.get().getStudent_id());
-		return ResponseEntity.ok().body(new ResponseModel(1, "successfully deleted", null, null));
-	}
-	
-	@GetMapping("getbyid/{id}")
-	private ResponseEntity<ResponseModel> getStudentById(@PathVariable Long id) {
-		Optional<Student> student = studentRepo.findById(id);
-		if(student.isPresent()) {
-			return ResponseEntity.ok().body(new ResponseModel(1, "student exist", null, student.get()));
-		}
-		student.get().setPassword("");
-		return ResponseEntity.ok().body(new ResponseModel(0, "student does not exist", null, null));
-	}
 	
 	
 	
-	
-
 }

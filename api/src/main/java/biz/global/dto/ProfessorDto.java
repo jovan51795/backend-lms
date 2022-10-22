@@ -75,7 +75,31 @@ public class ProfessorDto {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public String getProfessorNo() {
+        return professorNo;
+    }
+
+    public void setProfessorNo(String professorNo) {
+        this.professorNo = professorNo;
+    }
+
+    public List<ProfessorLoadDto> getProfessorLoad() {
+        return professorLoad;
+    }
+
+    public void setProfessorLoad(List<ProfessorLoadDto> professorLoad) {
+        this.professorLoad = professorLoad;
+    }
+
+    public List<SubjectDetailHistoryDto> getSubjectDetailHistory() {
+        return subjectDetailHistory;
+    }
+
+    public void setSubjectDetailHistory(List<SubjectDetailHistoryDto> subjectDetailHistory) {
+        this.subjectDetailHistory = subjectDetailHistory;
+    }
+
+    public void setStatus(String status) {
 		this.status = status;
 	}
 

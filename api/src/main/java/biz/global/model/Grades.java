@@ -1,25 +1,15 @@
 package biz.global.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.validation.constraints.NotBlank;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import biz.global.util.Generator;
 @Entity
 public class Grades {
 	 @Id
@@ -136,6 +126,8 @@ public class Grades {
 		Double compute = (prelimGrade+midtermGrade)/2;
 		if(compute<=3.0) {
 			this.status = "Pass";
+		}else if(compute > 3.0 && compute <= 3.5){
+		    this.status = "Conditional";
 		}
 		else {
 			this.status = "Fail";
