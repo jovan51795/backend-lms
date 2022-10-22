@@ -200,6 +200,7 @@ public class ProfessorController {
         }   
     }
     
+    
     @PostMapping(value="/setgradesto/{studentID}/subject/{subjectID}/prof/{profID}")
     public ResponseEntity<ResponseModel> setGrades( @PathVariable Long studentID, @PathVariable Long subjectID,@PathVariable Long profID, @RequestBody Grades model) {
     	
@@ -252,8 +253,36 @@ public class ProfessorController {
         }    	
     }
     
-   
     
+   
+    @PatchMapping(value="attendancelist")
+    public ResponseEntity<ResponseModel> attendanceChecking(@RequestBody List<Attendance> model){
+            model.stream().forEach(data ->{
+                Optional<Student> studentData= studentRepo.findById(data.getStudent().getStudent_id());
+                Optional<Subject> subjectData= subjectRepo.findById(data.getSubject().getSubject_id());
+                Optional<Professor> profData =professorRepo.findById(data.getProf().getProfessor_id());
+                Optional<Attendance> attendance =Optional.ofNullable(attendanceRepo.findAttendace(data.getStudent().getStudent_id(), data.getSubject().getSubject_id(), data.getProf().getProfessor_id()));
+                if(attendance.isPresent()) {
+                    
+                    attendance.get().setIsPresent(data.getIsPresent());
+                    attendanceRepo.save(attendance.get());
+                    return;
+                }else {
+                    
+                    data.setIsPresent(data.getIsPresent());
+                    data.setStudent(studentData.get());
+                    data.setSubject(subjectData.get());
+                    data.setProf(profData.get());
+                    attendanceRepo.save(data);
+                }
+                
+            }
+           
+            );
+            
+            return ResponseEntity.ok().body(new ResponseModel(1, "Recorded successfully", null, null));
+
+    }
     
     
     
