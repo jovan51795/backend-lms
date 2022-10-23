@@ -84,14 +84,10 @@ public class Student  implements  Serializable{
 	 }
 	
 	
-
-	
-
-    public Student(Long student_id, String studentNo, String firstName, String middleName, String lastName,
-            String password, String birthDate, String status, String sem, String yearLevel, String address,
+    public Student(Long student_id,String password,  String studentNo, String firstName, String middleName, String lastName,
+            String birthDate, String status, String sem, String yearLevel, String address,
             String mobileNumber, String emergencyContactFirstName, String emergencyContactLastName,
-            String emergencyContactNumber, Boolean active_deactive, LocalDate data_modified, List<Program> program,
-            List<Subject> subject, String type, Department department, Course course) {
+            String emergencyContactNumber, Boolean active_deactive, LocalDate data_modified,String type) {
         super();
         this.student_id = student_id;
         this.studentNo = studentNo;
@@ -113,8 +109,6 @@ public class Student  implements  Serializable{
         this.program = program;
         this.subject = subject;
         this.type = type;
-        this.department = department;
-        this.course = course;
     }
 
 
