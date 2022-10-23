@@ -99,7 +99,7 @@ public class SubjectController {
 	
 	
 
-    @PostMapping("/{subjectID}/professor/{profID}")
+    @PatchMapping("/{subjectID}/professor/{profID}")
     ResponseEntity<ResponseModel> addProfessorToSubject(
             @PathVariable Long subjectID,
             @PathVariable Long profID,
@@ -110,19 +110,29 @@ public class SubjectController {
         Optional<SubjectDetailHistory> findDetailNullprof =Optional.ofNullable(subjectDetailHistoryRepo.findHistorybySection(subjectID, subhistory.getSection()));
         Optional<SubjectDetailHistory> findDetail =Optional.ofNullable(subjectDetailHistoryRepo.findHistory(subjectID, profID));
         Optional<ProfessorLoad> findLoad =Optional.ofNullable(professorLoadRepo.findProfessorLoad(subjectID, profID));
-        
+        Optional<ProfessorLoad> findLoadbySection =Optional.ofNullable(professorLoadRepo.findProfessorLoadbySection(subjectID, subhistory.getSection()));
         if (findDetail.isPresent() && findDetailNullprof.isPresent()) {
-            
             findDetailNullprof.get().setAcademicYear(subhistory.getAcademicYear());
             findDetailNullprof.get().setSchedule(subhistory.getSchedule());
             findDetailNullprof.get().setSection(subhistory.getSection());
             findDetailNullprof.get().setStatus(subhistory.getStatus());
             findDetailNullprof.get().setStartDate(subhistory.getStartDate());
             findDetailNullprof.get().setProf(profData.get());
-            findLoad.get().setSubjectTitle(subjectData.get().getSubjectTitle());
-            findLoad.get().setSection(subhistory.getSection());
-            findLoad.get().setYearLevel(subjectData.get().getYearLevel());
-
+            
+            if(findLoadbySection.isPresent()&&findLoad.isPresent() ) {
+                findLoadbySection.get().setSubjectTitle(subjectData.get().getSubjectTitle());
+                findLoadbySection.get().setYearLevel(subjectData.get().getYearLevel());
+                findLoadbySection.get().setProf(profData.get());
+                professorLoadRepo.save(findLoad.get());  
+            }else{
+                if(findLoadbySection.isPresent()) {
+                    findLoadbySection.get().setProf(profData.get());
+                }else {
+                    ProfessorLoad profLoad = new ProfessorLoad(subjectData.get().getSubjectTitle(), subhistory.getSection(), subjectData.get().getYearLevel(),profData.get(), subjectData.get());
+                    professorLoadRepo.save(profLoad);
+                }
+                
+            } 
             subjectData.get().setProfessor(profData.get()); 
             subjectRepo.save(subjectData.get());
             subjectDetailHistoryRepo.save(findDetail.get());

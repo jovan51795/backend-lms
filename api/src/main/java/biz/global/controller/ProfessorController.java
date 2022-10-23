@@ -71,6 +71,23 @@ public class ProfessorController {
 	    	}
 	    	 return ResponseEntity.ok().body(new ResponseModel(1, "Success", null, get));
 	    }
+	 
+	   @GetMapping(value="getpass/{id}")
+	    public String getPass(@PathVariable Long id) {
+	     
+	       return professorRepo.getPass(id);
+	    }
+	    
+
+	    @GetMapping(value="getfail/{id}")
+	    public String getFail(@PathVariable Long id) {
+	       return professorRepo.getFail(id);
+	    }
+	    
+	    @GetMapping(value="getconditional/{id}")
+	    public String getConditional(@PathVariable Long id) {
+	       return professorRepo.getConditional(id);
+	    }
 
     @PostMapping(value="add")
     public ResponseEntity<ResponseModel> addProfessor(@RequestBody Professor professor) throws IOException {
@@ -161,10 +178,10 @@ public class ProfessorController {
     }
     
     
-    @PostMapping(value="/setgradesto/{studentID}/subject/{subjectID}/prof/{profID}")
+    @PostMapping(value="setgradesto/{studentID}/subject/{subjectID}/prof/{profID}")
     public ResponseEntity<ResponseModel> setGrades( @PathVariable Long studentID, @PathVariable Long subjectID,@PathVariable Long profID, @RequestBody Grades model) {
     	Subject subject = subjectRepo.findById(subjectID).get();
-    	Student student = studentRepo.findById(subjectID).get();
+    	Student student = studentRepo.findById(studentID).get();
     	Professor prof = professorRepo.findById(profID).get();
     	
     	model.setSubject(subject);
@@ -176,10 +193,24 @@ public class ProfessorController {
     	return ResponseEntity.ok().body(new ResponseModel(1, "Recorded successfully", null, save));
     }
     
-    @PostMapping(value="attendancesheet")
-    public ResponseEntity<ResponseModel> attendanceChecking( @RequestBody Attendance model) {
-    	Attendance save = attendanceRepo.save(model);
-    	return ResponseEntity.ok().body(new ResponseModel(1, "Recorded successfully", null, save));
+    @PostMapping(value="/attendancesheet/{studentID}/subject/{subjectID}/prof/{profID}")
+    public ResponseEntity<ResponseModel> attendanceChecking( @PathVariable Long studentID, @PathVariable Long subjectID,@PathVariable Long profID, @RequestBody Attendance model) {
+        
+        Optional<Student> studentData= studentRepo.findById(studentID);
+        Optional<Subject> subjectData= subjectRepo.findById(subjectID);
+        Optional<Professor> profData =professorRepo.findById(profID);
+        Optional<Attendance> attendance =Optional.ofNullable(attendanceRepo.findAttendace(studentID, subjectID, profID));
+        if(attendance.isPresent()) {
+            attendance.get().setIsPresent(model.getIsPresent());
+            Attendance save = attendanceRepo.save(attendance.get());
+            return ResponseEntity.ok().body(new ResponseModel(1, "Record has been modified",  null, save));
+        }else {
+            model.setStudent(studentData.get());
+            model.setSubject(subjectData.get());
+            model.setProf(profData.get());
+            Attendance save = attendanceRepo.save(model);
+            return ResponseEntity.ok().body(new ResponseModel(1, "Recorded successfully", null, save));
+        }       
     }
     
     @PostMapping(value="attendancelist")
