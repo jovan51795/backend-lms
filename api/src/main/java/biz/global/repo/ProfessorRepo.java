@@ -33,6 +33,9 @@ public interface ProfessorRepo extends JpaRepository<Professor, Long> {
 	
 	@Query(nativeQuery = true, value="SELECT COUNT(professor_id) FROM professor")
     String getTotalFacultyMembers(); 
+    
+	@Query(nativeQuery = true, value="SELECT COUNT(course_id) from course")
+    String getTotalCourses(); 
 	
 	@Query(nativeQuery = true, value="SELECT DISTINCT sub.subject_id, sub.subject_title, sub.subject_code, grades.prelim_grade, grades.midterm_grade, grades.final_grade, grades.remarks, grades.status FROM grades AS grades\r\n"
 	        + "    JOIN (SELECT  sub.subject_title, sub.subject_code,sub.subject_id,  sub.professor_id, prof.first_name\r\n"

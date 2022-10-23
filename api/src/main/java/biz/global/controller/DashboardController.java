@@ -49,12 +49,17 @@ public class DashboardController {
         return profRepo.getTotalFacultyMembers();
     }
     
+    public String getTotalCourses() {
+        return profRepo.getTotalCourses();
+    }
+    
     @GetMapping(value="dashboardreports")
     public ResponseEntity<ResponseModel> addProfessor() throws IOException {
         ArrayList<Object> dashboardReports = new ArrayList<>();
         dashboardReports.add(getTotalStudents());
         dashboardReports.add(getNewStudents());
         dashboardReports.add(getFacultyMembers());
+        dashboardReports.add(getTotalCourses());
 
         return ResponseEntity.ok().body(new ResponseModel(1, "professor added successfully", null, dashboardReports));
     }
