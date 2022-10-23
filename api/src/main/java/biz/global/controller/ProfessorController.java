@@ -153,13 +153,7 @@ public class ProfessorController {
 	        return checker(get);
 	    }
 	    
-	    
-	    @GetMapping("{id}")
-	    public ResponseEntity<Professor> getEmployeeById(@PathVariable Long id){
-	        Professor professor = professorRepo.findById(id)
-	                .orElseThrow(() -> new ResourceNotFoundException("Employee not exist with id:" + id));
-	        return ResponseEntity.ok(professor);
-	    }
+
 	
 //////////////////////////////////////////////////////////////////////////////////POST MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	 
