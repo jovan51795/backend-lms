@@ -53,6 +53,17 @@ public interface StudentRepo extends JpaRepository<Student, Long> {
 	@Query(nativeQuery = true, value="SELECT * FROM subject  WHERE course_fk = ?1 AND sem= ?2 AND year_level = ?3  ORDER BY year_level")
 	List<Object> getCourseEvalution(Long id, String sem, String yrlvl);
 	
+	
+	@Query(nativeQuery = true, value="SELECT * FROM subject AS sub WHERE sub.sem = 1? AND sub.year_level=?2 AND sub.course_fk =?3")
+    List<Object> getRecommendedSubjects(String sem, String yrlvl, Long courseID);
+	
+	
+	@Query(nativeQuery = true, value="SELECT * FROM subject_detail_history WHERE professor_id IS NOT NULL AND subject_id =?1")
+    List<Object> getScheduleSubject(Long subjectID);
+	
+	@Query(nativeQuery = true, value="INSERT INTO student_subject (student_id, subject_id)VALUES (?1,?2);")
+    List<Object> addStudentSubject(Long studentID,Long subjectID);
+	
 }
 
 

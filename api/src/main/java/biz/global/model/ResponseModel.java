@@ -1,5 +1,6 @@
 package biz.global.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ResponseModel {
@@ -35,6 +36,11 @@ public class ResponseModel {
 		this.data = data;
 	}
 	
+	public ResponseModel(int status, String message,  ArrayList<Object> data) {
+	        this.status = status;
+	        this.message = message;
+	        this.data = data;
+	}
 	
 	public List<Object> getData() {
 		return data;
