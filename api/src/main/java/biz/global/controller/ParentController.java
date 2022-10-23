@@ -39,7 +39,7 @@ public class ParentController {
         
         try {
             if(parent.isPresent() && parent.get().getLastName().equals(admin.getUsername()) && bcrypt.matches(admin.getPassword(), parent.get().getPassword()) && parent.get().getActive_deactive()) {
-                ResponseModel responseModel = new ResponseModel(1, "Login successful",jwtUtility.generateToken(parent.get().getStudentNo()) ,parent.get());
+                ResponseModel responseModel = new ResponseModel(1, "Login successful",jwtUtility.generateToken(parent.get().getLastName()) ,parent.get());
                 return ResponseEntity.ok().body(responseModel);
             }else if(!parent.get().getActive_deactive()) {
                 return ResponseEntity.ok().body(new ResponseModel(0, "Your account has been deactivated", "", null));
