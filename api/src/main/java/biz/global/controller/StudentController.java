@@ -1,6 +1,7 @@
 package biz.global.controller;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -24,9 +25,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import biz.global.dto.StudentDto;
 import biz.global.model.Admin;
+import biz.global.model.Parent;
 import biz.global.model.ResponseModel;
 import biz.global.model.Student;
 import biz.global.model.Subject;
+import biz.global.repo.ParentRepo;
 import biz.global.repo.StudentRepo;
 import biz.global.util.JWTUtility;
 import biz.global.util.NumberGenerator;
@@ -40,6 +43,8 @@ public class StudentController {
 	@Autowired
 	StudentRepo studentRepo;
 	
+	@Autowired
+    ParentRepo parentRepo;
 	
 	@Autowired
 	private JWTUtility jwtUtility;
@@ -131,7 +136,9 @@ public class StudentController {
         student.setStudentNo(numGenerator.generator(studentRepo.findAll().size()));
         String hashedPassword = bcrypt.encode(student.getStudentNo());
         student.setPassword(hashedPassword);
+        Parent parent = new  Parent(student.getEmergencyContactFirstName(), student.getEmergencyContactLastName(), bcrypt.encode(student.getEmergencyContactLastName()), student);
         studentRepo.save(student);
+        parentRepo.save(parent);
         return ResponseEntity.ok().body(new ResponseModel(1, "student successfully added", null, student));
     }
 	
@@ -213,7 +220,8 @@ public class StudentController {
 		stud.get().setSubject(student.getSubject());
 		stud.get().setAddress(student.getAddress());
 		stud.get().setMobileNumber(student.getMobileNumber());
-		stud.get().setEmergencyContactPerson(student.getEmergencyContactPerson());
+		stud.get().setEmergencyContactFirstName(student.getEmergencyContactFirstName());
+		stud.get().setEmergencyContactLastName(student.getEmergencyContactLastName());
 		stud.get().setEmergencyContactNumber(student.getEmergencyContactNumber());
 		studentRepo.save(stud.get());
 		return ResponseEntity.ok().body(new ResponseModel(1, "updated successfully", null, student));
