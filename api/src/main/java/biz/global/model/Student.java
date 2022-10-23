@@ -56,7 +56,8 @@ public class Student  implements  Serializable{
 	 
 	 private String mobileNumber;
 	 
-	 private String emergencyContactPerson;
+	 private String emergencyContactFirstName;
+	 private String emergencyContactLastName;
 	 
 	 private String emergencyContactNumber;
 	 
@@ -82,47 +83,56 @@ public class Student  implements  Serializable{
 		 super();
 	 }
 	
-	 public Student(
-			 Long student_id,
-			 String studentNo,
-			 String password,
-			 String firstName,
-			 String middleName,
-			 String lastName,
-			 String birthDate,
-			 String status,
-			 String sem,
-			 String yearLevel,
-			 String address,
-			 String mobileNumber,
-			 String emergencyContactPerson,
-			 String emergencyContactNumber,
-			 Boolean active_deactive,
-			 LocalDate data_modified,
-			 String type) {
-		 
-			super();
-			this.student_id = student_id;
-			this.studentNo = studentNo;
-			this.firstName = firstName;
-			this.middleName = middleName;
-			this.lastName = lastName;
-			this.password = password;
-			this.birthDate = birthDate;
-			this.status = status;
-			this.sem = sem;
-			this.yearLevel = yearLevel;
-			this.address = address;
-			this.mobileNumber = mobileNumber;
-			this.emergencyContactPerson = emergencyContactPerson;
-			this.emergencyContactNumber = emergencyContactNumber;
-			this.active_deactive = active_deactive;
-			this.data_modified = data_modified;
-			this.type = type;
-		}
+	
+
+	
+
+    public Student(Long student_id, String studentNo, String firstName, String middleName, String lastName,
+            String password, String birthDate, String status, String sem, String yearLevel, String address,
+            String mobileNumber, String emergencyContactFirstName, String emergencyContactLastName,
+            String emergencyContactNumber, Boolean active_deactive, LocalDate data_modified, List<Program> program,
+            List<Subject> subject, String type, Department department, Course course) {
+        super();
+        this.student_id = student_id;
+        this.studentNo = studentNo;
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.lastName = lastName;
+        this.password = password;
+        this.birthDate = birthDate;
+        this.status = status;
+        this.sem = sem;
+        this.yearLevel = yearLevel;
+        this.address = address;
+        this.mobileNumber = mobileNumber;
+        this.emergencyContactFirstName = emergencyContactFirstName;
+        this.emergencyContactLastName = emergencyContactLastName;
+        this.emergencyContactNumber = emergencyContactNumber;
+        this.active_deactive = active_deactive;
+        this.data_modified = data_modified;
+        this.program = program;
+        this.subject = subject;
+        this.type = type;
+        this.department = department;
+        this.course = course;
+    }
 
 
-	 @ManyToOne 
+
+
+
+    public String getEmergencyContactLastName() {
+        return emergencyContactLastName;
+    }
+
+
+    public void setEmergencyContactLastName(String emergencyContactLastName) {
+        this.emergencyContactLastName = emergencyContactLastName;
+    }
+
+
+
+    @ManyToOne 
 	 @JoinColumn(name="department_fk", updatable = true, insertable = true)
 	 private Department department;
 
@@ -131,7 +141,15 @@ public class Student  implements  Serializable{
 	 @JoinColumn(name="course_fk",  nullable = true, updatable = true)
 	 private Course course;
 	 
-	 
+	 public String getEmergencyContactFirstName() {
+	        return emergencyContactFirstName;
+	    }
+
+
+	    public void setEmergencyContactFirstName(String emergencyContactFirstName) {
+	        this.emergencyContactFirstName = emergencyContactFirstName;
+	    }
+
 	 public List<Subject> getSubject() {
 		return subject;
 	}
@@ -220,54 +238,13 @@ public class Student  implements  Serializable{
 		this.program = program;
 	}
 	
-//	public Student(Long student_id, String student_no, String firstName, String middleName,
-//			String lastName, List<Program> program,
-//			List<Subject> subjects, String sem, String academicYear, Boolean active_deactive) {
-//		super();
-//		this.student_id = student_id;
-//		this.studentNo = student_no;
-//		this.firstName = firstName;
-//		this.middleName = middleName;
-//		this.lastName = lastName;
-//		this.program = program;
-//		this.subject = subjects;
-//		this.sem = sem;
-//		this.yearLevel = yearLevel;
-//		this.active_deactive = active_deactive;
-//	}
+
 
 	
 	public Long getStudent_id() {
 		return student_id;
 	}
 	
-	public Student(Long student_id, String studentNo, String firstName, String middleName, String lastName, String password,
-		String birthDate, String status, String sem, String yearLevel, String address, String mobileNumber,
-		String emergencyContactPerson, String emergencyContactNumber, Boolean active_deactive, LocalDate data_modified,
-		List<Program> program, List<Subject> subject, String type, Department department, Course course) {
-	super();
-	this.student_id = student_id;
-	this.studentNo = studentNo;
-	this.firstName = firstName;
-	this.middleName = middleName;
-	this.lastName = lastName;
-	this.password = password;
-	this.birthDate = birthDate;
-	this.status = status;
-	this.sem = sem;
-	this.yearLevel = yearLevel;
-	this.address = address;
-	this.mobileNumber = mobileNumber;
-	this.emergencyContactPerson = emergencyContactPerson;
-	this.emergencyContactNumber = emergencyContactNumber;
-	this.active_deactive = active_deactive;
-	this.data_modified = data_modified;
-	this.program = program;
-	this.subject = subject;
-	this.type = type;
-	this.department = department;
-	this.course = course;
-}
 
 
 
@@ -362,14 +339,6 @@ public class Student  implements  Serializable{
 	}
 
 
-	public String getEmergencyContactPerson() {
-		return emergencyContactPerson;
-	}
-
-
-	public void setEmergencyContactPerson(String emergencyContactPerson) {
-		this.emergencyContactPerson = emergencyContactPerson;
-	}
 
 
 	public String getEmergencyContactNumber() {

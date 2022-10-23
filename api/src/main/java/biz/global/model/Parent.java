@@ -15,12 +15,8 @@ public class Parent {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long parent_id;
-   
-    private String studentNo;
 
     private String firstName;
-    
-    private String middleName;
     
     private String lastName;
     
@@ -37,15 +33,23 @@ public class Parent {
 
     private Long student_id;
     
+
+    public Parent() {
+        super();
+    }
     
     
-    
-    
-    
-    
-    
-    
-    
+
+    public Parent(String firstName, String lastName, String password, Student student) {
+        super();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.student = student;
+        
+    }
+
+
 
     public String getType() {
         return type;
@@ -63,13 +67,7 @@ public class Parent {
         this.parent_id = parent_id;
     }
 
-    public String getStudentNo() {
-        return studentNo;
-    }
 
-    public void setStudentNo(String studentNo) {
-        this.studentNo = studentNo;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -79,14 +77,7 @@ public class Parent {
         this.firstName = firstName;
     }
 
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
+  
     public String getLastName() {
         return lastName;
     }

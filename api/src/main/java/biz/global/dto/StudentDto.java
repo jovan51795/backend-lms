@@ -36,7 +36,10 @@ public class StudentDto{
 	 
 	 private String mobileNumber;
 	 
-	 private String emergencyContactPerson;
+	 private String emergencyContactFirstName;
+	 
+     private String emergencyContactLastName;
+     
 	 
 	 private String emergencyContactNumber;
 	
@@ -69,7 +72,27 @@ public class StudentDto{
 	}
 
 
-	public Department getDepartment() {
+	public String getEmergencyContactFirstName() {
+        return emergencyContactFirstName;
+    }
+
+
+    public void setEmergencyContactFirstName(String emergencyContactFirstName) {
+        this.emergencyContactFirstName = emergencyContactFirstName;
+    }
+
+
+    public String getEmergencyContactLastName() {
+        return emergencyContactLastName;
+    }
+
+
+    public void setEmergencyContactLastName(String emergencyContactLastName) {
+        this.emergencyContactLastName = emergencyContactLastName;
+    }
+
+
+    public Department getDepartment() {
 		return department;
 	}
 
@@ -220,14 +243,7 @@ public class StudentDto{
 	}
 
 
-	public String getEmergencyContactPerson() {
-		return emergencyContactPerson;
-	}
 
-
-	public void setEmergencyContactPerson(String emergencyContactPerson) {
-		this.emergencyContactPerson = emergencyContactPerson;
-	}
 
 
 	public String getEmergencyContactNumber() {
