@@ -93,11 +93,9 @@ public class StudentController {
      
      @GetMapping(value="evaluation")
      public ResponseEntity<ResponseModel> getCourseEval(
-             @RequestParam Long id,
-             @RequestParam String sem,
-             @RequestParam String yrlvl
+             @RequestParam Long id
              ) {
-         List<Object> getEval = studentRepo.getCourseEvalution(id, sem, yrlvl);
+         List<Object> getEval = studentRepo.getCourseEvalution(id);
          return ResponseEntity.ok().body(new ResponseModel(1, "Schedule ", "", getEval));
      }
    

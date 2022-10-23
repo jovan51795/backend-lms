@@ -51,8 +51,8 @@ public interface StudentRepo extends JpaRepository<Student, Long> {
 	@Query(nativeQuery = true, value="SELECT COUNT(student_id) FROM student WHERE data_modified >= (NOW() - INTERVAL '20 days')")
     String getNewStudents();
 	
-	@Query(nativeQuery = true, value="SELECT * FROM subject  WHERE course_fk = ?1 AND sem= ?2 AND year_level = ?3  ORDER BY year_level")
-	List<Object> getCourseEvalution(Long id, String sem, String yrlvl);
+	@Query(nativeQuery = true, value="SELECT * FROM subject  WHERE course_fk = ?1 ORDER BY year_level")
+	List<Object> getCourseEvalution(Long id);
 	
 	
 	@Query(nativeQuery = true, value="SELECT * FROM subject AS sub WHERE sub.sem = ?1 AND sub.year_level=?2 AND sub.course_fk =?3")
