@@ -26,9 +26,11 @@ import biz.global.dto.StudentDto;
 import biz.global.model.Admin;
 import biz.global.model.ResponseModel;
 import biz.global.model.Student;
+import biz.global.model.Subject;
 import biz.global.repo.StudentRepo;
 import biz.global.util.JWTUtility;
 import biz.global.util.NumberGenerator;
+import biz.global.wrapper.StudentSubjectWrapper;
 
 @RestController
 @RequestMapping(value = "api/student/")
@@ -96,7 +98,19 @@ public class StudentController {
    
      
      
+     @GetMapping(value= "subjectrecommendations")
+     public ResponseEntity<ResponseModel> getSubjectRecommendations(@RequestParam String sem,@RequestParam String yrlvl,@RequestParam Long courseID) {
+          List<Object> studentRecommendedSubject = studentRepo.getRecommendedSubjects(sem, yrlvl, courseID);
+          return ResponseEntity.ok().body(new ResponseModel(1, "Success", null, studentRecommendedSubject));
+      }
      
+     
+     @GetMapping(value= "getScheduleSubject")
+     public ResponseEntity<ResponseModel> getScheduleSubject(@RequestParam Long subjectID) {
+          List<Object> getScheduleSubject = studentRepo.getScheduleSubject(subjectID);
+          return ResponseEntity.ok().body(new ResponseModel(1, "Success", null, getScheduleSubject));
+      }
+
      
      
      
@@ -139,7 +153,20 @@ public class StudentController {
     }
     
     
-    
+    @PostMapping(value= "addStudentSubject")
+    public ResponseEntity<ResponseModel> addStudentSubject(@RequestParam Long studentID,@RequestParam Long subjectID) {
+       List<Object> student =studentRepo.checkStudentSubject(studentID, subjectID);
+
+ 
+        if(student.size() ==1) {
+            return ResponseEntity.ok().body(new ResponseModel(0, "Record Already Exist", "", null));
+        }else {
+            List<Object> add = studentRepo.addStudentSubject(studentID, subjectID);
+            return ResponseEntity.ok().body(new ResponseModel(1, "Successfully added!", "", add));
+        }
+        
+     }
+
     
     
 	    

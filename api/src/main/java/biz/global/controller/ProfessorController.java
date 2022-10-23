@@ -57,10 +57,7 @@ public class ProfessorController {
 	private GradesRepo gradesRepo;
 	
 	
-	@GetMapping(value= "all")
-    List<Professor> getprofessors() {
-        return professorRepo.findAll();
-    }
+	
 	
 	BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 	
@@ -72,23 +69,101 @@ public class ProfessorController {
 	    	 return ResponseEntity.ok().body(new ResponseModel(1, "Success", null, get));
 	    }
 	 
-	   @GetMapping(value="getpass/{id}")
+	 //////////////////////////////////////////////////////////////////////////////////GET MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\  
+	 @GetMapping(value= "all")
+	    List<Professor> getprofessors() {
+	        return professorRepo.findAll();
+	    }
+	 
+	 @GetMapping("{id}")
+	    public ResponseEntity<Professor> getProfessorById(@PathVariable Long id){
+	        Professor professor = professorRepo.findById(id)
+	                .orElseThrow(() -> new ResourceNotFoundException("Employee not exist with id:" + id));
+	        return ResponseEntity.ok(professor);
+	    }
+	 
+	 @GetMapping(value="getpass/{id}")
 	    public String getPass(@PathVariable Long id) {
 	     
 	       return professorRepo.getPass(id);
 	    }
 	    
 
-	    @GetMapping(value="getfail/{id}")
+	 @GetMapping(value="getfail/{id}")
 	    public String getFail(@PathVariable Long id) {
 	       return professorRepo.getFail(id);
 	    }
 	    
-	    @GetMapping(value="getconditional/{id}")
+	 @GetMapping(value="getconditional/{id}")
 	    public String getConditional(@PathVariable Long id) {
 	       return professorRepo.getConditional(id);
 	    }
-
+	    
+	    
+	 @GetMapping(value="getAllGradesbySubjectbyStudents")
+	    public ResponseEntity<ResponseModel> getAllGradesbySubjectbyStudents(@RequestParam Long profID, @RequestParam Long subID){
+	        List<Object> get = professorRepo.getAllGradesbySubjectbyStudents(profID, subID);
+	        return checker(get);
+	    }
+	 
+	 @GetMapping(value = "details/{id}")
+	    public ResponseEntity<ResponseModel> details(@PathVariable Long id) {
+	        Optional<Professor> prof = professorRepo.findById(id);
+	        if(prof.isEmpty()) {
+	            return ResponseEntity.ok().body(new ResponseModel(0, "professor does not exist", "", null));
+	        }
+	        return ResponseEntity.ok().body(new ResponseModel(1, "professor details", "", prof.get()));
+	    }
+	 
+	 @GetMapping(value="schedule/{id}")
+	    public ResponseEntity<ResponseModel> getSchedule(@PathVariable Long id) {
+	        List<Object> getSchedule = professorRepo.listOfSchedule(id);
+	        
+	        return ResponseEntity.ok().body(new ResponseModel(1, "Schedule ", "", getSchedule));
+	    }
+	 
+	 @GetMapping(value="gradesbysubject")
+	    public ResponseEntity<ResponseModel> getAllGradesbySubject(@RequestParam Long id){
+	        List<Object> get = professorRepo.getAllGradesbySubject(id);
+	        return checker(get);
+	    }
+	 
+	 @GetMapping(value="attendance")
+	    public ResponseEntity<ResponseModel> getstudentInSubjectByStudentID(@RequestParam Long subID,@RequestParam Long profID, @RequestParam Long studID){
+	        List<Object> get =attendanceRepo.getstudentInSubjectByStudentID(subID, profID,studID);
+	        return checker(get);
+	    }
+	    
+	    
+	    @GetMapping(value="grades")
+	    public ResponseEntity<ResponseModel> getAllStudentsEnrolledSubject(@RequestParam Long subID,@RequestParam Long profID, @RequestParam Long studID){
+	        List<Object> get = attendanceRepo.getstudentInSubjectByStudentID(subID, profID,studID);
+	        return checker(get);
+	    }
+	    
+	    @GetMapping(value="studentlist")
+	    public ResponseEntity<ResponseModel> studentList(@RequestParam Long subID,@RequestParam Long profID){   
+	        List<Object> get = attendanceRepo.studentListbySubject(subID, profID);
+	        return checker(get);    
+	    }
+	    
+	    @GetMapping(value="getSubjectByProfessor")
+	    public ResponseEntity<ResponseModel> getSubjectByProfessor(@RequestParam Long id){
+	        List<Object> get = attendanceRepo.getSubjectByProfessor(id);
+	        return checker(get);
+	    }
+	    
+	    
+	    @GetMapping("{id}")
+	    public ResponseEntity<Professor> getEmployeeById(@PathVariable Long id){
+	        Professor professor = professorRepo.findById(id)
+	                .orElseThrow(() -> new ResourceNotFoundException("Employee not exist with id:" + id));
+	        return ResponseEntity.ok(professor);
+	    }
+	
+//////////////////////////////////////////////////////////////////////////////////POST MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	 
+	 
     @PostMapping(value="add")
     public ResponseEntity<ResponseModel> addProfessor(@RequestBody Professor professor) throws IOException {
     	Optional<Professor> prof = Optional.ofNullable(professorRepo.findByProfessorNo(professor.getProfessorNo()));
@@ -102,6 +177,7 @@ public class ProfessorController {
 
         return ResponseEntity.ok().body(new ResponseModel(1, "professor added successfully", null, professor));
     }
+    
     
     @PostMapping(value = "login")
     public ResponseEntity<ResponseModel> login(@RequestBody Admin admin) {
@@ -120,77 +196,34 @@ public class ProfessorController {
     	
     }
     
- 
-    @GetMapping("{id}")
-    public ResponseEntity<Professor> getEmployeeById(@PathVariable Long id){
-    	Professor professor = professorRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee not exist with id:" + id));
-        return ResponseEntity.ok(professor);
-    }
     
-    @PatchMapping(value="/update/{id}")
-	private ResponseEntity<ResponseModel> updateProfessor(@PathVariable Long id, @RequestBody Professor professor) {
-		Optional<Professor> prof = professorRepo.findById(id);
-		if(prof.isPresent()) {
-			professorRepo.save(professor);
-			return ResponseEntity.ok().body(new ResponseModel(1, "professor updated successfully", "", professor));
-		}
-		return ResponseEntity.ok().body(new ResponseModel(0, "An unexpected error occurred", "", null));
-	}
-    
-    @DeleteMapping("{id}")
-    public ResponseEntity<ResponseModel> deleteProfessor(@PathVariable Long id){
-    	Optional<Professor> professor = professorRepo.findById(id);
-    	if(professor.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(0, "professor does not exist", null, null));
-		}
-    	
-		professorRepo.deleteById(professor.get().getProfessor_id());
-		
-		return ResponseEntity.ok().body(new ResponseModel(1, "successfully deleted", null, null));
-
-    }
-    
-    @GetMapping(value="attendance")
-    public ResponseEntity<ResponseModel> getstudentInSubjectByStudentID(@RequestParam Long subID,@RequestParam Long profID, @RequestParam Long studID){
-    	List<Object> get =attendanceRepo.getstudentInSubjectByStudentID(subID, profID,studID);
-    	return checker(get);
-    }
-    
-    
-    @GetMapping(value="grades")
-    public ResponseEntity<ResponseModel> getAllStudentsEnrolledSubject(@RequestParam Long subID,@RequestParam Long profID, @RequestParam Long studID){
-    	List<Object> get = attendanceRepo.getstudentInSubjectByStudentID(subID, profID,studID);
-    	return checker(get);
-    }
-    
-    @GetMapping(value="studentlist")
-    public ResponseEntity<ResponseModel> studentList(@RequestParam Long subID,@RequestParam Long profID){ 	
-    	List<Object> get = attendanceRepo.studentListbySubject(subID, profID);
-    	return checker(get);	
-    }
-    
-    
-    @GetMapping(value="getSubjectByProfessor")
-    public ResponseEntity<ResponseModel> getSubjectByProfessor(@RequestParam Long id){
-    	List<Object> get = attendanceRepo.getSubjectByProfessor(id);
-    	return checker(get);
-    }
-    
-    
-    @PostMapping(value="setgradesto/{studentID}/subject/{subjectID}/prof/{profID}")
+    @PostMapping(value="/setgradesto/{studentID}/subject/{subjectID}/prof/{profID}")
     public ResponseEntity<ResponseModel> setGrades( @PathVariable Long studentID, @PathVariable Long subjectID,@PathVariable Long profID, @RequestBody Grades model) {
-    	Subject subject = subjectRepo.findById(subjectID).get();
-    	Student student = studentRepo.findById(studentID).get();
-    	Professor prof = professorRepo.findById(profID).get();
-    	
-    	model.setSubject(subject);
-    	model.setStudent(student);
-    	model.setProf(prof);
-    	model.setFinalGrade(model.getPrelimGrade(), model.getMidtermGrade());
-    	model.setStatus(model.getPrelimGrade(), model.getMidtermGrade());
-    	Grades save = gradesRepo.save(model);
-    	return ResponseEntity.ok().body(new ResponseModel(1, "Recorded successfully", null, save));
+        
+        Optional<Student> studentData= studentRepo.findById(studentID);
+        Optional<Subject> subjectData= subjectRepo.findById(subjectID);
+        Optional<Professor> profData =professorRepo.findById(profID);
+        Optional<Grades> findGrade =Optional.ofNullable(gradesRepo.findGrade(studentID, subjectID, profID));
+        if(findGrade.isPresent()) {
+            
+            findGrade.get().setComment(model.getComment());
+            findGrade.get().setRemarks(model.getRemarks());
+            findGrade.get().setFinalGrade(model.getPrelimGrade(), model.getMidtermGrade());
+            findGrade.get().setStatus(model.getPrelimGrade(), model.getMidtermGrade());
+            findGrade.get().setPrelimGrade(model.getPrelimGrade());
+            findGrade.get().setMidtermGrade(model.getMidtermGrade());
+            
+            Grades save = gradesRepo.save(findGrade.get());
+            return ResponseEntity.ok().body(new ResponseModel(1, "Record has been modified",  null, save));
+        }else {
+            model.setStudent(studentData.get());
+            model.setSubject(subjectData.get());
+            model.setProf(profData.get());
+            model.setFinalGrade(model.getPrelimGrade(), model.getMidtermGrade());
+            model.setStatus(model.getPrelimGrade(), model.getMidtermGrade());
+            Grades save = gradesRepo.save(model);
+            return ResponseEntity.ok().body(new ResponseModel(1, "Recorded successfully", null, save));
+        }
     }
     
     @PostMapping(value="/attendancesheet/{studentID}/subject/{subjectID}/prof/{profID}")
@@ -235,8 +268,30 @@ public class ProfessorController {
     
     
     
-//////////////////////////////////////////////////////////////////////////////////  DELETE MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\    
+    //////////////////////////////////////////////////////////////////////////////////  DELETE MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\    
 
     
-   
+    @DeleteMapping("{id}")
+    public ResponseEntity<ResponseModel> deleteProfessor(@PathVariable Long id){
+        Optional<Professor> professor = professorRepo.findById(id);
+        if(professor.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel(0, "professor does not exist", null, null));
+        }
+        professorRepo.deleteById(professor.get().getProfessor_id());
+        return ResponseEntity.ok().body(new ResponseModel(1, "successfully deleted", null, null));
+    }
+    
+    
+    //////////////////////////////////////////////////////////////////////////////////  PATCH MAPPING  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    @PatchMapping(value="/update/{id}")
+    private ResponseEntity<ResponseModel> updateProfessor(@PathVariable Long id, @RequestBody Professor professor) {
+        Optional<Professor> prof = professorRepo.findById(id);
+        if(prof.isPresent()) {
+            professorRepo.save(professor);
+            return ResponseEntity.ok().body(new ResponseModel(1, "professor updated successfully", "", professor));
+        }
+        return ResponseEntity.ok().body(new ResponseModel(0, "An unexpected error occurred", "", null));
+    }
+    
+    
 }
